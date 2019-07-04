@@ -59,9 +59,9 @@ const helloWorld = {
   },
 };
 
-// Extra Komponente nur für den Blockly-Teil
-// Dann kansnt du das shouldComponentUpdate here auf false setzen
-// (dh diese Komponente rendert *nie* neu)
+// workaround for extra component for blockly toolbox and workspace
+// never renders again due to shouldComponentUpdate = false
+// needs to be done because of weird behavior, see this issue https://github.com/xvicmanx/react-blockly-drawer/issues/14
 class BlocklyWrapper extends Component {
   shouldComponentUpdate() {
     return false;
@@ -105,17 +105,12 @@ class BlocklyWrapper extends Component {
   }
 }
 
-// ...diese aber schon wenn sich der State oder Props ändern!
+// updates when state and props change
 class App extends Component {
-  // Du kannst den State auch so initialisieren, dann sparst du dir den
-  // Konstruktor und den super(props) Aufruf
   state = {
     pythonCode: '',
   }
 
-  // ...und wenn du die Event handler wie folgt spezifizierst, brauchst du nicht das .bind(this)
-  // (ist quasi ein Klassenattribut, dem eine Arrow-Funktion zugewiesen wird. Die Arrow-Funktionen
-  //  behalten den this-Kontext des Elternelements bei und man muss dieses deswegen nicht binden)
   handleClick = () => {
     console.log(this.state);
   }
@@ -126,8 +121,6 @@ class App extends Component {
     });
   }
 
-
-  //onChange={this.handleChange} das würde ich gerne stattdessen unten in BlocklyDrawer nutzen in Verbindung mit dem auskommentierten Code oben. Aber dann funktioniert die Toolbox nicht mehr
   render() {
     return (
       <div>
