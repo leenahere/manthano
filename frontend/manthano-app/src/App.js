@@ -3,6 +3,8 @@ import Blockly from 'node-blockly/browser';
 import BlocklyDrawer, { Block, Category } from 'react-blockly-drawer';
 import Button from 'react-bootstrap/Button';
 import './App.css';
+import axios from 'axios';
+
 
 const kNearNeigh = {
   name: 'Blabla',
@@ -54,7 +56,7 @@ const helloWorld = {
   },
   generator: (block) => {
     const message = block.getFieldValue('NAME');
-    const code = "\"Hello " + message + "\"";
+    const code = "'Hello " + message + "'";
     return [code, Blockly.Python.ORDER_MEMBER];
   },
 };
@@ -112,7 +114,17 @@ class App extends Component {
   }
 
   handleClick = () => {
-    console.log(this.state);
+    var locationUrl = 'http://'  + window.location.hostname + ':5000/api/robotcode/1';
+    var idrobot = "b14";
+    var codestring = this.state.pythonCode;
+
+    axios.put(locationUrl, {
+      "robot": idrobot,
+      "code": codestring
+    })
+    .then(res => console.log(res))
+
+    console.log(this.state.pythonCode);
   }
 
   handleChange = (code, workspace) => {
