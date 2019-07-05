@@ -1,6 +1,7 @@
 #!flask/bin/python
 import os
 import connexion
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -11,6 +12,8 @@ connex_app = connexion.App(__name__, specification_dir=basedir)
 
 # Get the underlying Flask app instance
 app = connex_app.app
+
+CORS(app)
 
 # Configure the SQLAlchemy part of the app instance
 app.config['SQLALCHEMY_ECHO'] = True
