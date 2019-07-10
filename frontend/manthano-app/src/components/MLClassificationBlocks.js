@@ -5,17 +5,30 @@ export const kNearNeigh = {
   category: 'Machine Learning',
   block: {
     init: function () {
-      this.jsonInit({
-        message0: Blockly.Msg['TEXT_PRINT_TITLE'],
-        args0: [
-          {
-            type: "input_value",
-            name: "TEXT"
-          }
-        ],
-        style: "text_blocks",
-        tooltip: Blockly.Msg['TEXT_PRINT_TOOLTIP']
-      });
+      this.appendDummyInput()
+        .setAlign(Blockly.ALIGN_CENTRE)
+        .appendField("Train K Nearest Neigbors Model");
+      this.appendValueInput("features")
+          .setCheck(["Array", "Number"])
+          .setAlign(Blockly.ALIGN_RIGHT)
+          .appendField("X(Features)");
+      this.appendValueInput("labels")
+          .setCheck("Array")
+          .setAlign(Blockly.ALIGN_RIGHT)
+          .appendField("Labels");
+      this.appendValueInput("k")
+          .setCheck("Number")
+          .setAlign(Blockly.ALIGN_LEFT)
+          .appendField("Number of Neighbors to consider");
+      this.appendDummyInput()
+          .setAlign(Blockly.ALIGN_RIGHT)
+          .appendField("Distance metric")
+          .appendField(new Blockly.FieldDropdown([["euclidean","euclideanDistance"], ["manhattan","manhattanDistance"]]), "distance");
+      this.setOutput(true, "knn");
+      this.setInputsInline(false);
+      this.setColour(15);
+      this.setTooltip("");
+      this.setHelpUrl("");
     },
   },
   generator: (block) => {
