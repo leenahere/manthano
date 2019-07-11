@@ -1,8 +1,11 @@
 from flask import make_response, abort, jsonify, send_from_directory
 from git import Repo
 import os
+
+#matplotlib No-GUI, otherwise thread issues
 import matplotlib as mpl
 mpl.use("Agg")
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 import mpld3
@@ -28,7 +31,6 @@ def list_all_csv(robot_id):
 
 
 def get_file(filename):
-    """Download a file."""
     return send_from_directory(DATA_PATH, filename, as_attachment=True)
 
 
