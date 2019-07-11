@@ -22,7 +22,7 @@ class RobotCodeSchema(ma.ModelSchema):
 def after_update(mapper, connection, target):
     link_table = RobotCode.__table__
     my_path = os.path.dirname(__file__)
-    path = os.path.join(my_path, "./../../server-thesis/test.py")
+    path = os.path.join(my_path, "./../../server-thesis/code/test.py")
 
     f = open(path, 'w+')
     f.write(target.code)
