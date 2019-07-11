@@ -4,6 +4,7 @@ import axios from 'axios';
 import { CsvToHtmlTable } from 'react-csv-to-table';
 import DataVisualization from './DataVisualization';
 import Button from 'react-bootstrap/Button';
+import {Tab, Tabs} from 'react-bootstrap';
 
 class Data extends Component {
   state = {
@@ -23,6 +24,16 @@ class Data extends Component {
     axios.get('http://'  + window.location.hostname + ':5000/api/csvdata/' + e.target.id)
     .then(res => this.setState({
         loadedcsv: res.data
+      }))
+    .catch(error => {
+      console.log(error);
+    });
+
+    axios.get('http://'  + window.location.hostname + ':5000/api/csvvisualization/' + e.target.id)
+    .then(res => this.setState({
+        plotid: res.data[0],
+        plot: res.data[1],
+        showPlot: true,
       }))
     .catch(error => {
       console.log(error);
@@ -62,7 +73,7 @@ class Data extends Component {
 
     let plotcontent;
 
-    if (this.state.showPlot) {
+    if (this.state.loadedcsv.length != 0) {
       plotcontent = <DataVisualization plot={this.state.plot} plotid={this.state.plotid}/>;
     } else {
       plotcontent = <h3>no plot, select data and click button</h3>;
@@ -72,9 +83,18 @@ class Data extends Component {
       <div>
         <h1>Data</h1>
         <div>{ list }</div>
-        {tablecontent}
-        <Button variant="light" onClick={this.handleButtonClick}>Visualize Data</Button>
-        {plotcontent}
+          <Tabs
+           id="controlled-tab-example"
+           activeKey={this.state.key}
+           onSelect={key => this.setState({ key })}
+         >
+           <Tab eventKey="home" title="Table">
+              {tablecontent}
+           </Tab>
+           <Tab eventKey="plot" title="Plot">
+             {plotcontent}
+           </Tab>
+         </Tabs>
       </div>
     );
   }
