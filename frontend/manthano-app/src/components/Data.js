@@ -74,9 +74,10 @@ class Data extends Component {
     let plotcontent;
 
     if (this.state.loadedcsv.length != 0) {
-      plotcontent = <DataVisualization plot={this.state.plot} plotid={this.state.plotid}/>;
+      // add key to DataVisualization to force a re-render, so that plots don't stack up
+      plotcontent = <DataVisualization key={this.state.plotid} plot={this.state.plot} plotid={this.state.plotid}/>;
     } else {
-      plotcontent = <h3>no plot, select data and click button</h3>;
+      plotcontent = <h3>no plot, select data</h3>;
     }
 
     return (
@@ -92,7 +93,7 @@ class Data extends Component {
               {tablecontent}
            </Tab>
            <Tab eventKey="plot" title="Plot">
-             {plotcontent}
+              {plotcontent}
            </Tab>
          </Tabs>
       </div>
