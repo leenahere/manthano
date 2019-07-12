@@ -4,7 +4,7 @@ import axios from 'axios';
 import { CsvToHtmlTable } from 'react-csv-to-table';
 import DataVisualization from './DataVisualization';
 import Button from 'react-bootstrap/Button';
-import {Tab, Tabs} from 'react-bootstrap';
+import {Tab, Tabs, Table} from 'react-bootstrap';
 
 class Data extends Component {
   state = {
@@ -17,11 +17,12 @@ class Data extends Component {
   }
 
   handleClick = (e) => {
+    console.log("clicked!");
+    console.log(e.currentTarget.id);
     this.setState({
-        selectedData: e.target.id,
+        selectedData: e.currentTarget.id,
     });
-    console.log(e.target.id);
-    axios.get('http://'  + window.location.hostname + ':5000/api/csvdata/' + e.target.id)
+    axios.get('http://'  + window.location.hostname + ':5000/api/csvdata/' + e.currentTarget.id)
     .then(res => this.setState({
         loadedcsv: res.data
       }))
@@ -29,7 +30,7 @@ class Data extends Component {
       console.log(error);
     });
 
-    axios.get('http://'  + window.location.hostname + ':5000/api/csvvisualization/' + e.target.id)
+    axios.get('http://'  + window.location.hostname + ':5000/api/csvvisualization/' + e.currentTarget.id)
     .then(res => this.setState({
         plotid: res.data[0],
         plot: res.data[1],
@@ -56,7 +57,10 @@ class Data extends Component {
     const data = this.props.csvdata;
     console.log(data);
     let list = data.map((obj, id) => {
-      return <div id={obj} onClick={this.handleClick}>{obj}</div>
+      return (<tr id={obj} onClick={this.handleClick} style={{cursor: 'pointer'}}>
+                <th>{obj}</th>
+              </tr>);
+      //<div id={obj} onClick={this.handleClick}>{obj}</div>
     });
 
     let tablecontent;
@@ -81,21 +85,37 @@ class Data extends Component {
     }
 
     return (
-      <div>
-        <h1>Data</h1>
-        <div>{ list }</div>
-          <Tabs
-           id="controlled-tab-example"
-           activeKey={this.state.key}
-           onSelect={key => this.setState({ key })}
-         >
-           <Tab eventKey="home" title="Table">
-              {tablecontent}
-           </Tab>
-           <Tab eventKey="plot" title="Plot">
-              {plotcontent}
-           </Tab>
-         </Tabs>
+      <div className="container" style={{ marginLeft: 1, marginRight: 1 }}>
+        <div className="row">
+          <div className="col-xs-2">
+            <Table hover>
+              <thead>
+                <tr>
+                  <th>
+                    Data
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                { list }
+              </tbody>
+            </Table>
+          </div>
+          <div className="col-md-10">
+            <Tabs
+             id="controlled-tab-example"
+             activeKey={this.state.key}
+             onSelect={key => this.setState({ key })}
+           >
+             <Tab eventKey="home" title="Table">
+                {tablecontent}
+             </Tab>
+             <Tab eventKey="plot" title="Plot">
+                {plotcontent}
+             </Tab>
+           </Tabs>
+         </div>
+        </div>
       </div>
     );
   }
