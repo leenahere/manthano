@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import Blockly from 'node-blockly/browser';
 import BlocklyDrawer, { Block, Category } from 'react-blockly-drawer';
 import Button from 'react-bootstrap/Button';
@@ -58,7 +58,7 @@ class BlocklyWorkspace extends Component {
               <Block type="text" />
             </Category>
           </BlocklyDrawer>
-          <Button onClick={this.handleClick}>Click me!</Button>
+          <Button variant="light" onClick={this.handleClick}>Click me!</Button>
         </div>
     );
   }

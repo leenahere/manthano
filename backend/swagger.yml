@@ -12,6 +12,57 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
+  /csvdata/{robot_id}:
+    get:
+      operationId: csvdata.list_all_csv
+      tags:
+        - csvdata
+      summary: Get a list of all available csv data for robot
+      description: List of available csv data
+      parameters:
+        - name: robot_id
+          in: path
+          description: Robot name of the code to get from the list
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
+  /csvdata/{filename}:
+    get:
+      operationId: csvdata.get_file
+      tags:
+        - csvdata
+      summary: Get one csv file from data
+      description: Get csv file
+      parameters:
+        - name: filename
+          in: path
+          description: name of csv file
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
+  /csvvisualization/{filename}:
+    get:
+      operationId: csvdata.get_plot
+      tags:
+        - csvdata
+      summary: Get plot for a csv file
+      description: Get plot for a csv file
+      parameters:
+        - name: filename
+          in: path
+          description: name of csv file
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
   /robotcode:
     get:
       operationId: robotcode.read
