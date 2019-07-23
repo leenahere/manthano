@@ -6,10 +6,7 @@ class DataVisualization extends Component {
   render() {
     return (
       <div>
-        <Helmet>
-            <script>{this.props.plot}</script>
-        </Helmet>
-        <div id={this.props.plotid}></div>
+        <img src={this.props.plot}/>
       </div>
     );
   }

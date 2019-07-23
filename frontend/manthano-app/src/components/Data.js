@@ -5,6 +5,7 @@ import { CsvToHtmlTable } from 'react-csv-to-table';
 import DataVisualization from './DataVisualization';
 import Button from 'react-bootstrap/Button';
 import {Tab, Tabs, Table} from 'react-bootstrap';
+import DataSettings from './DataSettings';
 
 class Data extends Component {
   state = {
@@ -17,12 +18,10 @@ class Data extends Component {
   }
 
   handleClick = (e) => {
-    console.log("clicked!");
-    console.log(e.currentTarget.id);
     this.setState({
         selectedData: e.currentTarget.id,
     });
-    axios.get('http://'  + window.location.hostname + ':5000/api/csvdata/' + e.currentTarget.id)
+    axios.get('http://'  + window.location.hostname + ':80/api/csvdata/' + e.currentTarget.id)
     .then(res => this.setState({
         loadedcsv: res.data
       }))
@@ -30,37 +29,39 @@ class Data extends Component {
       console.log(error);
     });
 
-    axios.get('http://'  + window.location.hostname + ':5000/api/csvvisualization/' + e.currentTarget.id)
-    .then(res => this.setState({
-        plotid: res.data[0],
-        plot: res.data[1],
+    axios.get('http://'  + window.location.hostname + ':80/api/csvvisualization/' + e.currentTarget.id, { responseType: 'arraybuffer' })
+    .then(res => {
+      console.log(res.data);
+      const base64 = btoa(
+          new Uint8Array(res.data).reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            '',
+          ),
+        );
+      console.log(base64);
+      this.setState({
+        plot: "data:;base64," + base64,
         showPlot: true,
-      }))
-    .catch(error => {
-      console.log(error);
-    });
-  }
-
-  handleButtonClick = () => {
-    axios.get('http://'  + window.location.hostname + ':5000/api/csvvisualization/' + this.state.selectedData)
-    .then(res => this.setState({
-        plotid: res.data[0],
-        plot: res.data[1],
-        showPlot: true,
-      }))
+      })})
     .catch(error => {
       console.log(error);
     });
   }
 
   render() {
+    const loadedcsv = this.state.loadedcsv;
+    const firstline = loadedcsv.split('\n')[0];
+    let commas = (firstline.match(/,/g) || []).length;
+    let features = [];
+    for (var i = 0; i < commas; i++) {
+      features.push(firstline.split(',')[i]);
+    }
+
     const data = this.props.csvdata;
-    console.log(data);
     let list = data.map((obj, id) => {
       return (<tr id={obj} onClick={this.handleClick} style={{cursor: 'pointer'}}>
                 <th>{obj}</th>
               </tr>);
-      //<div id={obj} onClick={this.handleClick}>{obj}</div>
     });
 
     let tablecontent;
@@ -79,7 +80,7 @@ class Data extends Component {
 
     if (this.state.loadedcsv.length != 0) {
       // add key to DataVisualization to force a re-render, so that plots don't stack up
-      plotcontent = <DataVisualization key={this.state.plotid} plot={this.state.plot} plotid={this.state.plotid}/>;
+      plotcontent = <DataVisualization plot={this.state.plot} plotid={this.state.plotid}/>;
     } else {
       plotcontent = <h3>no plot, select data</h3>;
     }
@@ -100,6 +101,10 @@ class Data extends Component {
                 { list }
               </tbody>
             </Table>
+            <div>
+              <h4>Settings</h4>
+              <DataSettings features={features} loadedcsv={this.state.loadedcsv}/>
+            </div>
           </div>
           <div className="col-md-10">
             <Tabs

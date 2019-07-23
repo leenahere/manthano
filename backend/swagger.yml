@@ -146,3 +146,55 @@ paths:
       responses:
         200:
           description: Successfully updated code in robot list
+
+  /data/{session_id}:
+    get:
+      operationId: data.read_relevant
+      tags:
+        - data
+      summary: read all data for ml models
+      description: Read all entries in db
+      parameters:
+        - name: session_id
+          in: path
+          description: Robot name of the code to get from the list
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
+  /data:
+    post:
+      operationId: data.create
+      tags:
+        - data
+      summary: create data in db
+      description: create data in db
+      parameters:
+        - name: data
+          in: body
+          description: data to create
+          required: True
+          schema:
+            type: object
+            properties:
+              session_id:
+                type: integer
+              data_name:
+                type: string
+                description: name
+              csv:
+                type: string
+                description: altered csv data
+              split:
+                type: boolean
+              shuffle:
+                type: boolean
+              test:
+                type: integer
+              train:
+                type: integer
+      responses:
+        201:
+          description: Successfully created robot in list

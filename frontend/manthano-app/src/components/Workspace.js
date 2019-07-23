@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import BlocklyWorkspace from './BlocklyWorkspace';
-import {Tab, Tabs} from 'react-bootstrap';
+import {Tab, Tabs, Button} from 'react-bootstrap';
 import Data from './Data';
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -12,10 +12,11 @@ class Workspace extends Component {
     pythonCode: '',
     csvdata: [],
     key: 'home',
+    forceBlocklyUpdate: false
   }
 
   componentDidMount() {
-    axios.get('http://'  + window.location.hostname + ':5000/api/csvdata/4')
+    axios.get('http://'  + window.location.hostname + ':80/api/csvdata/4')
     .then(res => this.setState({
         loading: false,
         csvdata: res.data
@@ -25,8 +26,14 @@ class Workspace extends Component {
     });
   }
 
+  handleClick = () => {
+    this.setState({
+      forceBlocklyUpdate: !this.forceBlocklyUpdate,
+    })
+  }
+
   updateCode = (code) => {
-    var locationUrl = 'http://'  + window.location.hostname + ':5000/api/robotcode/1';
+    var locationUrl = 'http://'  + window.location.hostname + ':80/api/robotcode/1';
     var idrobot = "b14";
     var codestring = code;
 
@@ -56,7 +63,7 @@ class Workspace extends Component {
        onSelect={key => this.setState({ key })}
      >
        <Tab eventKey="home" title="Blockly">
-         <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode }/>
+         <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate }/>
        </Tab>
        <Tab eventKey="data" title="Data">
          <Data csvdata={ this.state.csvdata }/>
@@ -67,6 +74,7 @@ class Workspace extends Component {
       <div>
 
         { content }
+        <Button onClick={this.handleClick}>Force Update</Button>
       </div>
     );
   }

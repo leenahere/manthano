@@ -7,8 +7,11 @@ import * as blocks from './MLClassificationBlocks';
 
 // updates when state and props change
 class BlocklyWorkspace extends Component {
-  shouldComponentUpdate() {
-    return false;
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.forceUpdate === nextProps.forceUpdate) {
+      return false;
+    }
+    return true;
   }
 
   state = {
@@ -31,7 +34,7 @@ class BlocklyWorkspace extends Component {
         <div>
           <BlocklyDrawer
             language={Blockly.Python}
-            tools={[blocks.helloWorld, blocks.kNearNeigh]}
+            tools={[blocks.helloWorld, blocks.kNearNeigh, blocks.dataBlock]}
             onChange={this.handleChange}
             appearance={
               {
@@ -67,7 +70,8 @@ class BlocklyWorkspace extends Component {
 
 BlocklyWorkspace.propTypes = {
   updateCode: PropTypes.func.isRequired,
-  pythonCode: PropTypes.string.isRequired
+  pythonCode: PropTypes.string.isRequired,
+  forceUpdate: PropTypes.bool.isRequired
 }
 
 export default BlocklyWorkspace;
