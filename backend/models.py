@@ -20,7 +20,7 @@ class Data(db.Model):
     session_id = db.Column(db.Integer)
     data_name = db.Column(db.String(32), index=True)
     csv = db.Column(db.String)
-    split = db.Column(db.Boolean)
+    scale = db.Column(db.String)
     shuffle = db.Column(db.Boolean)
     test = db.Column(db.Integer)
     train = db.Column(db.Integer)

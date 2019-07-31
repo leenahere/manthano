@@ -6,11 +6,13 @@ import DataVisualization from './DataVisualization';
 import Button from 'react-bootstrap/Button';
 import {Tab, Tabs, Table} from 'react-bootstrap';
 import DataSettings from './DataSettings';
+import convertCSVToArray from 'convert-csv-to-array';
 
 class Data extends Component {
   state = {
     csvlist: this.props.csvdata,
     loadedcsv: "",
+    loadedcsvarray: [],
     selectedData: "",
     plot: "",
     plotid: "",
@@ -23,7 +25,8 @@ class Data extends Component {
     });
     axios.get('http://'  + window.location.hostname + ':80/api/csvdata/' + e.currentTarget.id)
     .then(res => this.setState({
-        loadedcsv: res.data
+        loadedcsv: res.data,
+        loadedcsvarray: convertCSVToArray(res.data, {type: 'array', separator: ','}),
       }))
     .catch(error => {
       console.log(error);
@@ -48,15 +51,13 @@ class Data extends Component {
     });
   }
 
-  render() {
-    const loadedcsv = this.state.loadedcsv;
-    const firstline = loadedcsv.split('\n')[0];
-    let commas = (firstline.match(/,/g) || []).length;
-    let features = [];
-    for (var i = 0; i < commas; i++) {
-      features.push(firstline.split(',')[i]);
-    }
+  handOver = () => {
+    this.props.forceUpdate();
+  }
 
+  render() {
+    //console.log(this.state.loadedcsvarray);
+    //console.log(this.state.loadedcsv);
     const data = this.props.csvdata;
     let list = data.map((obj, id) => {
       return (<tr id={obj} onClick={this.handleClick} style={{cursor: 'pointer'}}>
@@ -101,10 +102,6 @@ class Data extends Component {
                 { list }
               </tbody>
             </Table>
-            <div>
-              <h4>Settings</h4>
-              <DataSettings features={features} loadedcsv={this.state.loadedcsv}/>
-            </div>
           </div>
           <div className="col-md-10">
             <Tabs
@@ -118,6 +115,9 @@ class Data extends Component {
              <Tab eventKey="plot" title="Plot">
                 {plotcontent}
              </Tab>
+             <Tab eventKey="enhance" title="Enhance and Settings">
+                <DataSettings forceUpdate={this.handOver} csvArray={this.state.loadedcsvarray} loadedcsv={this.state.loadedcsv}/>
+             </Tab>
            </Tabs>
          </div>
         </div>
@@ -128,6 +128,7 @@ class Data extends Component {
 
 Data.propTypes = {
   csvdata: PropTypes.array.isRequired,
+  forceUpdate: PropTypes.func.isRequired,
 }
 
 export default Data;

@@ -187,8 +187,8 @@ paths:
               csv:
                 type: string
                 description: altered csv data
-              split:
-                type: boolean
+              scale:
+                type: string
               shuffle:
                 type: boolean
               test:

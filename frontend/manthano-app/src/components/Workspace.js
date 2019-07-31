@@ -32,6 +32,14 @@ class Workspace extends Component {
     })
   }
 
+  updateForceUpdate = () => {
+    console.log("Force Update is called");
+    console.log(this.state.forceBlocklyUpdate);
+    this.setState({
+      forceBlocklyUpdate: !this.state.forceBlocklyUpdate,
+    })
+  }
+
   updateCode = (code) => {
     var locationUrl = 'http://'  + window.location.hostname + ':80/api/robotcode/1';
     var idrobot = "b14";
@@ -66,7 +74,7 @@ class Workspace extends Component {
          <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate }/>
        </Tab>
        <Tab eventKey="data" title="Data">
-         <Data csvdata={ this.state.csvdata }/>
+         <Data csvdata={ this.state.csvdata } forceUpdate={this.updateForceUpdate}/>
        </Tab>
      </Tabs>
     }
