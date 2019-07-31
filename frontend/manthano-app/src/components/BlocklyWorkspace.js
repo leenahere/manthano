@@ -7,8 +7,13 @@ import * as blocks from './MLClassificationBlocks';
 
 // updates when state and props change
 class BlocklyWorkspace extends Component {
-  shouldComponentUpdate() {
-    return false;
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.forceUpdate === nextProps.forceUpdate) {
+      console.log("Blockly Workspace doesnt update");
+      return false;
+    }
+    console.log("Blockly Workspace updates");
+    return true;
   }
 
   state = {
@@ -27,11 +32,13 @@ class BlocklyWorkspace extends Component {
   }
 
   render() {
+    Blockly.HSV_SATURATION = 0.9;
+    Blockly.HSV_VALUE = 0.9;
     return (
         <div>
           <BlocklyDrawer
             language={Blockly.Python}
-            tools={[blocks.helloWorld, blocks.kNearNeigh]}
+            tools={[blocks.kNearNeigh, blocks.logRegression, blocks.naiveBayes, blocks.svm, blocks.linRegression, blocks.polyRegression, blocks.decisionTree, blocks.mlp, blocks.dataBlock, blocks.list]}
             onChange={this.handleChange}
             appearance={
               {
@@ -39,23 +46,29 @@ class BlocklyWorkspace extends Component {
                   Demo: {
                     colour: '270'
                   },
+                  Classification: {
+                    colour: '56'
+                  },
+                  Data: {
+                    colour: '30'
+                  },
+                  NeuralNets: {
+                    colour: '320'
+                  },
+                  List: {
+                    colour: '190'
+                  },
+                  Regression: {
+                    colour: '120'
+                  }
+
                 },
               }
             }
           >
-            <Category name="Variables" custom="VARIABLE" />
-            <Category name="Basics">
-              <Block type="controls_if" />
-              <Block type="logic_compare" />
-              <Block type="controls_repeat_ext" />
-              <Block type="math_arithmetic" />
-              <Block type="text" />
-              <Block type="text_print" />
+            <Category name="Values" colour='%{BKY_MATH_HUE}' >
+              <Block type="lists_create_with" />
               <Block type="math_number" />
-            </Category>
-            <Category name="Values">
-              <Block type="math_number" />
-              <Block type="text" />
             </Category>
           </BlocklyDrawer>
           <Button variant="light" onClick={this.handleClick}>Click me!</Button>
@@ -67,7 +80,8 @@ class BlocklyWorkspace extends Component {
 
 BlocklyWorkspace.propTypes = {
   updateCode: PropTypes.func.isRequired,
-  pythonCode: PropTypes.string.isRequired
+  pythonCode: PropTypes.string.isRequired,
+  forceUpdate: PropTypes.bool.isRequired
 }
 
 export default BlocklyWorkspace;
