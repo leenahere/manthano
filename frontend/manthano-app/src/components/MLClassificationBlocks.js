@@ -1,7 +1,7 @@
 import Blockly from 'node-blockly/browser';
 import axios from 'axios';
 
-var testTrainDropdownList = [["X", "X"], ["y", "y"], ["X_train", "X_train"], ["y_train", "y_Train"], ["X_test", "X_test"], ["y_test", "y_test"]]
+var testTrainDropdownList = [["X", "X"], ["y", "y"], ["X_train", "X_train"], ["y_train", "y_train"], ["X_test", "X_test"], ["y_test", "y_test"]]
 
 const classificationColor = 56;
 const regressionColor = 120;
