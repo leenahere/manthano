@@ -12,6 +12,33 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
+  /connect/{ip}/{user}/{pw}:
+    get:
+      operationId: connect_robot.check_ip_connection
+      tags:
+        - connect
+      summary: Check if IP address is accessible
+      description: Check if IP address
+      parameters:
+        - name: ip
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: user
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: pw
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
   /csvdata/{robot_id}:
     get:
       operationId: csvdata.list_all_csv
