@@ -13,17 +13,21 @@ class RobotCode(db.Model):
     robot = db.Column(db.String(32), index=True)
     code = db.Column(db.String(32))
 
+
 class Data(db.Model):
     __tablename__ = 'data'
     data_id = db.Column(db.Integer, primary_key=True)
     #  I need something to connect data objects to robot/session. This is just a temporary solution
-    session_id = db.Column(db.Integer)
+    session_id = db.Column(db.String)
     data_name = db.Column(db.String(32), index=True)
     csv = db.Column(db.String)
     scale = db.Column(db.String)
     shuffle = db.Column(db.Boolean)
     test = db.Column(db.Integer)
     train = db.Column(db.Integer)
+    labels = db.Column(db.ARRAY(db.Integer))
+    delimiter = db.Column(db.String)
+
 
 class DataSchema(ma.ModelSchema):
     class Meta:

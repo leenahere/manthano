@@ -12,7 +12,9 @@ DATA = [
         "shuffle": False,
         "scale": False,
         "test": 30,
-        "train": 70
+        "train": 70,
+        "labels": [1,2],
+        "delimiter": ";"
     },
     {
         "csv": "nclbkjfacbdvs",
@@ -21,7 +23,9 @@ DATA = [
         "shuffle": False,
         "scale": True,
         "test": 30,
-        "train": 70
+        "train": 70,
+        "labels": [1],
+        "delimiter": ","
     },
     {
         "csv": "nclbkjfacbdvs",
@@ -30,7 +34,9 @@ DATA = [
         "shuffle": False,
         "scale": True,
         "test": 30,
-        "train": 70
+        "train": 70,
+        "labels": [3],
+        "delimiter": ","
     }
 ]
 

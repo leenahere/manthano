@@ -81,7 +81,8 @@ class BlocklyWorkspace extends Component {
 BlocklyWorkspace.propTypes = {
   updateCode: PropTypes.func.isRequired,
   pythonCode: PropTypes.string.isRequired,
-  forceUpdate: PropTypes.bool.isRequired
+  forceUpdate: PropTypes.bool.isRequired,
+  session: PropTypes.string.isRequired
 }
 
 export default BlocklyWorkspace;

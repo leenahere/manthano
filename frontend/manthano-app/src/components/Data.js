@@ -116,7 +116,7 @@ class Data extends Component {
                 {plotcontent}
              </Tab>
              <Tab eventKey="enhance" title="Enhance and Settings">
-                <DataSettings forceUpdate={this.handOver} csvArray={this.state.loadedcsvarray} loadedcsv={this.state.loadedcsv}/>
+                <DataSettings forceUpdate={this.handOver} csvArray={this.state.loadedcsvarray} loadedcsv={this.state.loadedcsv} session={this.props.session}/>
              </Tab>
            </Tabs>
          </div>
@@ -129,6 +129,7 @@ class Data extends Component {
 Data.propTypes = {
   csvdata: PropTypes.array.isRequired,
   forceUpdate: PropTypes.func.isRequired,
+  session: PropTypes.string.isRequired
 }
 
 export default Data;

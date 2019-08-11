@@ -11,7 +11,7 @@ const dataColor = 30;
 const listColor = 190;
 
 function getListsForDataBlock(dataDropdownList) {
-  axios.get('http://'  + window.location.hostname + ':80/api/data/1234')
+  axios.get('http://'  + window.location.hostname + ':80/api/data/' + localStorage.getItem('sessionID'))
   .then(res => { for (var obj in res.data) {
     dataDropdownList.push([res.data[obj].data_name, res.data[obj].data_name])
   }
@@ -471,8 +471,7 @@ export const mlp = {
     //const code = 'print(' + msg + ')\n';
     //model = MLPClassifier(hidden_layer_sizes=(64,64,),max_iter=1000, solver='adam', activation='relu')
     //model.fit(X_train, y_train)
-    var code = 'model = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')\n' +
-                'model.fit(' + featuresSplit[1] +', '+labelsSplit[1]+')'
+    var code = 'import_dataset('+featuresSplit[0]+')\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')\nmodel.fit(' + featuresSplit[1] +', '+labelsSplit[1]+')'
     //var code = 'print' + alphaValue + layerList + solverValue + activationValue + maxIterValue + featuresValue + labelsValue
     //return [code, Blockly.Python.ORDER_MEMBER];
     return code;

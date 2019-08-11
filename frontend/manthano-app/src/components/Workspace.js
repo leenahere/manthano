@@ -4,6 +4,7 @@ import BlocklyWorkspace from './BlocklyWorkspace';
 import {Tab, Tabs, Button} from 'react-bootstrap';
 import Data from './Data';
 import 'bootstrap/dist/css/bootstrap.css';
+import PropTypes from 'prop-types';
 
 // updates when state and props change
 class Workspace extends Component {
@@ -59,6 +60,7 @@ class Workspace extends Component {
   };
 
   render() {
+    console.log(this.props.session);
     let content;
 
     if (this.state.loading) {
@@ -71,10 +73,10 @@ class Workspace extends Component {
        onSelect={key => this.setState({ key })}
      >
        <Tab eventKey="home" title="Blockly">
-         <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate }/>
+         <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate } session={this.props.session}/>
        </Tab>
        <Tab eventKey="data" title="Data">
-         <Data csvdata={ this.state.csvdata } forceUpdate={this.updateForceUpdate}/>
+         <Data csvdata={ this.state.csvdata } forceUpdate={this.updateForceUpdate} session={this.props.session}/>
        </Tab>
      </Tabs>
     }
@@ -87,6 +89,10 @@ class Workspace extends Component {
     );
   }
 
+}
+
+Workspace.propTypes = {
+  session: PropTypes.string.isRequired
 }
 
 export default Workspace;

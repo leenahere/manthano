@@ -158,7 +158,7 @@ paths:
         - name: session_id
           in: path
           description: Robot name of the code to get from the list
-          type: integer
+          type: string
           required: True
       responses:
         200:
@@ -180,7 +180,7 @@ paths:
             type: object
             properties:
               session_id:
-                type: integer
+                type: string
               data_name:
                 type: string
                 description: name
@@ -195,6 +195,30 @@ paths:
                 type: integer
               train:
                 type: integer
+              delimiter:
+                type: string
+              labels:
+                type: array
+                items:
+                  type: integer
       responses:
         201:
           description: Successfully created robot in list
+
+  /runcode/{code}:
+    get:
+      operationId: train_code.execute_code
+      tags:
+        - train_code
+      summary: execute code from Blockly and get back training results
+      description: see summary
+      parameters:
+        - name: code
+          in: path
+          description: Code that should be executed
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully executed code
+

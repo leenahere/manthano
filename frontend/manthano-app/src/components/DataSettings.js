@@ -39,8 +39,9 @@ class DataSettings extends Component {
     //console.log(this.state.csvArray);
     var locationUrl = 'http://'  + window.location.hostname + ':80/api/data';
     axios.post(locationUrl, {
-      session_id: 1234,
+      session_id: this.props.session,
       data_name: this.state.dataName,
+      delimiter: ",",
       csv: convertArrayToCSV(this.state.csvArray, {header, separator: ';'}),
       scale: this.state.scaler,
       shuffle: this.state.checkboxChecked,
@@ -130,6 +131,7 @@ DataSettings.propTypes = {
   csvArray: PropTypes.array.isRequired,
   loadedcsv: PropTypes.string.isRequired,
   forceUpdate: PropTypes.func.isRequired,
+  session: PropTypes.string.isRequired
 }
 
 export default DataSettings
