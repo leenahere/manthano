@@ -15,7 +15,7 @@ class Workspace extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://'  + window.location.hostname + ':5000/api/csvdata/4')
+    axios.get('http://'  + window.location.hostname + ':80/api/csvdata/4')
     .then(res => this.setState({
         loading: false,
         csvdata: res.data
@@ -26,7 +26,7 @@ class Workspace extends Component {
   }
 
   updateCode = (code) => {
-    var locationUrl = 'http://'  + window.location.hostname + ':5000/api/robotcode/1';
+    var locationUrl = 'http://'  + window.location.hostname + ':80/api/robotcode/1';
     var idrobot = "b14";
     var codestring = code;
 

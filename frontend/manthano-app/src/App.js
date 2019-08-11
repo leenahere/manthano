@@ -39,7 +39,7 @@ class App extends Component {
 
   handleSubmit = () => {
     console.log(this.state.ip);
-    axios.get('http://'  + window.location.hostname + ':5000/api/connect/' + this.state.ip + '/robot/maker')
+    axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/robot/maker')
     .then(res => this.setState({
       connected: (res.data ? connection.SUCCESSFUL : connection.UNUSCCESSFUL)
     }))

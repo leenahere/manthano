@@ -8827,10 +8827,10 @@ react@^16.2.0, react@^16.8.6:
     prop-types "^15.6.2"
     scheduler "^0.13.6"
 
-reactjs-popup@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-1.4.1.tgz#d5ec829a0f94d4480144f8c52f71cc73b7941083"
-  integrity sha512-Q1yLwo4X+on6k/45usKuOdmIkJr5TnL+8LUNtFvNLNmGLEdOnZn1uR57iq36E8RrMJc+d+tSGdgo8uaJKkxNNA==
+reactjs-popup@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-1.4.2.tgz#7ef29df2d87e31ffb0a9c6aae909cbd65d786be7"
+  integrity sha512-fDwRnR00tEFHjJha1cC1sqfH4qc73jQfvcjiOv6/THTE6QQI2DAcdI03iMKYm0ar47MGDLBWXNpU0J8eT22rkA==
 
 read-pkg-up@^2.0.0:
   version "2.0.0"
