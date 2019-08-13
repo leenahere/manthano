@@ -4,10 +4,8 @@ from models import Data, DataSchema
 
 
 def read_relevant(session_id):
-    print("I am reading data from db.")
     data = Data.query.filter(Data.session_id == session_id).all()
     if data is not None:
-        print(data)
         data_schema = DataSchema(many=True)
         return data_schema.dump(data).data
     else:

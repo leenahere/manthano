@@ -39,31 +39,54 @@ paths:
         200:
           description: Successfully read all entries
 
-  /csvdata/{robot_id}:
+  /robotdata/list/{ip}/{user}/{pw}:
     get:
-      operationId: csvdata.list_all_csv
+      operationId: robot_data.read_all
       tags:
-        - csvdata
-      summary: Get a list of all available csv data for robot
-      description: List of available csv data
+        - robotdata
+      description: List of available csv data from robot
       parameters:
-        - name: robot_id
+        - name: ip
           in: path
-          description: Robot name of the code to get from the list
-          type: integer
+          description: IP address given by user
+          type: string
+          required: True
+        - name: user
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: pw
+          in: path
+          description: IP address given by user
+          type: string
           required: True
       responses:
         200:
           description: Successfully read all entries
 
-  /csvdata/{filename}:
+  /robotdata/file/{ip}/{user}/{pw}/{filename}:
     get:
-      operationId: csvdata.get_file
+      operationId: robot_data.read_file
       tags:
-        - csvdata
-      summary: Get one csv file from data
-      description: Get csv file
+        - robotdata
+      description: Get specific csv file from robot
       parameters:
+        - name: ip
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: user
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: pw
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
         - name: filename
           in: path
           description: name of csv file
@@ -73,17 +96,56 @@ paths:
         200:
           description: Successfully read all entries
 
-  /csvvisualization/{filename}:
+  /robotdata/delimiter/{ip}/{user}/{pw}/{filename}:
     get:
-      operationId: csvdata.get_plot
+      operationId: robot_data.get_delimiter
       tags:
-        - csvdata
-      summary: Get plot for a csv file
-      description: Get plot for a csv file
+        - robotdata
+      description: Get correct delimiter for specific csv file
       parameters:
+        - name: ip
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: user
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: pw
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
         - name: filename
           in: path
           description: name of csv file
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
+  /plot/{csv}/{delimiter}/{session}:
+    get:
+      operationId: plot_data.plot
+      tags:
+        - plot_data
+      summary: Get plot for a csv file
+      description: Get plot for a csv file
+      parameters:
+        - name: csv
+          in: path
+          description: csv file
+          type: string
+          required: True
+        - name: delimiter
+          in: path
+          type: string
+          required: True
+        - name: session
+          in: path
           type: string
           required: True
       responses:
@@ -249,3 +311,28 @@ paths:
         200:
           description: Successfully executed code
 
+  /exampledata/list:
+    get:
+      operationId: example_data.read_all
+      tags:
+        - exmaple_data
+      description: get example datasets from scikit learn lib
+      responses:
+        200:
+          description: Successfully executed code
+
+  /exampledata/file/{filename}:
+    get:
+      operationId: example_data.read_file
+      tags:
+        - exmaple_data
+      description: get specific example csv from scikit lib
+      parameters:
+        - name: filename
+          in: path
+          description: name of csv file
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully executed code

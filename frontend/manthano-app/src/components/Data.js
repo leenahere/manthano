@@ -7,16 +7,49 @@ import Button from 'react-bootstrap/Button';
 import {Tab, Tabs, Table} from 'react-bootstrap';
 import DataSettings from './DataSettings';
 import convertCSVToArray from 'convert-csv-to-array';
+import convertArrayToCSV from 'convert-array-to-csv';
 
 class Data extends Component {
   state = {
-    csvlist: this.props.csvdata,
     loadedcsv: "",
     loadedcsvarray: [],
     selectedData: "",
     plot: "",
     plotid: "",
     showPlot: false,
+    exampleCSVList: [],
+    robotCSVList: ['Connect to robot to display data'],
+    connection: this.props.connection,
+    delimiter: ""
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.connection != nextProps.connection) {
+      if (nextProps.connection == 3) {
+        axios.get('http://'  + window.location.hostname + ':80/api/robotdata/list/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw)
+        .then(res => this.setState({
+            robotCSVList: res.data
+          }))
+        .catch(error => {
+          console.log(error);
+        });
+      } else {
+        this.setState({
+          robotCSVList: ['Connect to robot to display data']
+        })
+      }
+    }
+  }
+
+  componentDidMount() {
+    axios.get('http://'  + window.location.hostname + ':80/api/exampledata/list')
+    .then(res => this.setState({
+        exampleCSVList: res.data
+      }))
+    .catch(error => {
+      console.log(error);
+    });
+
   }
 
   handleClick = (e) => {
@@ -32,7 +65,7 @@ class Data extends Component {
       console.log(error);
     });
 
-    axios.get('http://'  + window.location.hostname + ':80/api/csvvisualization/' + e.currentTarget.id, { responseType: 'arraybuffer' })
+    axios.get('http://'  + window.location.hostname + ':80/api/plot/' + e.currentTarget.id + '/' + this.state.delimiter + '/' + this.props.session, { responseType: 'arraybuffer' })
     .then(res => {
       console.log(res.data);
       const base64 = btoa(
@@ -51,16 +84,94 @@ class Data extends Component {
     });
   }
 
+  handleClickExample = (e) => {
+    this.setState({
+        selectedData: e.currentTarget.id,
+    });
+    axios.get('http://'  + window.location.hostname + ':80/api/exampledata/file/' + e.currentTarget.id)
+    .then(res => {
+      this.setState({
+        loadedcsv: res.data.csv,
+        delimiter: res.data.delimiter,
+        loadedcsvarray: convertCSVToArray(res.data.csv, {type: 'array', separator: res.data.delimiter,}),
+      });
+      axios.get('http://'  + window.location.hostname + ':80/api/plot/' + encodeURIComponent(res.data.csv) + '/' + res.data.delimiter + '/' + this.props.session, { responseType: 'arraybuffer' })
+      .then(res => {
+        console.log(res.data);
+        const base64 = btoa(
+            new Uint8Array(res.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          );
+        console.log(base64);
+        this.setState({
+          plot: "data:;base64," + base64,
+          showPlot: true,
+        })})
+      .catch(error => {
+        console.log(error);
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  handleClickRobot = (e) => {
+    this.setState({
+        selectedData: e.currentTarget.id,
+    });
+    axios.all([
+      axios.get('http://'  + window.location.hostname + ':80/api/robotdata/file/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.currentTarget.id),
+      axios.get('http://'  + window.location.hostname + ':80/api/robotdata/delimiter/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.currentTarget.id)
+    ])
+    .then(axios.spread((resCSV, resDel) => {
+      this.setState({
+        loadedcsv: resCSV.data,
+        delimiter: resDel.data,
+        loadedcsvarray: convertCSVToArray(resCSV.data, {type: 'array', separator: resDel.data,}),
+      });
+      axios.get('http://'  + window.location.hostname + ':80/api/plot/' + encodeURIComponent(resCSV.data) + '/' + resDel.data + '/' + this.props.session, { responseType: 'arraybuffer' })
+      .then(res => {
+        console.log(res.data);
+        const base64 = btoa(
+            new Uint8Array(res.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          );
+        console.log(base64);
+        this.setState({
+          plot: "data:;base64," + base64,
+          showPlot: true,
+        })})
+      .catch(error => {
+        console.log(error);
+      });
+    }))
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
   handOver = () => {
     this.props.forceUpdate();
   }
 
   render() {
-    //console.log(this.state.loadedcsvarray);
-    //console.log(this.state.loadedcsv);
-    const data = this.props.csvdata;
-    let list = data.map((obj, id) => {
-      return (<tr id={obj} onClick={this.handleClick} style={{cursor: 'pointer'}}>
+    console.log(this.props);
+    console.log(this.state.delimiter);
+    const exampleData = this.state.exampleCSVList;
+    let exampleDataList = exampleData.map((obj, id) => {
+      return (<tr id={obj.data_name} onClick={this.handleClickExample} style={{cursor: 'pointer'}}>
+                <th>{obj.data_name}</th>
+              </tr>);
+    });
+
+    const robotData = this.state.robotCSVList;
+    let robotDataList = robotData.map((obj, id) => {
+      return (<tr id={obj} onClick={this.handleClickRobot} style={{cursor: 'pointer'}}>
                 <th>{obj}</th>
               </tr>);
     });
@@ -70,7 +181,7 @@ class Data extends Component {
     if (this.state.loadedcsv.length != 0) {
       tablecontent = <CsvToHtmlTable
                         data={this.state.loadedcsv}
-                        csvDelimiter=","
+                        csvDelimiter={this.state.delimiter}
                         tableClassName="table table-striped table-hover"
                       />;
     } else {
@@ -94,12 +205,24 @@ class Data extends Component {
               <thead>
                 <tr>
                   <th>
-                    Data
+                    Example Data
                   </th>
                 </tr>
               </thead>
               <tbody>
-                { list }
+                { exampleDataList }
+              </tbody>
+            </Table>
+            <Table hover>
+              <thead>
+                <tr>
+                  <th>
+                    Robot Data
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                { robotDataList }
               </tbody>
             </Table>
           </div>
@@ -127,9 +250,12 @@ class Data extends Component {
 }
 
 Data.propTypes = {
-  csvdata: PropTypes.array.isRequired,
   forceUpdate: PropTypes.func.isRequired,
-  session: PropTypes.string.isRequired
+  session: PropTypes.string.isRequired,
+  ip: PropTypes.string.isRequired,
+  user: PropTypes.string.isRequired,
+  pw: PropTypes.string.isRequired,
+  connection: PropTypes.string.isRequired
 }
 
 export default Data;

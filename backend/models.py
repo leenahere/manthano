@@ -25,8 +25,25 @@ class Data(db.Model):
     shuffle = db.Column(db.Boolean)
     test = db.Column(db.Integer)
     train = db.Column(db.Integer)
+    features = db.Column(db.ARRAY(db.Integer))
     labels = db.Column(db.ARRAY(db.Integer))
     delimiter = db.Column(db.String)
+
+
+class ExampleData(db.Model):
+    __tablename__ = 'exampledata'
+    data_id = db.Column(db.Integer, primary_key=True)
+    data_name = db.Column(db.String)
+    csv = db.Column(db.String)
+    features = db.Column(db.ARRAY(db.Integer))
+    labels = db.Column(db.ARRAY(db.Integer))
+    delimiter = db.Column(db.String)
+
+
+class ExampleDataSchema(ma.ModelSchema):
+    class Meta:
+        model = ExampleData
+        sqla_session = db.session
 
 
 class DataSchema(ma.ModelSchema):

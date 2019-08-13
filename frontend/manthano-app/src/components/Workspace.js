@@ -9,28 +9,9 @@ import PropTypes from 'prop-types';
 // updates when state and props change
 class Workspace extends Component {
   state = {
-    loading: true,
     pythonCode: '',
-    csvdata: [],
     key: 'home',
     forceBlocklyUpdate: false
-  }
-
-  componentDidMount() {
-    axios.get('http://'  + window.location.hostname + ':80/api/csvdata/4')
-    .then(res => this.setState({
-        loading: false,
-        csvdata: res.data
-      }))
-    .catch(error => {
-      console.log(error);
-    });
-  }
-
-  handleClick = () => {
-    this.setState({
-      forceBlocklyUpdate: !this.forceBlocklyUpdate,
-    })
   }
 
   updateForceUpdate = () => {
@@ -60,31 +41,21 @@ class Workspace extends Component {
   };
 
   render() {
-    console.log(this.props.session);
-    let content;
-
-    if (this.state.loading) {
-      content = <div>Loading...</div>;
-    } else {
-      content =
-      <Tabs
-       id="controlled-tab-example"
-       activeKey={this.state.key}
-       onSelect={key => this.setState({ key })}
-     >
-       <Tab eventKey="home" title="Blockly">
-         <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate } session={this.props.session}/>
-       </Tab>
-       <Tab eventKey="data" title="Data">
-         <Data csvdata={ this.state.csvdata } forceUpdate={this.updateForceUpdate} session={this.props.session}/>
-       </Tab>
-     </Tabs>
-    }
+    console.log(this.props);
     return (
       <div>
-
-        { content }
-        <Button onClick={this.handleClick}>Force Update</Button>
+        <Tabs
+         id="controlled-tab-example"
+         activeKey={this.state.key}
+         onSelect={key => this.setState({ key })}
+       >
+         <Tab eventKey="home" title="Blockly">
+           <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate } session={this.props.session}/>
+         </Tab>
+         <Tab eventKey="data" title="Data">
+           <Data forceUpdate={this.updateForceUpdate} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw} connection={this.props.connection}/>
+         </Tab>
+       </Tabs>
       </div>
     );
   }
@@ -92,7 +63,11 @@ class Workspace extends Component {
 }
 
 Workspace.propTypes = {
-  session: PropTypes.string.isRequired
+  session: PropTypes.string.isRequired,
+  ip: PropTypes.string.isRequired,
+  user: PropTypes.string.isRequired,
+  pw: PropTypes.string.isRequired,
+  connection: PropTypes.string.isRequired
 }
 
 export default Workspace;

@@ -27,6 +27,8 @@ class App extends Component {
     sessionId: "",
     isLoaded: false,
     ip: "",
+    user: "",
+    pw: "",
     status: true,
     // connected auf 0, not yet connected, connected auf 1: could not connect try again, connected auf 2: connected
     connected: connection.NOTHIN,
@@ -34,22 +36,34 @@ class App extends Component {
     correctFormat: false,
   }
 
-  handleChange = (event) => {
+  handleChangeIp = (event) => {
     this.setState({ ip: event.target.value })
     if(event.target.value.match(/^([0-9]{1,3}\.){3}[0-9]{1,3}$/)) {
       this.setState({
-        correctFormat: true
+        correctIpFormat: true
       });
     } else {
       this.setState({
-        correctFormat: false
+        correctIpFormat: false
       });
     }
   }
 
+  handleChangeUser = (event) => {
+    this.setState({
+      user: event.target.value
+    })
+  }
+
+  handleChangePw = (event) => {
+    this.setState({
+      pw: event.target.value
+    })
+  }
+
   handleSubmit = () => {
     console.log(this.state.ip);
-    axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/robot/maker')
+    axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw)
     .then(res => this.setState({
       connected: (res.data ? connection.SUCCESSFUL : connection.UNUSCCESSFUL)
     }))
@@ -102,7 +116,7 @@ class App extends Component {
       return(
       <div>
         <div>
-          <h1>Manthano App Yo</h1>
+          <h1 style={{ fontFamily: 'Liu Jian Mao Cao', fontSize: '80px'}}>&mu;anthano</h1>
           <Popup
             trigger={<Button variant="light">Connect to EV3</Button>}
             modal
@@ -110,17 +124,25 @@ class App extends Component {
             >
             {close => (
               <div>
-                <form> //TODO add user and pw input to form
+                <form>
                   <label>
                     IP address:
-                    <input type="text" value={this.state.ip} onChange={this.handleChange}/>
+                    <input type="text" value={this.state.ip} onChange={this.handleChangeIp}/>
+                  </label>
+                  <label>
+                    User:
+                    <input type="text" value={this.state.user} onChange={this.handleChangeUser}/>
+                  </label>
+                  <label>
+                    Password:
+                    <input type="text" value={this.state.pw} onChange={this.handleChangePw}/>
                   </label>
                   <Button onClick={() => {
                       close();
                       this.handleSubmit();
-                    }} disabled={!this.state.correctFormat} variant="light">Connect</Button>
+                    }} disabled={!(this.state.correctIpFormat && (this.state.user.length > 0) && (this.state.pw.length > 0))} variant="light">Connect</Button>
                   </form>
-                  { this.state.correctFormat
+                  { this.state.correctIpFormat
                     ? <span style={{color: 'green'}}>Valid IP address</span>
                     : <span style={{color: 'red'}}>You need to enter a IP address</span>
                 }
@@ -130,7 +152,7 @@ class App extends Component {
           { ev3Connect }
         </div>
         <div>
-          <Workspace session={this.state.sessionId}/>
+          <Workspace session={this.state.sessionId} ip={this.state.ip} user={this.state.user} pw={this.state.pw} connection={this.state.connected}/>
         </div>
       </div>
     );
