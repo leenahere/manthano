@@ -224,7 +224,7 @@ class Data extends Component {
              <Tab eventKey="plot" title="Plot">
                 {plotcontent}
              </Tab>
-             <Tab eventKey="enhance" title="Enhance and Settings">
+             <Tab eventKey="enhance" title="Preprocessing">
                 <DataSettings forceUpdate={this.handOver} dataList={allData} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw}/>
              </Tab>
            </Tabs>
