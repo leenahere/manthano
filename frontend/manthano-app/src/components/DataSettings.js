@@ -9,14 +9,18 @@ import 'react-dropdown/style.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import convertArrayToCSV from 'convert-array-to-csv';
+import DragDrop from './DataDragNDrop';
 
 
 class DataSettings extends Component {
   state = {
     scaler: "None",
+    selectedData: "",
+    dndList: {},
     //initialfeatures: (this.props.csvarray === undefined || this.props.csvarray.length == 0) ? [] : this.props.csvarray[0],
     //features: (this.props.csvarray === undefined || this.props.csvarray.length == 0) ? [] : this.props.csvarray[0],
     csvArray: this.props.csvArray,
+    dataList: this.props.dataList,
     checkboxChecked: false,
     dataName: "",
     trData: 70,
@@ -29,6 +33,7 @@ class DataSettings extends Component {
         //initialfeatures: (nextProps.csvarray === undefined || nextProps.csvarray.length == 0) ? [] : nextProps.csvarray[0],
         //features: (nextProps.csvarray === undefined || nextProps.csvarray.length == 0) ? [] : nextProps.csvarray[0],
         csvArray: nextProps.csvArray,
+        dataList: nextProps.dataList
       });
   }
 
@@ -83,12 +88,80 @@ class DataSettings extends Component {
       scaler: e.value
     })
   }
+
+  _onSelectData = (e) => {
+    const dropdownList = this.state.dataList;
+    const background = dropdownList.find(item => item.data === e.value);
+    if (background.from === "example") {
+      axios.get('http://'  + window.location.hostname + ':80/api/exampledata/file/' + e.value)
+      .then(res => {
+        const i =  res.data.csv.split("\n")[0];
+        const j = i.split(res.data.delimiter);
+        const l = [];
+        for (var item in j) {
+          const id = "data-" + item;
+          l.push(
+            {id: "data-" + item, name: j[item]}
+          );
+        }
+        var dict1 = {};
+        dict1.key1 = "value1";
+        dict1.key2 = "value2";
+        const dict = {};
+        for (var item in l) {
+          const d = "data-" + item;
+          dict[d] = l[item];
+        }
+        this.setState({
+          selectedData: e.value,
+          dndList: dict
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    } else {
+      axios.all([
+        axios.get('http://'  + window.location.hostname + ':80/api/robotdata/file/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.value),
+        axios.get('http://'  + window.location.hostname + ':80/api/robotdata/delimiter/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.value)
+      ])
+      .then(axios.spread((resCSV, resDel) => {
+        this.setState({
+
+        });
+      }))
+      .catch(error => {
+        console.log(error);
+      });
+    }
+    this.setState({
+      selectedData: e.value
+    })
+  }
+
+  myCallback = (features, labels) => {
+    console.log(features);
+    console.log(labels);
+  }
+
   render() {
+    console.log(this.state);
     //console.log(this.state.checkboxChecked);
     const options = ['None', 'Standard', 'MinMax', 'Normalization'];
     const defaultOption = this.state.scaler;
+    let dataOptions = [];
+    for (var item in this.state.dataList) {
+      dataOptions.push(
+        this.state.dataList[item].data
+      )
+    }
+    const defaultDataOption = dataOptions[0];
     return(
       <div>
+        <div>
+          <label>Select Data</label>
+          <Dropdown options={dataOptions} onChange={this._onSelectData} value={defaultDataOption} placeholder="Select an option" />
+        </div>
       <div>
         <label>Scale Data</label>
         <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />
@@ -121,6 +194,7 @@ class DataSettings extends Component {
           </Button>
         </Form>
       </div>
+      <DragDrop list={this.state.dndList} callbackFromParent={this.myCallback}/>
       </div>
 
     )
@@ -128,10 +202,14 @@ class DataSettings extends Component {
 }
 
 DataSettings.propTypes = {
+  ip: PropTypes.string.isRequired,
+  user: PropTypes.string.isRequired,
+  pw: PropTypes.string.isRequired,
   csvArray: PropTypes.array.isRequired,
   loadedcsv: PropTypes.string.isRequired,
   forceUpdate: PropTypes.func.isRequired,
-  session: PropTypes.string.isRequired
+  session: PropTypes.string.isRequired,
+  dataList: PropTypes.array.isRequired,
 }
 
 export default DataSettings

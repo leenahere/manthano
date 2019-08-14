@@ -28,14 +28,16 @@ class Data extends Component {
       if (nextProps.connection == 3) {
         axios.get('http://'  + window.location.hostname + ':80/api/robotdata/list/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw)
         .then(res => this.setState({
-            robotCSVList: res.data
+            robotCSVList: res.data,
+            connection: nextProps.connection
           }))
         .catch(error => {
           console.log(error);
         });
       } else {
         this.setState({
-          robotCSVList: ['Connect to robot to display data']
+          robotCSVList: ['Connect to robot to display data'],
+          connection: nextProps.connection
         })
       }
     }
@@ -197,6 +199,22 @@ class Data extends Component {
       plotcontent = <h3>no plot, select data</h3>;
     }
 
+    let exampleList = [];
+    for (var item in exampleData) {
+      exampleList.push({
+            from: "example", data: exampleData[item].data_name
+          });
+    }
+
+    let robotList = [];
+    for (var item in this.state.robotCSVList) {
+      robotList.push({
+            from: "robot", data: this.state.robotCSVList[item]
+          });
+    }
+
+    const allData = (this.state.connection === 3) ? exampleList.concat(robotList) : exampleList;
+
     return (
       <div className="container" style={{ marginLeft: 1, marginRight: 1 }}>
         <div className="row">
@@ -239,7 +257,7 @@ class Data extends Component {
                 {plotcontent}
              </Tab>
              <Tab eventKey="enhance" title="Enhance and Settings">
-                <DataSettings forceUpdate={this.handOver} csvArray={this.state.loadedcsvarray} loadedcsv={this.state.loadedcsv} session={this.props.session}/>
+                <DataSettings forceUpdate={this.handOver} csvArray={this.state.loadedcsvarray} loadedcsv={this.state.loadedcsv} dataList={allData} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw}/>
              </Tab>
            </Tabs>
          </div>
