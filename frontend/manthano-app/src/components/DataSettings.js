@@ -25,6 +25,10 @@ class DataSettings extends Component {
     dataName: "",
     trData: 70,
     testData: 30,
+    features: [],
+    labels: [],
+    selectedCSV: "",
+    selectedDel: "",
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,19 +43,35 @@ class DataSettings extends Component {
 
   saveSettings = (e) => {
     e.preventDefault();
-    const header = this.state.csvArray[0];
-    this.state.csvArray.shift();
-    //console.log(this.state.csvArray);
+    const featuresArr = [];
+    for (var item in this.state.features) {
+      const num = this.state.features[item].split("-");
+      featuresArr.push(
+        Number(num[1])
+      )
+    }
+    featuresArr.sort(function(a, b){return a-b});
+    const labelsArr = [];
+    for (var item in this.state.labels) {
+      const num = this.state.labels[item].split("-");
+      labelsArr.push(
+        Number(num[1])
+      )
+    }
+    labelsArr.sort(function(a, b){return a-b});
+
     var locationUrl = 'http://'  + window.location.hostname + ':80/api/data';
     axios.post(locationUrl, {
       session_id: this.props.session,
       data_name: this.state.dataName,
-      delimiter: ",",
-      csv: convertArrayToCSV(this.state.csvArray, {header, separator: ';'}),
+      csv: this.state.selectedCSV,
       scale: this.state.scaler,
       shuffle: this.state.checkboxChecked,
       test: this.state.testData,
-      train: this.state.trData
+      train: this.state.trData,
+      features: featuresArr,
+      labels: labelsArr,
+      delimiter: this.state.selectedDel
     })
     .then(res => console.log(res))
 
@@ -95,6 +115,10 @@ class DataSettings extends Component {
     if (background.from === "example") {
       axios.get('http://'  + window.location.hostname + ':80/api/exampledata/file/' + e.value)
       .then(res => {
+        this.setState({
+          selectedCSV: res.data.csv,
+          selectedDel: res.data.delimiter
+        })
         const i =  res.data.csv.split("\n")[0];
         const j = i.split(res.data.delimiter);
         const l = [];
@@ -104,9 +128,6 @@ class DataSettings extends Component {
             {id: "data-" + item, name: j[item]}
           );
         }
-        var dict1 = {};
-        dict1.key1 = "value1";
-        dict1.key2 = "value2";
         const dict = {};
         for (var item in l) {
           const d = "data-" + item;
@@ -127,7 +148,26 @@ class DataSettings extends Component {
       ])
       .then(axios.spread((resCSV, resDel) => {
         this.setState({
-
+          selectedCSV: resCSV.data,
+          selectedDel: resDel.data
+        })
+        const i =  resCSV.data.split("\n")[0];
+        const j = i.split(resDel.data);
+        const l = [];
+        for (var item in j) {
+          const id = "data-" + item;
+          l.push(
+            {id: "data-" + item, name: j[item]}
+          );
+        }
+        const dict = {};
+        for (var item in l) {
+          const d = "data-" + item;
+          dict[d] = l[item];
+        }
+        this.setState({
+          selectedData: e.value,
+          dndList: dict
         });
       }))
       .catch(error => {
@@ -139,9 +179,11 @@ class DataSettings extends Component {
     })
   }
 
-  myCallback = (features, labels) => {
-    console.log(features);
-    console.log(labels);
+  myCallback = (featureList, labelList) => {
+    this.setState({
+      features: featureList,
+      labels: labelList
+    });
   }
 
   render() {
@@ -155,13 +197,14 @@ class DataSettings extends Component {
         this.state.dataList[item].data
       )
     }
-    const defaultDataOption = dataOptions[0];
     return(
       <div>
-        <div>
-          <label>Select Data</label>
-          <Dropdown options={dataOptions} onChange={this._onSelectData} value={defaultDataOption} placeholder="Select an option" />
-        </div>
+      <div>
+        <label>Data</label>
+        <Dropdown options={dataOptions} onChange={this._onSelectData} value={this.state.selectedData} placeholder="Select an option" />
+      </div>
+      <b><em>All data that isn't dragged to either the features or labels column will be dropped.</em></b>
+      <DragDrop list={this.state.dndList} callbackFromParent={this.myCallback}/>
       <div>
         <label>Scale Data</label>
         <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />
@@ -194,7 +237,6 @@ class DataSettings extends Component {
           </Button>
         </Form>
       </div>
-      <DragDrop list={this.state.dndList} callbackFromParent={this.myCallback}/>
       </div>
 
     )

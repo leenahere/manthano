@@ -78,7 +78,6 @@ class DataDragNDrop extends Component {
 
   onDragEnd = result => {
     const {destination, source, draggableId} = result;
-    console.log(result);
     if (!destination) {
       return;
     }
@@ -92,7 +91,6 @@ class DataDragNDrop extends Component {
     const end = this.state.columns[destination.droppableId];
 
     if (begin === end) {
-      console.log("end and begin equal");
       const newDataIds = Array.from(begin.dataId);
       newDataIds.splice(source.index, 1);
       newDataIds.splice(destination.index, 0, draggableId);
@@ -124,9 +122,6 @@ class DataDragNDrop extends Component {
       ...end,
       dataId: endDataIds
     };
-
-    console.log(newBegin);
-    console.log(newEnd);
 
     const newState = {
       ...this.state,
