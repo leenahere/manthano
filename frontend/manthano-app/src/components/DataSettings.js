@@ -17,9 +17,6 @@ class DataSettings extends Component {
     scaler: "None",
     selectedData: "",
     dndList: {},
-    //initialfeatures: (this.props.csvarray === undefined || this.props.csvarray.length == 0) ? [] : this.props.csvarray[0],
-    //features: (this.props.csvarray === undefined || this.props.csvarray.length == 0) ? [] : this.props.csvarray[0],
-    csvArray: this.props.csvArray,
     dataList: this.props.dataList,
     checkboxChecked: false,
     dataName: "",
@@ -32,11 +29,7 @@ class DataSettings extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-      //if (nextProps.)
       this.setState({
-        //initialfeatures: (nextProps.csvarray === undefined || nextProps.csvarray.length == 0) ? [] : nextProps.csvarray[0],
-        //features: (nextProps.csvarray === undefined || nextProps.csvarray.length == 0) ? [] : nextProps.csvarray[0],
-        csvArray: nextProps.csvArray,
         dataList: nextProps.dataList
       });
   }
@@ -76,12 +69,6 @@ class DataSettings extends Component {
     .then(res => console.log(res))
 
     this.props.forceUpdate();
-
-    //console.log(this.state.checkboxChecked);
-    //console.log(this.state.dataName);
-    //console.log(this.state.scaler);
-    //console.log(this.state.trData);
-    //console.log(this.state.testData);
   }
 
   handleChange = () => {
@@ -247,8 +234,6 @@ DataSettings.propTypes = {
   ip: PropTypes.string.isRequired,
   user: PropTypes.string.isRequired,
   pw: PropTypes.string.isRequired,
-  csvArray: PropTypes.array.isRequired,
-  loadedcsv: PropTypes.string.isRequired,
   forceUpdate: PropTypes.func.isRequired,
   session: PropTypes.string.isRequired,
   dataList: PropTypes.array.isRequired,

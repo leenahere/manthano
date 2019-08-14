@@ -11,8 +11,8 @@ import convertArrayToCSV from 'convert-array-to-csv';
 
 class Data extends Component {
   state = {
-    loadedcsv: "",
-    loadedcsvarray: [],
+    loadedCSV: "",
+    loadedCSVArray: [],
     selectedData: "",
     plot: "",
     plotid: "",
@@ -54,38 +54,6 @@ class Data extends Component {
 
   }
 
-  handleClick = (e) => {
-    this.setState({
-        selectedData: e.currentTarget.id,
-    });
-    axios.get('http://'  + window.location.hostname + ':80/api/csvdata/' + e.currentTarget.id)
-    .then(res => this.setState({
-        loadedcsv: res.data,
-        loadedcsvarray: convertCSVToArray(res.data, {type: 'array', separator: ','}),
-      }))
-    .catch(error => {
-      console.log(error);
-    });
-
-    axios.get('http://'  + window.location.hostname + ':80/api/plot/' + e.currentTarget.id + '/' + this.state.delimiter + '/' + this.props.session, { responseType: 'arraybuffer' })
-    .then(res => {
-      console.log(res.data);
-      const base64 = btoa(
-          new Uint8Array(res.data).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            '',
-          ),
-        );
-      console.log(base64);
-      this.setState({
-        plot: "data:;base64," + base64,
-        showPlot: true,
-      })})
-    .catch(error => {
-      console.log(error);
-    });
-  }
-
   handleClickExample = (e) => {
     this.setState({
         selectedData: e.currentTarget.id,
@@ -93,9 +61,9 @@ class Data extends Component {
     axios.get('http://'  + window.location.hostname + ':80/api/exampledata/file/' + e.currentTarget.id)
     .then(res => {
       this.setState({
-        loadedcsv: res.data.csv,
+        loadedCSV: res.data.csv,
         delimiter: res.data.delimiter,
-        loadedcsvarray: convertCSVToArray(res.data.csv, {type: 'array', separator: res.data.delimiter,}),
+        loadedCSVArray: convertCSVToArray(res.data.csv, {type: 'array', separator: res.data.delimiter,}),
       });
       axios.get('http://'  + window.location.hostname + ':80/api/plot/' + encodeURIComponent(res.data.csv) + '/' + res.data.delimiter + '/' + this.props.session, { responseType: 'arraybuffer' })
       .then(res => {
@@ -130,9 +98,9 @@ class Data extends Component {
     ])
     .then(axios.spread((resCSV, resDel) => {
       this.setState({
-        loadedcsv: resCSV.data,
+        loadedCSV: resCSV.data,
         delimiter: resDel.data,
-        loadedcsvarray: convertCSVToArray(resCSV.data, {type: 'array', separator: resDel.data,}),
+        loadedCSVArray: convertCSVToArray(resCSV.data, {type: 'array', separator: resDel.data,}),
       });
       axios.get('http://'  + window.location.hostname + ':80/api/plot/' + encodeURIComponent(resCSV.data) + '/' + resDel.data + '/' + this.props.session, { responseType: 'arraybuffer' })
       .then(res => {
@@ -180,9 +148,9 @@ class Data extends Component {
 
     let tablecontent;
 
-    if (this.state.loadedcsv.length != 0) {
+    if (this.state.loadedCSV.length != 0) {
       tablecontent = <CsvToHtmlTable
-                        data={this.state.loadedcsv}
+                        data={this.state.loadedCSV}
                         csvDelimiter={this.state.delimiter}
                         tableClassName="table table-striped table-hover"
                       />;
@@ -192,7 +160,7 @@ class Data extends Component {
 
     let plotcontent;
 
-    if (this.state.loadedcsv.length != 0) {
+    if (this.state.loadedCSV.length != 0) {
       // add key to DataVisualization to force a re-render, so that plots don't stack up
       plotcontent = <DataVisualization plot={this.state.plot} plotid={this.state.plotid}/>;
     } else {
@@ -257,7 +225,7 @@ class Data extends Component {
                 {plotcontent}
              </Tab>
              <Tab eventKey="enhance" title="Enhance and Settings">
-                <DataSettings forceUpdate={this.handOver} csvArray={this.state.loadedcsvarray} loadedcsv={this.state.loadedcsv} dataList={allData} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw}/>
+                <DataSettings forceUpdate={this.handOver} dataList={allData} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw}/>
              </Tab>
            </Tabs>
          </div>
