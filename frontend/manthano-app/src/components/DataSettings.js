@@ -36,23 +36,6 @@ class DataSettings extends Component {
 
   saveSettings = (e) => {
     e.preventDefault();
-    const featuresArr = [];
-    for (var item in this.state.features) {
-      const num = this.state.features[item].split("-");
-      featuresArr.push(
-        Number(num[1])
-      )
-    }
-    featuresArr.sort(function(a, b){return a-b});
-    const labelsArr = [];
-    for (var item in this.state.labels) {
-      const num = this.state.labels[item].split("-");
-      labelsArr.push(
-        Number(num[1])
-      )
-    }
-    labelsArr.sort(function(a, b){return a-b});
-
     var locationUrl = 'http://'  + window.location.hostname + ':80/api/data';
     axios.post(locationUrl, {
       session_id: this.props.session,
@@ -62,8 +45,8 @@ class DataSettings extends Component {
       shuffle: this.state.checkboxChecked,
       test: this.state.testData,
       train: this.state.trData,
-      features: featuresArr,
-      labels: labelsArr,
+      features: this.state.features,
+      labels: this.state.labels,
       delimiter: this.state.selectedDel
     })
     .then(res => console.log(res))
@@ -188,7 +171,7 @@ class DataSettings extends Component {
       <div>
       <div>
         <label>Data</label>
-        <Dropdown options={dataOptions} onChange={this._onSelectData} value={this.state.selectedData} placeholder="Select an option" />
+        <Dropdown options={dataOptions} onChange={this._onSelectData} value={this.state.selectedData} placeholder="Select a dataset" />
       </div>
       <b><em>All data that isn't dragged to either the features or labels column will be dropped.</em></b>
       <DragDrop list={this.state.dndList} callbackFromParent={this.myCallback}/>

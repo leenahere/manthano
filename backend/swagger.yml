@@ -127,7 +127,7 @@ paths:
         200:
           description: Successfully read all entries
 
-  /plot/{csv}/{delimiter}/{session}:
+  /plot/{csv}/{delimiter}/{session}/{features}/{labels}/{problem}:
     get:
       operationId: plot_data.plot
       tags:
@@ -145,6 +145,18 @@ paths:
           type: string
           required: True
         - name: session
+          in: path
+          type: string
+          required: True
+        - name: features
+          in: path
+          type: string
+          required: True
+        - name: labels
+          in: path
+          type: string
+          required: True
+        - name: problem
           in: path
           type: string
           required: True

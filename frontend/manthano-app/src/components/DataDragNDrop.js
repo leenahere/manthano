@@ -21,12 +21,12 @@ class DataDragNDrop extends Component {
   state = {
     features: [],
     labels: [],
-    data: {},
+    data: this.props.list,
     columns: {
       'column-1': {
         id: 'column-1',
         title: "Data",
-        dataId: []
+        dataId: this.arrayForDataId(this.props.list),
       },
       'column-2': {
         id: 'column-2',
@@ -42,22 +42,27 @@ class DataDragNDrop extends Component {
     columnsort: ['column-1', 'column-2', 'column-3']
   };
 
+  arrayForDataId(list) {
+    const arr = [];
+    for (var item in list) {
+      arr.push(
+        list[item].id
+      );
+    }
+    return arr;
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.list != nextProps.list) {
-      const arr = [];
-      for (var item in nextProps.list) {
-        arr.push(
-          nextProps.list[item].id
-        );
-      }
       const newState = {
-        ...this.state,
+        features: [],
+        labels: [],
         data: nextProps.list,
         columns: {
           'column-1': {
             id: 'column-1',
             title: "Data",
-            dataId: arr
+            dataId: this.arrayForDataId(nextProps.list),
           },
           'column-2': {
             id: 'column-2',
@@ -132,10 +137,28 @@ class DataDragNDrop extends Component {
       },
     };
     this.setState(newState);
-    this.props.callbackFromParent(newState.columns['column-2'].dataId, newState.columns['column-3'].dataId);
+    const featuresArr = [];
+    for (var item in newState.columns['column-2'].dataId) {
+      const num = newState.columns['column-2'].dataId[item].split("-");
+      featuresArr.push(
+        Number(num[1])
+      )
+    }
+    featuresArr.sort(function(a, b){return a-b});
+    const labelsArr = [];
+    for (var item in newState.columns['column-3'].dataId) {
+      const num = newState.columns['column-3'].dataId[item].split("-");
+      labelsArr.push(
+        Number(num[1])
+      )
+    }
+    labelsArr.sort(function(a, b){return a-b});
+    this.props.callbackFromParent(featuresArr, labelsArr);
   };
 
   render() {
+    console.log(this.props);
+    console.log(this.state.data);
     return(
     <div>
       <DragDropContext onDragEnd={this.onDragEnd}>

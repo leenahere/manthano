@@ -4,6 +4,8 @@ import Blockly from 'node-blockly/browser';
 import BlocklyDrawer, { Block, Category } from 'react-blockly-drawer';
 import Button from 'react-bootstrap/Button';
 import * as blocks from './MLClassificationBlocks';
+import axios from 'axios';
+import Loader from 'react-loader-spinner';
 
 // updates when state and props change
 class BlocklyWorkspace extends Component {
@@ -18,12 +20,15 @@ class BlocklyWorkspace extends Component {
 
   state = {
     pythonCode: this.props.pythonCode,
+    loading: false,
+    resultData: "",
   }
 
   handleChange = (code, workspace) => {
     this.setState({
       pythonCode: code,
     });
+    this.props.updateCode(code);
   }
 
   handleClick = () => {
@@ -31,11 +36,30 @@ class BlocklyWorkspace extends Component {
     this.props.updateCode(code);
   }
 
+  handleClickRun = () => {
+    var code = this.state.pythonCode;
+    var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/'+ encodeURIComponent(code);
+    this.setState({ loading: true}, () => {
+      axios.get(locationUrl)
+      .then(res => {
+        this.setState({
+          loading: false,
+          resultData: res.data,
+        });
+        console.log(res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    });
+  }
+
   render() {
+    console.log("it renders");
     Blockly.HSV_SATURATION = 0.9;
     Blockly.HSV_VALUE = 0.9;
     return (
-        <div>
+      <div>
           <BlocklyDrawer
             language={Blockly.Python}
             tools={[blocks.kNearNeigh, blocks.logRegression, blocks.naiveBayes, blocks.svm, blocks.linRegression, blocks.polyRegression, blocks.decisionTree, blocks.mlp, blocks.dataBlock, blocks.list]}
@@ -71,8 +95,8 @@ class BlocklyWorkspace extends Component {
               <Block type="math_number" />
             </Category>
           </BlocklyDrawer>
-          <Button variant="light" onClick={this.handleClick}>Click me!</Button>
-        </div>
+        <Button variant="light" onClick={this.handleClick}>Click me!</Button>
+      </div>
     );
   }
 
@@ -82,7 +106,7 @@ BlocklyWorkspace.propTypes = {
   updateCode: PropTypes.func.isRequired,
   pythonCode: PropTypes.string.isRequired,
   forceUpdate: PropTypes.bool.isRequired,
-  session: PropTypes.string.isRequired
+  session: PropTypes.string.isRequired,
 }
 
 export default BlocklyWorkspace;

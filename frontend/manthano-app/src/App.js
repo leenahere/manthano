@@ -116,7 +116,7 @@ class App extends Component {
       return(
       <div>
         <div>
-          <h1 style={{ fontFamily: 'Liu Jian Mao Cao', fontSize: '80px'}}>&mu;anthano</h1>
+          <h1 style={{ fontFamily: 'Liu Jian Mao Cao', fontSize: '80px'}}>&mu;anth&aacute;n&#333;</h1>
           <Popup
             trigger={<Button variant="light">Connect to EV3</Button>}
             modal

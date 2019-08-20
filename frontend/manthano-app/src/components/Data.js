@@ -20,7 +20,8 @@ class Data extends Component {
     exampleCSVList: [],
     robotCSVList: ['Connect to robot to display data'],
     connection: this.props.connection,
-    delimiter: ""
+    delimiter: "",
+    dndList: {}
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,27 +61,25 @@ class Data extends Component {
     });
     axios.get('http://'  + window.location.hostname + ':80/api/exampledata/file/' + e.currentTarget.id)
     .then(res => {
+      const i =  res.data.csv.split("\n")[0];
+      const j = i.split(res.data.delimiter);
+      const l = [];
+      for (var item in j) {
+        const id = "data-" + item;
+        l.push(
+          {id: "data-" + item, name: j[item]}
+        );
+      }
+      const dict = {};
+      for (var item in l) {
+        const d = "data-" + item;
+        dict[d] = l[item];
+      }
       this.setState({
         loadedCSV: res.data.csv,
         delimiter: res.data.delimiter,
         loadedCSVArray: convertCSVToArray(res.data.csv, {type: 'array', separator: res.data.delimiter,}),
-      });
-      axios.get('http://'  + window.location.hostname + ':80/api/plot/' + encodeURIComponent(res.data.csv) + '/' + res.data.delimiter + '/' + this.props.session, { responseType: 'arraybuffer' })
-      .then(res => {
-        console.log(res.data);
-        const base64 = btoa(
-            new Uint8Array(res.data).reduce(
-              (data, byte) => data + String.fromCharCode(byte),
-              '',
-            ),
-          );
-        console.log(base64);
-        this.setState({
-          plot: "data:;base64," + base64,
-          showPlot: true,
-        })})
-      .catch(error => {
-        console.log(error);
+        dndList: dict
       });
     })
     .catch(error => {
@@ -97,29 +96,27 @@ class Data extends Component {
       axios.get('http://'  + window.location.hostname + ':80/api/robotdata/delimiter/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.currentTarget.id)
     ])
     .then(axios.spread((resCSV, resDel) => {
+      const i =  resCSV.data.split("\n")[0];
+      const j = i.split(resDel.data);
+      const l = [];
+      for (var item in j) {
+        const id = "data-" + item;
+        l.push(
+          {id: "data-" + item, name: j[item]}
+        );
+      }
+      const dict = {};
+      for (var item in l) {
+        const d = "data-" + item;
+        dict[d] = l[item];
+      }
       this.setState({
         loadedCSV: resCSV.data,
         delimiter: resDel.data,
         loadedCSVArray: convertCSVToArray(resCSV.data, {type: 'array', separator: resDel.data,}),
+        dndList: dict,
       });
-      axios.get('http://'  + window.location.hostname + ':80/api/plot/' + encodeURIComponent(resCSV.data) + '/' + resDel.data + '/' + this.props.session, { responseType: 'arraybuffer' })
-      .then(res => {
-        console.log(res.data);
-        const base64 = btoa(
-            new Uint8Array(res.data).reduce(
-              (data, byte) => data + String.fromCharCode(byte),
-              '',
-            ),
-          );
-        console.log(base64);
-        this.setState({
-          plot: "data:;base64," + base64,
-          showPlot: true,
-        })})
-      .catch(error => {
-        console.log(error);
-      });
-    }))
+      }))
     .catch(error => {
       console.log(error);
     });
@@ -158,15 +155,6 @@ class Data extends Component {
       tablecontent = <h3>Select data to display</h3>;
     }
 
-    let plotcontent;
-
-    if (this.state.loadedCSV.length != 0) {
-      // add key to DataVisualization to force a re-render, so that plots don't stack up
-      plotcontent = <DataVisualization plot={this.state.plot} plotid={this.state.plotid}/>;
-    } else {
-      plotcontent = <h3>no plot, select data</h3>;
-    }
-
     let exampleList = [];
     for (var item in exampleData) {
       exampleList.push({
@@ -185,8 +173,8 @@ class Data extends Component {
 
     return (
       <div className="container" style={{ marginLeft: 1, marginRight: 1 }}>
-        <div className="row">
-          <div className="col-xs-2">
+        <div className="row" style={{ width: '100vw'}}>
+          <div className="col-2">
             <Table hover>
               <thead>
                 <tr>
@@ -212,20 +200,26 @@ class Data extends Component {
               </tbody>
             </Table>
           </div>
-          <div className="col-md-10">
+          <div className="col-10">
             <Tabs
              id="controlled-tab-example"
              activeKey={this.state.key}
              onSelect={key => this.setState({ key })}
            >
              <Tab eventKey="home" title="Table">
-                {tablecontent}
+                 <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+                     {tablecontent}
+                 </div>
              </Tab>
              <Tab eventKey="plot" title="Plot">
-                {plotcontent}
+                 <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+                     <DataVisualization csv={this.state.loadedCSV} list={this.state.dndList} delimiter={this.state.delimiter} session={this.props.session} />
+                 </div>
              </Tab>
              <Tab eventKey="enhance" title="Preprocessing">
-                <DataSettings forceUpdate={this.handOver} dataList={allData} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw}/>
+                <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+                 <DataSettings forceUpdate={this.handOver} dataList={allData} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw}/>
+                </div>
              </Tab>
            </Tabs>
          </div>
