@@ -34,6 +34,8 @@ def plot(csv, delimiter, session, features, labels, problem):
         pairplot = sns.pairplot(data[data.columns[combined]])
 
     plt.savefig('./plots/plot'+ session + '.png')
+
+    plt.clf()
     image_path = './plots/plot'+ session + '.png'
     print(os.path.isfile(image_path))
     return send_file(image_path, mimetype='image/png')
