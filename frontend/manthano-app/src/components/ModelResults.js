@@ -17,13 +17,20 @@ class ModelResults extends Component {
     var code = this.props.code;
     var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/'+ encodeURIComponent(code);
     this.setState({ loading: true}, () => {
-      axios.get(locationUrl)
+      axios.get(locationUrl, { responseType: 'arraybuffer' })
       .then(res => {
+        console.log(res.data);
+        const base64 = btoa(
+          new Uint8Array(res.data).reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            '',
+          ),
+        );
+        console.log(base64);
         this.setState({
           loading: false,
-          resultData: res.data,
+          resultData: "data:;base64," + base64,
         });
-        console.log(res.data);
       })
       .catch(error => {
         console.log(error);
@@ -37,7 +44,7 @@ class ModelResults extends Component {
     return (
       <div>
         <Button variant="light" onClick={this.handleClickRun}>Run Model</Button>
-        {this.state.loading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : <span>{ this.state.resultData }</span>}
+        {this.state.loading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : <img style={{ height: '100%', width: '100%'}} src={this.state.resultData}/>}
       </div>
     );
   }

@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import Blockly from 'node-blockly/browser';
 import BlocklyDrawer, { Block, Category } from 'react-blockly-drawer';
 import Button from 'react-bootstrap/Button';
-import * as blocks from './MLClassificationBlocks';
+import * as classblocks from './MLClassificationBlocks';
+import * as helperblocks from './helperBlocks';
+import * as regblocks from './MLRegressionBlocks';
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
 
@@ -61,8 +63,9 @@ class BlocklyWorkspace extends Component {
     return (
       <div>
           <BlocklyDrawer
+            style={{ height: 'calc(100vh - 210px)'}}
             language={Blockly.Python}
-            tools={[blocks.kNearNeigh, blocks.logRegression, blocks.naiveBayes, blocks.svm, blocks.linRegression, blocks.polyRegression, blocks.decisionTree, blocks.mlp, blocks.dataBlock, blocks.list]}
+            tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, classblocks.mlp, helperblocks.dataBlock, helperblocks.list]}
             onChange={this.handleChange}
             appearance={
               {
@@ -95,7 +98,6 @@ class BlocklyWorkspace extends Component {
               <Block type="math_number" />
             </Category>
           </BlocklyDrawer>
-        <Button variant="light" onClick={this.handleClick}>Click me!</Button>
       </div>
     );
   }

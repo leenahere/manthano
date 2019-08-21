@@ -58,11 +58,11 @@ class Workspace extends Component {
          onSelect={key => this.setState({ key })}
        >
          <Tab eventKey="home" title="Blockly">
-           <div style={{display: 'flex'}}>
-             <div style={{ display: 'flex', flexDirection: 'column', width: '65%' }}>
+           <div style={{display: 'flex', height: 'calc(100vh - 210px)', width: '100vw'}}>
+             <div style={{ display: 'flex', flexDirection: 'column', width: '55%' }}>
                <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate } session={this.props.session}/>
              </div>
-             <div style={{ display: 'flex', flexDirection: 'column', width: '35%' }}>
+             <div style={{ display: 'flex', flexDirection: 'column', width: '45%' }}>
                <ModelResults code={ this.state.pythonCode } />
              </div>
            </div>

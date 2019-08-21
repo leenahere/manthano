@@ -1,93 +1,12 @@
 import Blockly from 'node-blockly/browser';
 import axios from 'axios';
 
-var testTrainDropdownList = [["X", "X"], ["y", "y"], ["X_train", "X_train"], ["y_train", "y_train"], ["X_test", "X_test"], ["y_test", "y_test"]]
-
 const classificationColor = 56;
 const regressionColor = 120;
 const reinforcementColor = 140;
 const neuralNetColor = 320;
 const dataColor = 30;
 const listColor = 190;
-
-function getListsForDataBlock(dataDropdownList) {
-  axios.get('http://'  + window.location.hostname + ':80/api/data/' + localStorage.getItem('sessionID'))
-  .then(res => { for (var obj in res.data) {
-    dataDropdownList.push([res.data[obj].data_name, res.data[obj].data_name])
-  }
-  console.log(dataDropdownList);
-})
-  .catch(error => {
-    console.log(error);
-  });
-  return dataDropdownList;
-}
-
-export const linRegression = {
-  name: 'linRegression',
-  category: 'Regression',
-  block: {
-    init: function () {
-      this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train linear regression");
-      this.appendDummyInput()
-        .appendField('multinomial output')
-        .appendField(new Blockly.FieldCheckbox(false), 'multiOutput');
-      this.appendValueInput("features")
-        .setCheck("data")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Features");
-      this.appendValueInput("labels")
-        .setCheck("data")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Labels");
-      this.setInputsInline(false);
-      this.setColour(regressionColor);
-      this.setTooltip("");
-      this.setHelpUrl("");
-    },
-  },
-  generator: (block) => {
-    var code = 'something';
-    return code;
-  },
-}
-
-export const polyRegression = {
-  name: 'polyRegression',
-  category: 'Regression',
-  block: {
-    init: function () {
-      this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train polynomial regression");
-      this.appendDummyInput()
-        .appendField('multinomial output')
-        .appendField(new Blockly.FieldCheckbox(false), 'multiOutput');
-      this.appendValueInput("degree")
-        .setCheck("Number")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("degree");
-      this.appendValueInput("features")
-        .setCheck("data")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Features");
-      this.appendValueInput("labels")
-        .setCheck("data")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Labels");
-      this.setInputsInline(false);
-      this.setColour(regressionColor);
-      this.setTooltip("");
-      this.setHelpUrl("");
-    },
-  },
-  generator: (block) => {
-    var code = 'something';
-    return code;
-  },
-}
 
 export const logRegression = {
   name: 'logRegression',
@@ -100,11 +19,11 @@ export const logRegression = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Problem")
-        .appendField(new Blockly.FieldDropdown([["multinomial","multProblem"], ["binary", "binaryProblem"]]), "problem");
+        .appendField(new Blockly.FieldDropdown([["multinomial","multinomial"], ["binary", "ovr"]]), "problem");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Solver")
-        .appendField(new Blockly.FieldDropdown([["lbfgs","lbfgsSolver"], ["liblinear", "liblinearSolver"], ["newtoncg", "newtoncgSolver"], ["saga", "sagaSolver"]]), "solver");
+        .appendField(new Blockly.FieldDropdown([["lbfgs","lbfgs"], ["liblinear", "liblinear"], ["newtoncg", "newton-cg"], ["saga", "saga"]]), "solver");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -120,7 +39,15 @@ export const logRegression = {
     },
   },
   generator: (block) => {
-    var code = 'something';
+    var problemValue = block.getFieldValue('problem');
+    var solverValue = block.getFieldValue('solver');
+    var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
+    var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
+    var featuresSplit = featuresValue.split("\n");
+    var labelsSplit = labelsValue.split("\n");
+    var problemString = 'multi_class=\'' + problemValue + '\', ';
+    var solverString = 'solver=\'' + solverValue + '\', ';
+    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = LogisticRegression(' + problemString + solverString + ')';
     return code;
   },
 };
@@ -136,7 +63,7 @@ export const naiveBayes = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Type")
-        .appendField(new Blockly.FieldDropdown([["Gaussian","gaussianType"], ["Multinomial", "nultinomialType"], ["Complement", "complementType"], ["Bernoulli", "bernoulliType"]]), "type");
+        .appendField(new Blockly.FieldDropdown([["Gaussian","GaussianNB()"], ["Multinomial", "MultinomialNB()"], ["Complement", "ComplementNB()"], ["Bernoulli", "BernoulliNB()"]]), "type");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -152,7 +79,12 @@ export const naiveBayes = {
     },
   },
   generator: (block) => {
-    var code = 'something';
+    var typeValue = block.getFieldValue('type');
+    var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
+    var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
+    var featuresSplit = featuresValue.split("\n");
+    var labelsSplit = labelsValue.split("\n");
+    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel =' + typeValue;
     return code;
   },
 };
@@ -168,7 +100,7 @@ export const svm = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Kernel")
-        .appendField(new Blockly.FieldDropdown([["linear","linearKernel"], ["poly", "polyKernel"], ["rbf", "rbfKernel"], ["sigmoid", "sigmoidKernel"]]), "kernel");
+        .appendField(new Blockly.FieldDropdown([["linear","linear"], ["poly", "poly"], ["rbf", "rbf"], ["sigmoid", "sigmoid"]]), "kernel");
       this.appendValueInput("degreePoly")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -188,7 +120,15 @@ export const svm = {
     },
   },
   generator: (block) => {
-    var code = 'something';
+    var kernelValue = block.getFieldValue('kernel');
+    var degreeValue = Blockly.Python.valueToCode(block, 'degreePoly', Blockly.Python.ORDER_ATOMIC);
+    var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
+    var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
+    var featuresSplit = featuresValue.split("\n");
+    var labelsSplit = labelsValue.split("\n");
+    var kernelString = 'kernel=\'' + kernelValue + '\', ';
+    var degreeString = 'degree=' + degreeValue;
+    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + degreeString + ', gamma=\'auto\')';
     return code;
   },
 };
@@ -204,11 +144,11 @@ export const decisionTree = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("criterion")
-        .appendField(new Blockly.FieldDropdown([["gini","giniCriterion"], ["entropy", "entropyCriterion"]]), "criterion");
+        .appendField(new Blockly.FieldDropdown([["gini","gini"], ["entropy", "entropy"]]), "criterion");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("splitter")
-        .appendField(new Blockly.FieldDropdown([["best","bestSplitter"], ["random", "randomSplitter"]]), "splitter");
+        .appendField(new Blockly.FieldDropdown([["best","best"], ["random", "random"]]), "splitter");
       this.appendValueInput("depth")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -228,7 +168,17 @@ export const decisionTree = {
     },
   },
   generator: (block) => {
-    var code = 'something';
+    var criterionValue = block.getFieldValue('criterion');
+    var splitterValue = block.getFieldValue('splitter');
+    var depthValue = Blockly.Python.valueToCode(block, 'depth', Blockly.Python.ORDER_ATOMIC);
+    var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
+    var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
+    var featuresSplit = featuresValue.split("\n");
+    var labelsSplit = labelsValue.split("\n");
+    var criterionString = 'criterion=\'' + criterionValue + '\', ';
+    var splitterString = 'splitter=\'' + splitterValue + '\', ';
+    var depthString = 'max_depth=' + depthValue;
+    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = DecisionTreeClassifier(' + criterionString + splitterString + depthString + ')';
     return code;
   },
 };
@@ -244,21 +194,21 @@ export const kNearNeigh = {
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("Distance metric")
-          .appendField(new Blockly.FieldDropdown([["euclidean","euclideanDistance"], ["manhattan","manhattanDistance"], ["chebyshev","chebyshevDistance"], ["minkowski","minkowskiDistance"]]), "distance");
+          .appendField(new Blockly.FieldDropdown([["euclidean","euclidean"], ["manhattan","manhattan"], ["chebyshev","chebyshev"], ["minkowski","minkowski"]]), "distance");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("Weights")
-          .appendField(new Blockly.FieldDropdown([["uniform", "uniformWeights"], ["distance", "distanceWeights"]]), "weights");
+          .appendField(new Blockly.FieldDropdown([["uniform", "uniform"], ["distance", "distance"]]), "weights");
       this.appendValueInput("k")
           .setCheck("Number")
           .setAlign(Blockly.ALIGN_LEFT)
           .appendField("Number of Neighbors to consider");
       this.appendValueInput("features")
-          .setCheck("Data")
+          .setCheck("data")
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("Features");
       this.appendValueInput("labels")
-          .setCheck("Data")
+          .setCheck("data")
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("Labels");
       this.setInputsInline(false);
@@ -268,150 +218,20 @@ export const kNearNeigh = {
     },
   },
   generator: (block) => {
-    // Print statement.
-    var value_text = Blockly.Python.valueToCode(block, 'TEXT', Blockly.Python.ORDER_ATOMIC);
-    //const code = 'print(' + msg + ')\n';
-    var code = 'print' + value_text
-    //return [code, Blockly.Python.ORDER_MEMBER];
+    var distanceValue = block.getFieldValue('distance');
+    var weightsValue = block.getFieldValue('weights');
+    var kValue = Blockly.Python.valueToCode(block, 'k', Blockly.Python.ORDER_ATOMIC);
+    var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
+    var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
+    var featuresSplit = featuresValue.split("\n");
+    var labelsSplit = labelsValue.split("\n");
+    var kString = 'n_neighbors=' + kValue + ', ';
+    var distanceString = 'metric=\'' + distanceValue + '\', ';
+    var weightsString = 'weights=\'' + weightsValue + '\'';
+    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = KNeighborsClassifier(' + kString + distanceString + weightsString + ')';
     return code;
   },
 };
-
-export const list = {
-  name: 'list',
-  category: 'List',
-  block: {
-    /**
-    * Block for creating a list with any number of elements of any type.
-    * @this Blockly.Block
-    */
-    init: function() {
-      this.setColour(listColor);
-      this.itemCount_ = 3;
-      this.updateShape_();
-      this.setOutput(true, 'list');
-      this.setMutator(new Blockly.Mutator(['lists_create_with_item']));
-    },
-    /**
-    * Create XML to represent list inputs.
-    * @return {!Element} XML storage element.
-    * @this Blockly.Block
-    */
-    mutationToDom: function() {
-      var container = document.createElement('mutation');
-      container.setAttribute('items', this.itemCount_);
-      return container;
-    },
-    /**
-    * Parse XML to restore the list inputs.
-    * @param {!Element} xmlElement XML storage element.
-    * @this Blockly.Block
-    */
-    domToMutation: function(xmlElement) {
-      this.itemCount_ = parseInt(xmlElement.getAttribute('items'), 10);
-      this.updateShape_();
-    },
-    /**
-    * Populate the mutator's dialog with this block's components.
-    * @param {!Blockly.Workspace} workspace Mutator's workspace.
-    * @return {!Blockly.Block} Root block in mutator.
-    * @this Blockly.Block
-    */
-    decompose: function(workspace) {
-      var containerBlock = workspace.newBlock('lists_create_with_container');
-      containerBlock.initSvg();
-      var connection = containerBlock.getInput('STACK').connection;
-      for (var i = 0; i < this.itemCount_; i++) {
-        var itemBlock = workspace.newBlock('lists_create_with_item');
-        itemBlock.initSvg();
-        connection.connect(itemBlock.previousConnection);
-        connection = itemBlock.nextConnection;
-      }
-      return containerBlock;
-    },
-    /**
-    * Reconfigure this block based on the mutator dialog's components.
-    * @param {!Blockly.Block} containerBlock Root block in mutator.
-    * @this Blockly.Block
-    */
-    compose: function(containerBlock) {
-      var itemBlock = containerBlock.getInputTargetBlock('STACK');
-      // Count number of inputs.
-      var connections = [];
-      while (itemBlock) {
-        connections.push(itemBlock.valueConnection_);
-        itemBlock = itemBlock.nextConnection &&
-        itemBlock.nextConnection.targetBlock();
-      }
-      // Disconnect any children that don't belong.
-      for (var i = 0; i < this.itemCount_; i++) {
-        var connection = this.getInput('ADD' + i).connection.targetConnection;
-        if (connection && connections.indexOf(connection) == -1) {
-          connection.disconnect();
-        }
-      }
-      this.itemCount_ = connections.length;
-      this.updateShape_();
-      // Reconnect any child blocks.
-      for (var i = 0; i < this.itemCount_; i++) {
-        Blockly.Mutator.reconnect(connections[i], this, 'ADD' + i);
-      }
-    },
-    /**
-    * Store pointers to any connected child blocks.
-    * @param {!Blockly.Block} containerBlock Root block in mutator.
-    * @this Blockly.Block
-    */
-    saveConnections: function(containerBlock) {
-      var itemBlock = containerBlock.getInputTargetBlock('STACK');
-      var i = 0;
-      while (itemBlock) {
-        var input = this.getInput('ADD' + i);
-        itemBlock.valueConnection_ = input && input.connection.targetConnection;
-        i++;
-        itemBlock = itemBlock.nextConnection &&
-        itemBlock.nextConnection.targetBlock();
-      }
-    },
-    /**
-    * Modify this block to have the correct number of inputs.
-    * @private
-    * @this Blockly.Block
-    */
-    updateShape_: function() {
-      if (this.itemCount_ && this.getInput('EMPTY')) {
-        this.removeInput('EMPTY');
-      } else if (!this.itemCount_ && !this.getInput('EMPTY')) {
-        this.appendDummyInput('EMPTY')
-        .appendField(Blockly.Msg['LISTS_CREATE_EMPTY_TITLE']);
-      }
-      // Add new inputs.
-      for (var i = 0; i < this.itemCount_; i++) {
-        if (!this.getInput('ADD' + i)) {
-          var input = this.appendValueInput('ADD' + i);
-          if (i == 0) {
-            input.appendField(Blockly.Msg['LISTS_CREATE_WITH_INPUT_WITH']);
-          }
-        }
-      }
-      // Remove deleted inputs.
-      while (this.getInput('ADD' + i)) {
-        this.removeInput('ADD' + i);
-        i++;
-      }
-    }
-  },
-  generator: (block) => {
-    var elements = new Array(block.itemCount_);
-    console.log(elements);
-    for (var i = 0; i < block.itemCount_; i++) {
-      elements[i] = Blockly.Python.valueToCode(block, 'ADD' + i,
-      Blockly.Python.ORDER_NONE) || 'None';
-    }
-    var code = '(' + elements.join(', ') + ')';
-    return [code, Blockly.Python.ORDER_ATOMIC];
-  }
-}
 
 export const mlp = {
   name: 'mlp',
@@ -457,7 +277,6 @@ export const mlp = {
   },
   generator: (block) => {
     console.log(block);
-    // Print statement.
     var layerList = Blockly.Python.valueToCode(block, 'layers', Blockly.Python.ORDER_ATOMIC);
     var solverValue = block.getFieldValue('solver');
     var activationValue = block.getFieldValue('activation');
@@ -467,43 +286,7 @@ export const mlp = {
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
-    console.log(featuresSplit);
-    //const code = 'print(' + msg + ')\n';
-    //model = MLPClassifier(hidden_layer_sizes=(64,64,),max_iter=1000, solver='adam', activation='relu')
-    //model.fit(X_train, y_train)
-    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')\nmodel.fit(' + featuresSplit[1] +', '+labelsSplit[1]+')'
-    //var code = 'print' + alphaValue + layerList + solverValue + activationValue + maxIterValue + featuresValue + labelsValue
-    //return [code, Blockly.Python.ORDER_MEMBER];
+    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
     return code;
   },
 };
-
-
-export var dataBlock = {
-  name: 'Data',
-  category: 'Data',
-  block: {
-    init: function () {
-      this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("from data")
-        .appendField(new Blockly.FieldDropdown(getListsForDataBlock([["iris", "iris"]])),'data');
-      this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("get")
-        .appendField(new Blockly.FieldDropdown(testTrainDropdownList), "part");
-      this.setOutput(true, "data");
-      this.setInputsInline(true);
-      this.setColour(dataColor);
-      this.setTooltip("Data for the training the models");
-      this.setHelpUrl("");
-    },
-  },
-  generator: (block) => {
-    var dataValue = block.getFieldValue('data');
-    var partValue = block.getFieldValue('part');
-    var code = dataValue + '\n' + partValue;
-    console.log(code);
-    return [code, Blockly.Python.ORDER_ATOMIC];
-  },
-}
