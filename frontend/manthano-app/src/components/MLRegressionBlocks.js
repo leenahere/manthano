@@ -16,9 +16,6 @@ export const linRegression = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
         .appendField("train linear regression");
-      this.appendDummyInput()
-        .appendField('multinomial output')
-        .appendField(new Blockly.FieldCheckbox(false), 'multiOutput');
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -34,7 +31,11 @@ export const linRegression = {
     },
   },
   generator: (block) => {
-    var code = 'something';
+    var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
+    var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
+    var featuresSplit = featuresValue.split("\n");
+    var labelsSplit = labelsValue.split("\n");
+    var code = 'regression\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = LinearRegression()';
     return code;
   },
 }

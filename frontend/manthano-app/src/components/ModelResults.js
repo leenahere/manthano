@@ -12,6 +12,14 @@ class ModelResults extends Component {
     resultData: "",
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(this.props.forceUpdate != nextProps.forceUpdate) {
+      this.setState({
+        resultData: "",
+      })
+    }
+  }
+
 
   handleClickRun = () => {
     var code = this.props.code;
@@ -33,6 +41,9 @@ class ModelResults extends Component {
         });
       })
       .catch(error => {
+        this.setState(({
+          loading: false,
+        }))
         console.log(error);
       });
     });
@@ -41,10 +52,22 @@ class ModelResults extends Component {
   render() {
     console.log("it renders");
     console.log(this.props.code);
+
+    let result;
+    if (this.state.loading == false) {
+      if (this.state.resultData == "") {
+        result = <span>nada</span>;
+      } else {
+        result = <img style={{ height: '100%', width: '100%'}} src={this.state.resultData}/>;
+      }
+    } else {
+      result = <Loader type="Oval" color="#a8a8a8" height={80} width={80} />;
+    }
+
     return (
       <div>
         <Button variant="light" onClick={this.handleClickRun}>Run Model</Button>
-        {this.state.loading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : <img style={{ height: '100%', width: '100%'}} src={this.state.resultData}/>}
+        { result }
       </div>
     );
   }
@@ -53,6 +76,7 @@ class ModelResults extends Component {
 
 ModelResults.propTypes = {
   code: PropTypes.string.isRequired,
+  forceUpdate: PropTypes.bool.isRequired,
 }
 
 export default ModelResults;

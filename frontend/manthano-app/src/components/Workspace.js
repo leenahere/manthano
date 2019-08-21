@@ -63,7 +63,7 @@ class Workspace extends Component {
                <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate } session={this.props.session}/>
              </div>
              <div style={{ display: 'flex', flexDirection: 'column', width: '45%' }}>
-               <ModelResults code={ this.state.pythonCode } />
+               <ModelResults forceUpdate={ this.state.forceBlocklyUpdate } code={ this.state.pythonCode } />
              </div>
            </div>
          </Tab>

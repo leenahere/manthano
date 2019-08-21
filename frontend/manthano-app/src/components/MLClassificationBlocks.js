@@ -47,7 +47,7 @@ export const logRegression = {
     var labelsSplit = labelsValue.split("\n");
     var problemString = 'multi_class=\'' + problemValue + '\', ';
     var solverString = 'solver=\'' + solverValue + '\', ';
-    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = LogisticRegression(' + problemString + solverString + ')';
+    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = LogisticRegression(' + problemString + solverString + ')';
     return code;
   },
 };
@@ -84,7 +84,7 @@ export const naiveBayes = {
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
-    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel =' + typeValue;
+    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel =' + typeValue;
     return code;
   },
 };
@@ -128,7 +128,7 @@ export const svm = {
     var labelsSplit = labelsValue.split("\n");
     var kernelString = 'kernel=\'' + kernelValue + '\', ';
     var degreeString = 'degree=' + degreeValue;
-    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + degreeString + ', gamma=\'auto\')';
+    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + degreeString + ', gamma=\'auto\')';
     return code;
   },
 };
@@ -178,7 +178,7 @@ export const decisionTree = {
     var criterionString = 'criterion=\'' + criterionValue + '\', ';
     var splitterString = 'splitter=\'' + splitterValue + '\', ';
     var depthString = 'max_depth=' + depthValue;
-    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = DecisionTreeClassifier(' + criterionString + splitterString + depthString + ')';
+    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = DecisionTreeClassifier(' + criterionString + splitterString + depthString + ')';
     return code;
   },
 };
@@ -228,7 +228,7 @@ export const kNearNeigh = {
     var kString = 'n_neighbors=' + kValue + ', ';
     var distanceString = 'metric=\'' + distanceValue + '\', ';
     var weightsString = 'weights=\'' + weightsValue + '\'';
-    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = KNeighborsClassifier(' + kString + distanceString + weightsString + ')';
+    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = KNeighborsClassifier(' + kString + distanceString + weightsString + ')';
     return code;
   },
 };
@@ -286,7 +286,7 @@ export const mlp = {
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
-    var code = 'import_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
+    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
     return code;
   },
 };

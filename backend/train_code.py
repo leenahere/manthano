@@ -8,6 +8,7 @@ import seaborn as sns
 import urllib
 from io import StringIO
 from yellowbrick.classifier import ClassificationReport
+from yellowbrick.regressor import ResidualsPlot
 import matplotlib
 matplotlib.use("Agg")
 
@@ -19,6 +20,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB, ComplementNB
 from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 
 df = None
 X, y = None, None
@@ -51,14 +53,24 @@ def execute_code(code):
     code_str = urllib.parse.unquote(code)
     code_arr = code_str.split("\n")
     print(code_arr)
-    exec(code_arr[0])
+    problem_class = code_arr[0]
+    print(problem_class)
+    exec(code_arr[1])
     print(df)
-    exec(code_arr[1], globals())
+    exec(code_arr[2], globals())
 
-    viz = ClassificationReport(model, cmap='PiYG')
-    viz.fit(X_train, y_train)
-    viz.score(X_test, y_test)
-    viz.poof(outpath="pcoords1.png")
+    plt.clf()
+
+    if problem_class == 'classification':
+        viz = ClassificationReport(model, cmap='PiYG')
+        viz.fit(X_train, y_train)
+        viz.score(X_test, y_test)
+        viz.poof(outpath="pcoords1.png")
+    elif problem_class == 'regression':
+        viz = ResidualsPlot(model)
+        viz.fit(X_train, y_train)
+        viz.score(X_test, y_test)
+        viz.poof(outpath="pcoords1.png")
 
     plt.clf()
 
