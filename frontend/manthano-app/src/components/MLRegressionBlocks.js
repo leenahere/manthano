@@ -48,9 +48,6 @@ export const polyRegression = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
         .appendField("train polynomial regression");
-      this.appendDummyInput()
-        .appendField('multinomial output')
-        .appendField(new Blockly.FieldCheckbox(false), 'multiOutput');
       this.appendValueInput("degree")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -70,7 +67,12 @@ export const polyRegression = {
     },
   },
   generator: (block) => {
-    var code = 'something';
+    var degreeValue = Blockly.Python.valueToCode(block, 'degree', Blockly.Python.ORDER_ATOMIC);
+    var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
+    var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
+    var featuresSplit = featuresValue.split("\n");
+    var labelsSplit = labelsValue.split("\n");
+    var code = 'regression\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = Pipeline([(\'poly\', PolynomialFeatures(degree=' + degreeValue + ')), (\'linear\', LinearRegression(fit_intercept=False))])';
     return code;
   },
 }

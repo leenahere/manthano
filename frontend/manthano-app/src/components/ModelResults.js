@@ -44,6 +44,7 @@ class ModelResults extends Component {
         this.setState(({
           loading: false,
         }))
+        alert("Your model could not be trained. Please make sure that the model type fits the given data. Also go back to the data analysis and check if you configured the features and labels correctly.");
         console.log(error);
       });
     });
@@ -56,7 +57,7 @@ class ModelResults extends Component {
     let result;
     if (this.state.loading == false) {
       if (this.state.resultData == "") {
-        result = <span>nada</span>;
+        result = <span></span>;
       } else {
         result = <img style={{ height: '100%', width: '100%'}} src={this.state.resultData}/>;
       }

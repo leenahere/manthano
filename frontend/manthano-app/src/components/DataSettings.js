@@ -49,7 +49,14 @@ class DataSettings extends Component {
       labels: this.state.labels,
       delimiter: this.state.selectedDel
     })
-    .then(res => console.log(res))
+    .then(res => {
+      console.log(res);
+      if (res.status == 200) {
+        alert("Your configured dataset was successfully sent. You can now use it to train your models");
+      } else {
+        alert("Something went wrong. Please try to configure the data again and make sure to fill out all necessary information.");
+      }
+    })
 
     this.props.forceUpdate();
   }
