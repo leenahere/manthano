@@ -19,11 +19,11 @@ export const linRegression = {
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Features");
+        .appendField("features");
       this.appendValueInput("labels")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Labels");
+        .appendField("labels");
       this.setInputsInline(false);
       this.setColour(regressionColor);
       this.setTooltip("");
@@ -55,11 +55,11 @@ export const polyRegression = {
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Features");
+        .appendField("features");
       this.appendValueInput("labels")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Labels");
+        .appendField("labels");
       this.setInputsInline(false);
       this.setColour(regressionColor);
       this.setTooltip("");

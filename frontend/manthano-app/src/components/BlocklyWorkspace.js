@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import * as classblocks from './MLClassificationBlocks';
 import * as helperblocks from './helperBlocks';
 import * as regblocks from './MLRegressionBlocks';
+import * as annblocks from './ANNBlocks';
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
 
@@ -65,7 +66,7 @@ class BlocklyWorkspace extends Component {
           <BlocklyDrawer
             style={{ height: 'calc(100vh - 210px)'}}
             language={Blockly.Python}
-            tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, classblocks.mlp, helperblocks.dataBlock, helperblocks.list]}
+            tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, annblocks.mlp, helperblocks.dataBlock, helperblocks.list]}
             onChange={this.handleChange}
             appearance={
               {
@@ -94,7 +95,6 @@ class BlocklyWorkspace extends Component {
             }
           >
             <Category name="Values" colour='%{BKY_MATH_HUE}' >
-              <Block type="lists_create_with" />
               <Block type="math_number" />
             </Category>
           </BlocklyDrawer>

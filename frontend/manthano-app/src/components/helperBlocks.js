@@ -1,7 +1,7 @@
 import Blockly from 'node-blockly/browser';
 import axios from 'axios';
 
-var testTrainDropdownList = [["X", "X"], ["y", "y"], ["X_train", "X_train"], ["y_train", "y_train"], ["X_test", "X_test"], ["y_test", "y_test"]]
+var testTrainDropdownList = [["X", "X"], ["y", "y"]]
 
 const classificationColor = 56;
 const regressionColor = 120;
@@ -26,18 +26,18 @@ function getListsForDataBlock(dataDropdownList) {
 
 export const list = {
   name: 'list',
-  category: 'List',
+  category: 'NeuralNets',
   block: {
     /**
     * Block for creating a list with any number of elements of any type.
     * @this Blockly.Block
     */
     init: function() {
-      this.setColour(listColor);
       this.itemCount_ = 3;
       this.updateShape_();
       this.setOutput(true, 'list');
       this.setMutator(new Blockly.Mutator(['lists_create_with_item']));
+      this.setColour(listColor);
     },
     /**
     * Create XML to represent list inputs.
@@ -137,7 +137,7 @@ export const list = {
         if (!this.getInput('ADD' + i)) {
           var input = this.appendValueInput('ADD' + i);
           if (i == 0) {
-            input.appendField(Blockly.Msg['LISTS_CREATE_WITH_INPUT_WITH']);
+            input.appendField('create layers');
           }
         }
       }

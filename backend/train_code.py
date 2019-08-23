@@ -14,7 +14,7 @@ matplotlib.use("Agg")
 
 import sklearn as skl
 import sklearn.model_selection
-from sklearn.neural_network import MLPClassifier
+from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
@@ -66,7 +66,7 @@ def import_dataset(data):
 
 
 
-def execute_code(code):
+def execute_classification_code(code):
     try:
         global df, model, problem_class
         code_str = urllib.parse.unquote(code)
@@ -80,38 +80,10 @@ def execute_code(code):
 
         plt.clf()
 
-        if problem_class == 'classification':
-            viz = ClassificationReport(model, cmap='PiYG')
-            viz.fit(X_train, y_train)
-            viz.score(X_test, y_test)
-            viz.poof(outpath="pcoords1.png")
-        elif problem_class == 'regression':
-            model.fit(X_train, y_train)
-            y_predict = model.predict(X_test)
-            r2 = r2_score(y_test, y_predict)
-            mse = mean_squared_error(y_test, y_predict)
-            print(r2)
-            print(mse)
-            # _, ax = plt.subplots()
-            #
-            # ax.scatter(x=range(0, y_test.size), y=y_test, c='blue', label='Actual', alpha=0.3)
-            # ax.scatter(x=range(0, y_predict.size), y=y_predict, c='red', label='Predicted', alpha=0.3)
-            #
-            # plt.title('Actual and predicted values')
-            # plt.xlabel('bla')
-            # plt.ylabel('mpg')
-            # plt.legend()
-            # plt.savefig("pcoords1.png")
-            # plt.figure()
-            # print(X[X.columns[cols]])
-            # X_some = X[X.columns[cols]]
-            # print(X_some.columns[1])
-            # print(y.columns[0])
-            # sns.lmplot(x=X_some.columns[1], y=y.columns[0], data=df)
-            # plt.savefig('pcoords1.png')
-
-        plt.clf()
-
+        viz = ClassificationReport(model, cmap='PiYG')
+        viz.fit(X_train, y_train)
+        viz.score(X_test, y_test)
+        viz.poof(outpath="pcoords1.png")
         image_path = "pcoords1.png"
         print(os.path.isfile(image_path))
         return send_file(image_path, mimetype='image/png')
@@ -119,4 +91,45 @@ def execute_code(code):
         abort(400)
 
 
+def execute_regression_code(code):
+    try:
+        global df, model, problem_class
+        code_str = urllib.parse.unquote(code)
+        code_arr = code_str.split("\n")
+        print(code_arr)
+        problem_class = code_arr[0]
+        print(problem_class)
+        exec(code_arr[1])
+        print(df)
+        exec(code_arr[2], globals())
 
+        plt.clf()
+
+        model.fit(X_train, y_train)
+        y_predict = model.predict(X_test)
+        r2 = r2_score(y_test, y_predict)
+        mse = mean_squared_error(y_test, y_predict)
+        return jsonify(r2, mse)
+    except:
+        abort(400)
+
+
+
+# This is all code for visualizing the regression models. Nothing convincing...
+# _, ax = plt.subplots()
+#
+# ax.scatter(x=range(0, y_test.size), y=y_test, c='blue', label='Actual', alpha=0.3)
+# ax.scatter(x=range(0, y_predict.size), y=y_predict, c='red', label='Predicted', alpha=0.3)
+#
+# plt.title('Actual and predicted values')
+# plt.xlabel('bla')
+# plt.ylabel('mpg')
+# plt.legend()
+# plt.savefig("pcoords1.png")
+# plt.figure()
+# print(X[X.columns[cols]])
+# X_some = X[X.columns[cols]]
+# print(X_some.columns[1])
+# print(y.columns[0])
+# sns.lmplot(x=X_some.columns[1], y=y.columns[0], data=df)
+# plt.savefig('pcoords1.png')
