@@ -8,6 +8,7 @@ import {Tab, Tabs, Table} from 'react-bootstrap';
 import DataSettings from './DataSettings';
 import convertCSVToArray from 'convert-csv-to-array';
 import convertArrayToCSV from 'convert-array-to-csv';
+import Loader from 'react-loader-spinner';
 
 class Data extends Component {
   state = {
@@ -21,7 +22,9 @@ class Data extends Component {
     robotCSVList: ['Connect to robot to display data'],
     connection: this.props.connection,
     delimiter: "",
-    dndList: {}
+    dndList: {},
+    loadingHeatmap: false,
+    heatmap: "",
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,6 +58,31 @@ class Data extends Component {
 
   }
 
+  getHeatmap = (csv, delimiter, session) => {
+    this.setState({ loadingHeatmap: true, error: ""}, () => {
+      axios.get('http://'  + window.location.hostname + ':80/api/heatmap/' + encodeURIComponent(csv) + '/' + delimiter + '/' + session, { responseType: 'arraybuffer' })
+      .then(res => {
+        console.log(res.data);
+        const base64 = btoa(
+            new Uint8Array(res.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          );
+        console.log(base64);
+        this.setState({
+          heatmap: "data:;base64," + base64,
+          loadingHeatmap: false,
+        })})
+      .catch(error => {
+        this.setState({
+          loadingHeatmap: false,
+        })
+        console.log(error);
+      });
+    });
+  }
+
   handleClickExample = (e) => {
     this.setState({
         selectedData: e.currentTarget.id,
@@ -81,6 +109,7 @@ class Data extends Component {
         loadedCSVArray: convertCSVToArray(res.data.csv, {type: 'array', separator: res.data.delimiter,}),
         dndList: dict
       });
+      this.getHeatmap(res.data.csv, res.data.delimiter, this.props.session);
     })
     .catch(error => {
       console.log(error);
@@ -116,6 +145,7 @@ class Data extends Component {
         loadedCSVArray: convertCSVToArray(resCSV.data, {type: 'array', separator: resDel.data,}),
         dndList: dict,
       });
+      this.getHeatmap(resCSV.data, resDel.data, this.props.session);
       }))
     .catch(error => {
       console.log(error);
@@ -171,6 +201,18 @@ class Data extends Component {
 
     const allData = (this.state.connection === 3) ? exampleList.concat(robotList) : exampleList;
 
+    let heatmap;
+
+    if (this.state.loadingHeatmap == true) {
+      heatmap = <Loader type="Oval" color="#a8a8a8" height={80} width={80} />
+    } else {
+      if (this.state.heatmap == "") {
+        heatmap = <span>Select data to display heatmap. If you've already selected data then the heatmap is not available</span>
+      } else {
+        heatmap = <img src={this.state.heatmap} />
+      }
+    }
+
     return (
       <div className="container" style={{ marginLeft: 1, marginRight: 1 }}>
         <div className="row" style={{ width: '100vw'}}>
@@ -210,6 +252,11 @@ class Data extends Component {
                  <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
                      {tablecontent}
                  </div>
+             </Tab>
+             <Tab eventKey="heatmap" title="Feature Heatmap">
+               <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+                   { heatmap }
+               </div>
              </Tab>
              <Tab eventKey="plot" title="Plot">
                  <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>

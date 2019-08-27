@@ -39,3 +39,19 @@ def plot(csv, delimiter, session, features, labels, problem):
     image_path = './plots/plot'+ session + '.png'
     print(os.path.isfile(image_path))
     return send_file(image_path, mimetype='image/png')
+
+
+def heatmap(csv, delimiter, session):
+    replaced = urllib.parse.unquote(csv)
+    data = pd.read_csv(StringIO(replaced), sep=delimiter)
+    figure_size = len(data.columns) / 2
+    if figure_size < 5:
+        figure_size = 5
+    plt.figure(figsize=(figure_size,figure_size))
+    sns.heatmap(data.corr(), annot=True, cmap='PiYG', fmt='.1f', square=True)
+    #plt.tight_layout()
+    plt.savefig('./plots/heatmap' + session + '.png')
+    plt.clf()
+    image_path = './plots/heatmap' + session + '.png'
+    print(os.path.isfile(image_path))
+    return send_file(image_path, mimetype='image/png')

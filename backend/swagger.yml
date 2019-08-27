@@ -164,6 +164,31 @@ paths:
         200:
           description: Successfully read all entries
 
+  /heatmap/{csv}/{delimiter}/{session}:
+    get:
+      operationId: plot_data.heatmap
+      tags:
+        - plot_data
+      summary: Get plot for a csv file
+      description: Get plot for a csv file
+      parameters:
+        - name: csv
+          in: path
+          description: csv file
+          type: string
+          required: True
+        - name: delimiter
+          in: path
+          type: string
+          required: True
+        - name: session
+          in: path
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
   /robotcode:
     get:
       operationId: robotcode.read
@@ -306,9 +331,26 @@ paths:
         201:
           description: Successfully created robot in list
 
-  /runcode/{code}:
+  /runcode/classification/{code}:
     get:
-      operationId: train_code.execute_code
+      operationId: train_code.execute_classification_code
+      tags:
+        - train_code
+      summary: execute code from Blockly and get back training results
+      description: see summary
+      parameters:
+        - name: code
+          in: path
+          description: Code that should be executed
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully executed code
+
+  /runcode/regression/{code}:
+    get:
+      operationId: train_code.execute_regression_code
       tags:
         - train_code
       summary: execute code from Blockly and get back training results
