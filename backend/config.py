@@ -30,6 +30,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{DB_USER}:{DB_PASS}@{DB_AD
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
 # Create the SQLAlchemy db instance
 db = SQLAlchemy(app)
 

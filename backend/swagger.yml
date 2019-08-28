@@ -365,6 +365,28 @@ paths:
         200:
           description: Successfully executed code
 
+  /runcode/image/{imagepath}/{timestamp}:
+    get:
+      operationId: train_code.send_image
+      tags:
+        - train_code
+      summary: get images for model visualization
+      description: see summary
+      parameters:
+        - name: imagepath
+          in: path
+          description: path to image
+          type: string
+          required: True
+        - name: timestamp
+          in: path
+          description: unnecessary timestamp to prevent caching
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully executed code
+
   /exampledata/list:
     get:
       operationId: example_data.read_all

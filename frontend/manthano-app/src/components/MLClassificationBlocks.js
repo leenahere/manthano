@@ -129,7 +129,7 @@ export const svm = {
     var kernelString = 'kernel=\'' + kernelValue + '\', ';
     var degreeString = 'degree=' + degreeValue;
     if (kernelValue != 'poly') {
-      var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + ', gamma=\'auto\')';
+      var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + 'gamma=\'auto\')';
     } else {
       var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + degreeString + ', gamma=\'auto\')';
     }

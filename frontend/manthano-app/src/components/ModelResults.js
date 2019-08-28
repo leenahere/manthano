@@ -4,12 +4,15 @@ import Button from 'react-bootstrap/Button';
 import * as blocks from './MLClassificationBlocks';
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
+import AliceCarousel from 'react-alice-carousel';
+import "react-alice-carousel/lib/alice-carousel.css";
 
 // updates when state and props change
 class ModelResults extends Component {
   state = {
     loading: false,
     resultData: "",
+    resultDecBoundary: "",
     problem: "",
   }
 
@@ -29,25 +32,57 @@ class ModelResults extends Component {
     if (problemClass == 'classification') {
       var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/classification/'+ encodeURIComponent(code);
       this.setState({ loading: true, problem: "classification"}, () => {
-        axios.get(locationUrl, { responseType: 'arraybuffer' })
+        axios.get(locationUrl)
         .then(res => {
           console.log(res.data);
-          const base64 = btoa(
-            new Uint8Array(res.data).reduce(
-              (data, byte) => data + String.fromCharCode(byte),
-              '',
-            ),
-          );
-          console.log(base64);
-          this.setState({
-            loading: false,
-            resultData: "data:;base64," + base64,
+          console.log(Date.now());
+          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[0] + '/' + Date.now(), { responseType: 'arraybuffer' })
+          .then(res => {
+            console.log(res);
+            const base64Class = btoa(
+              new Uint8Array(res.data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                '',
+              ),
+            );
+            this.setState({
+              resultData: "data:;base64," + base64Class,
+            });
+          })
+          .catch(error => {
+            this.setState({
+              loading: false,
+            })
+            alert("Couldn't plot classification matrix");
+            console.log(error);
+          });
+
+          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[1] + '/' + Date.now(), { responseType: 'arraybuffer' })
+          .then(res => {
+            console.log(res);
+            const base64Dec = btoa(
+              new Uint8Array(res.data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                '',
+              ),
+            );
+            this.setState({
+              loading: false,
+              resultDecBoundary: "data:;base64," + base64Dec,
+            });
+          })
+          .catch(error => {
+            this.setState(({
+              loading: false,
+            }))
+            alert("Couldn't plot decision boundaries");
+            console.log(error);
           });
         })
         .catch(error => {
-          this.setState(({
+          this.setState({
             loading: false,
-          }))
+          })
           alert("Your model could not be trained. Please make sure that the model type fits the given data. Also go back to the data analysis and check if you configured the features and labels correctly.");
           console.log(error);
         });
@@ -76,14 +111,15 @@ class ModelResults extends Component {
   }
 
   render() {
-    console.log("it renders");
-    console.log(this.props.code);
-    console.log(this.state.resultData);
+    const handleOnDragStart = e => e.preventDefault();
 
     let result;
     if (this.state.loading == false) {
       if (this.state.problem == "classification") {
-        result = <img style={{ height: '100%', width: '100%'}} src={this.state.resultData}/>;
+        result = <AliceCarousel mouseDragEnabled buttonsDisabled={true}>
+                    <img onDragStart={handleOnDragStart} src={this.state.resultData}/>
+                    <img onDragStart={handleOnDragStart} src={this.state.resultDecBoundary}/>
+                  </AliceCarousel>
       } else if (this.state.problem == "regression") {
         result = <div><p>{ this.state.resultData[0] }</p><p>{ this.state.resultData[1] }</p></div>
       } else {

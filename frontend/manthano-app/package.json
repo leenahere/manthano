@@ -11,6 +11,7 @@
     "node-blockly": "^1.0.37",
     "node-gyp": "^5.0.3",
     "react": "^16.8.6",
+    "react-alice-carousel": "^1.15.3",
     "react-beautiful-dnd": "^11.0.5",
     "react-blockly-drawer": "https://github.com/leenahere/react-blockly-drawer.git",
     "react-bootstrap": "^1.0.0-beta.9",
