@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import BlocklyWorkspace from './BlocklyWorkspace';
-import {Tab, Tabs, Button} from 'react-bootstrap';
+import {Tab, Tabs} from 'react-bootstrap';
 import Data from './Data';
 import 'bootstrap/dist/css/bootstrap.css';
 import PropTypes from 'prop-types';
-import Loader from 'react-loader-spinner';
 import ModelResults from './ModelResults';
 
 // updates when state and props change

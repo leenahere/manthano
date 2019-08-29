@@ -1,14 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import { CsvToHtmlTable } from 'react-csv-to-table';
-import DataVisualization from './DataVisualization';
-import {Tab, Tabs, Table, Select, ListGroup, Button, Form} from 'react-bootstrap';
-import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { makeStyles } from '@material-ui/core/styles';
-import Slider from '@material-ui/core/Slider';
-import convertArrayToCSV from 'convert-array-to-csv';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Column from './Column';
 import styled from 'styled-components';

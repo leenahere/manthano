@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import * as blocks from './MLClassificationBlocks';
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import AliceCarousel from 'react-alice-carousel';

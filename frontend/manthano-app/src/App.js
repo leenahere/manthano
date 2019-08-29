@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import BlocklyWorkspace from './components/BlocklyWorkspace';
-import Data from './components/Data';
 import 'bootstrap/dist/css/bootstrap.css';
 import Workspace from './components/Workspace';
 import Loader from 'react-loader-spinner';

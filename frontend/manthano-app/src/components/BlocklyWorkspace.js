@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Blockly from 'node-blockly/browser';
 import BlocklyDrawer, { Block, Category } from 'react-blockly-drawer';
-import Button from 'react-bootstrap/Button';
 import * as classblocks from './MLClassificationBlocks';
 import * as helperblocks from './helperBlocks';
 import * as regblocks from './MLRegressionBlocks';
 import * as annblocks from './ANNBlocks';
 import axios from 'axios';
-import Loader from 'react-loader-spinner';
 
 // updates when state and props change
 class BlocklyWorkspace extends Component {
