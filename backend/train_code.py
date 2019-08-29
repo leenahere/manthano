@@ -6,8 +6,10 @@ from models import Data
 import pandas as pd
 import seaborn as sns
 import urllib
+import numpy as np
 from io import StringIO
 from yellowbrick.classifier import ClassificationReport
+from yellowbrick.contrib.classifier import DecisionViz
 from yellowbrick.regressor import ResidualsPlot, PredictionError
 import matplotlib
 matplotlib.use("Agg")
@@ -26,6 +28,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2, f_regression
 from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.preprocessing import LabelEncoder
 
 df = None
 X, y = None, None
@@ -63,31 +66,50 @@ def import_dataset(data):
         print(cols)
 
     X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, train_size=train_size)
+    print("Split worked")
 
 
 
 def execute_classification_code(code):
-    try:
-        global df, model, problem_class
-        code_str = urllib.parse.unquote(code)
-        code_arr = code_str.split("\n")
-        print(code_arr)
-        problem_class = code_arr[0]
-        print(problem_class)
-        exec(code_arr[1])
-        print(df)
-        exec(code_arr[2], globals())
+    global df, model, problem_class
+    code_str = urllib.parse.unquote(code)
+    code_arr = code_str.split("\n")
+    print(code_arr)
+    problem_class = code_arr[0]
+    print(problem_class)
+    exec(code_arr[1])
+    print(df)
+    exec(code_arr[2], globals())
 
-        plt.clf()
+    viz = ClassificationReport(model, cmap='PiYG')
+    viz.fit(X_train, y_train)
+    viz.score(X_test, y_test)
+    viz.poof(outpath="./plots/classificationmatrix.png")
+    image_path_class = "classificationmatrix"
 
-        viz = ClassificationReport(model, cmap='PiYG')
-        viz.fit(X_train, y_train)
-        viz.score(X_test, y_test)
-        viz.poof(outpath="pcoords1.png")
-        image_path = "pcoords1.png"
-        print(os.path.isfile(image_path))
-        return send_file(image_path, mimetype='image/png')
-    except:
+    plt.clf()
+    plt.cla()
+    plt.close()
+
+    le = LabelEncoder()
+    dec_viz = DecisionViz(model, title="Decision Boundaries", features=np.where(cols == True)[0].tolist(), classes=list(map(str, y.iloc[:, 0].unique())))
+    dec_viz.fit(X_train.to_numpy(), le.fit_transform(y_train))
+    dec_viz.draw(X_test.to_numpy(), le.fit_transform(y_test))
+    dec_viz.poof(outpath="./plots/decviz.png")
+    image_path_dec = "decviz"
+
+    plt.clf()
+    plt.cla()
+    plt.close()
+
+    return jsonify(image_path_class, image_path_dec)
+
+
+def send_image(imagepath, timestamp):
+    path = "./plots/" + imagepath + '.png'
+    if os.path.isfile(path):
+        return send_file(path, mimetype='image/png')
+    else:
         abort(400)
 
 

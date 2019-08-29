@@ -36,6 +36,9 @@ def plot(csv, delimiter, session, features, labels, problem):
     plt.savefig('./plots/plot'+ session + '.png')
 
     plt.clf()
+    plt.cla()
+    plt.close()
+
     image_path = './plots/plot'+ session + '.png'
     print(os.path.isfile(image_path))
     return send_file(image_path, mimetype='image/png')
@@ -52,6 +55,8 @@ def heatmap(csv, delimiter, session):
     #plt.tight_layout()
     plt.savefig('./plots/heatmap' + session + '.png')
     plt.clf()
+    plt.cla()
+    plt.close()
     image_path = './plots/heatmap' + session + '.png'
     print(os.path.isfile(image_path))
     return send_file(image_path, mimetype='image/png')
