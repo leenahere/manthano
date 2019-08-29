@@ -8,8 +8,16 @@ import * as regblocks from './MLRegressionBlocks';
 import * as annblocks from './ANNBlocks';
 import axios from 'axios';
 
-// updates when state and props change
+/**
+ * This is the BlocklyWorkspace component based mainly on react-blockly-drawer which is based on node-blockly/browser.
+ * Most of the component's behavior is just the default behavior for a Blockly Workspace.
+ */
 class BlocklyWorkspace extends Component {
+  /**
+   * This Component should only update if the user submitted new data in the data analysis tool.
+   * This is mainly because of a bug in the react-blockly-drawer which then just re-renders every time the user tries to open one of the tabs to add a block.
+   * This leads to the foldout menu containing the blocks immediatley closing again which makes the whole workspace unusable.
+   */
   shouldComponentUpdate(nextProps, nextState) {
     if (this.props.forceUpdate === nextProps.forceUpdate) {
       console.log("Blockly Workspace doesnt update");
@@ -25,6 +33,7 @@ class BlocklyWorkspace extends Component {
     resultData: "",
   }
 
+  // Updates generated code every time the user adds/removes/drags blocks in the workspace and informs parent via updateCode callback
   handleChange = (code, workspace) => {
     this.setState({
       pythonCode: code,
@@ -32,31 +41,8 @@ class BlocklyWorkspace extends Component {
     this.props.updateCode(code);
   }
 
-  handleClick = () => {
-    var code = this.state.pythonCode;
-    this.props.updateCode(code);
-  }
-
-  handleClickRun = () => {
-    var code = this.state.pythonCode;
-    var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/'+ encodeURIComponent(code);
-    this.setState({ loading: true}, () => {
-      axios.get(locationUrl)
-      .then(res => {
-        this.setState({
-          loading: false,
-          resultData: res.data,
-        });
-        console.log(res.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    });
-  }
-
   render() {
-    console.log("it renders");
+    // Changes saturation and value of block colors in whole workspace
     Blockly.HSV_SATURATION = 0.9;
     Blockly.HSV_VALUE = 0.9;
     return (
