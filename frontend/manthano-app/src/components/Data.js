@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { CsvToHtmlTable } from 'react-csv-to-table';
 import DataVisualization from './DataVisualization';
-import Button from 'react-bootstrap/Button';
 import {Tab, Tabs, Table} from 'react-bootstrap';
 import DataSettings from './DataSettings';
 import convertCSVToArray from 'convert-csv-to-array';
-import convertArrayToCSV from 'convert-array-to-csv';
 import Loader from 'react-loader-spinner';
 
 class Data extends Component {
