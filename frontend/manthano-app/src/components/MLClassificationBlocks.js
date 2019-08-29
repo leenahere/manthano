@@ -1,7 +1,9 @@
 import Blockly from 'node-blockly/browser';
 
+// Hue for classification blocks
 const classificationColor = 56;
 
+// Logistic Regression block that converts to sklearn.linear_model.LogisticRegression
 export const logRegression = {
   name: 'logRegression',
   category: 'Classification',
@@ -46,6 +48,7 @@ export const logRegression = {
   },
 };
 
+// Naive Bayes block that converts to sklearn.naive_bayes
 export const naiveBayes = {
   name: 'naiveBayes',
   category: 'Classification',
@@ -83,6 +86,7 @@ export const naiveBayes = {
   },
 };
 
+// Support vector machine block that converts to sklearn.svm.SVC
 export const svm = {
   name: 'svm',
   category: 'Classification',
@@ -132,6 +136,7 @@ export const svm = {
   },
 };
 
+// Decision Tree Block that converts to sklearn.tree.DecisionTreeClassifier
 export const decisionTree = {
   name: 'decisionTree',
   category: 'Classification',
@@ -182,6 +187,7 @@ export const decisionTree = {
   },
 };
 
+// K nearest neighbors block that converts to sklearn.neighbors.KNeighborsClassifier
 export const kNearNeigh = {
   name: 'kNearNeigh',
   category: 'Classification',

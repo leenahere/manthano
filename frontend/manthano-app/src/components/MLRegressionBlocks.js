@@ -1,8 +1,10 @@
 import Blockly from 'node-blockly/browser';
 
+// Hue for regression blocks
 const regressionColor = 120;
 const reinforcementColor = 140;
 
+// Linear Regression block that converts to sklearn.linear_model.LinearRegression
 export const linRegression = {
   name: 'linRegression',
   category: 'Regression',
@@ -35,6 +37,7 @@ export const linRegression = {
   },
 }
 
+// Polynomial Regression block that converts to sklearn.preprocessing.PolynomialFeatures and sklearn.linear_model.LinearRegression in a pipeline which is basically polynomial regression
 export const polyRegression = {
   name: 'polyRegression',
   category: 'Regression',

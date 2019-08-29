@@ -1,13 +1,10 @@
 import Blockly from 'node-blockly/browser';
 import axios from 'axios';
 
-const classificationColor = 56;
-const regressionColor = 120;
-const reinforcementColor = 140;
+// Hue for neural net blocks
 const neuralNetColor = 320;
-const dataColor = 30;
-const listColor = 190;
 
+// Multi Layer Perceptron block which converts to either sklearn.neural_network.MLPClassifier or sklearn.neural_network.MLPRegressor depending on the problem class given by the user
 export const mlp = {
   name: 'mlp',
   category: 'NeuralNets',
@@ -55,7 +52,6 @@ export const mlp = {
     },
   },
   generator: (block) => {
-    console.log(block);
     var problemValue = Blockly.Python.valueToCode(block, 'problem', Blockly.Python.ORDER_ATOMIC);
     var layerList = Blockly.Python.valueToCode(block, 'layers', Blockly.Python.ORDER_ATOMIC);
     var solverValue = block.getFieldValue('solver');
