@@ -1,5 +1,4 @@
 import Blockly from 'node-blockly/browser';
-import axios from 'axios';
 
 // Hue for neural net blocks
 const neuralNetColor = 320;
@@ -15,7 +14,7 @@ export const mlp = {
         .appendField("train multi layer perceptron");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("problem class")
+          .appendField("problem")
           .appendField(new Blockly.FieldDropdown([["classification","classification"], ["regression","regression"]]), "problem");
       this.appendValueInput("layers")
           .setCheck("list")
@@ -52,9 +51,11 @@ export const mlp = {
     },
   },
   generator: (block) => {
-    var problemValue = Blockly.Python.valueToCode(block, 'problem', Blockly.Python.ORDER_ATOMIC);
+    var problemValue = block.getFieldValue('problem');
+    console.log(problemValue);
     var layerList = Blockly.Python.valueToCode(block, 'layers', Blockly.Python.ORDER_ATOMIC);
     var solverValue = block.getFieldValue('solver');
+    console.log(solverValue);
     var activationValue = block.getFieldValue('activation');
     var alphaValue = Blockly.Python.valueToCode(block, 'alpha', Blockly.Python.ORDER_ATOMIC);
     var maxIterValue = Blockly.Python.valueToCode(block, 'maxIter', Blockly.Python.ORDER_ATOMIC);
@@ -62,7 +63,7 @@ export const mlp = {
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
-    if (problemValue == 'classification') {
+    if (problemValue == "classification") {
       return 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
     } else {
       return 'regression\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPRegressor(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
