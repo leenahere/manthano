@@ -6,12 +6,15 @@ import Loader from 'react-loader-spinner';
 import Popup from 'reactjs-popup';
 import Button from 'react-bootstrap/Button';
 
+// connection "enum" for connecting to a robot
 const connection = {
-  NOTHIN: 1,
+  UNKNOWN: 1,
   UNUSCCESSFUL: 2,
   SUCCESSFUL: 3
 }
 
+// session ID generator
+// TODO: check if good practice to just write this function here
 function guidGenerator() {
     var S4 = function() {
        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -19,7 +22,6 @@ function guidGenerator() {
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
 
-// updates when state and props change
 class App extends Component {
   state = {
     sessionId: "",
@@ -27,13 +29,12 @@ class App extends Component {
     ip: "",
     user: "",
     pw: "",
-    status: true,
-    // connected auf 0, not yet connected, connected auf 1: could not connect try again, connected auf 2: connected
-    connected: connection.NOTHIN,
+    connected: connection.UNKNOWN,
     showPopup: false,
     correctFormat: false,
   }
 
+  // Handles the IP address input field. Checks if IP has valid pattern
   handleChangeIp = (event) => {
     this.setState({ ip: event.target.value })
     if(event.target.value.match(/^([0-9]{1,3}\.){3}[0-9]{1,3}$/)) {
@@ -47,20 +48,24 @@ class App extends Component {
     }
   }
 
+  // Handles the user input field
   handleChangeUser = (event) => {
     this.setState({
       user: event.target.value
     })
   }
 
+  // Handles the password input field
   handleChangePw = (event) => {
     this.setState({
       pw: event.target.value
     })
   }
 
+  // Handles Submission of connection form.
   handleSubmit = () => {
-    console.log(this.state.ip);
+    // Backend checks if it can create a SFTP connection to robot
+    // TODO What happends if connection is lost in between? User won't have any feedback about lost connection. Could reconnect to robot every minute or so?
     axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw)
     .then(res => this.setState({
       connected: (res.data ? connection.SUCCESSFUL : connection.UNUSCCESSFUL)
@@ -68,10 +73,10 @@ class App extends Component {
     .catch(error => {
       console.log(error);
     });
-    // hier axios call, wenn dieser erfolgreich, dann connected auf True
   }
 
   componentDidMount() {
+    // Generate session ID and store it in local storage if not existent
     if(localStorage.getItem('sessionID') != null) {
       this.setState({
         sessionId: localStorage.getItem('sessionID'),
@@ -89,9 +94,10 @@ class App extends Component {
   }
 
   render() {
+    // ev3Connect gives user feedback if the Connection to the robot was successfull
     let ev3Connect;
     switch(this.state.connected) {
-      case connection.NOTHIN:
+      case connection.UNKNOWN:
       ev3Connect = <span></span>
       break;
       case connection.UNUSCCESSFUL:
@@ -104,6 +110,8 @@ class App extends Component {
       ev3Connect = <span>Something's wrong</span>
       break;
     }
+
+    // isLoaded is false if session ID hasn't been generated yet. Returns loading spinner if false
     const isLoaded = this.state.isLoaded;
     console.log(isLoaded);
     if (!isLoaded) {
@@ -111,6 +119,7 @@ class App extends Component {
         <div><Loader type="Oval" color="#somecolor" height={80} width={80} /></div>
       );
     } else {
+      // Returns app heading, the connection button which opens a popup form and the workspace component
       return(
       <div>
         <div>
