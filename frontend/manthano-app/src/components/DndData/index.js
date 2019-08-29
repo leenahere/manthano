@@ -10,6 +10,9 @@ const Container = styled.div`
   background-color: whitesmoke;
 `;
 
+/**
+ * Item Component for the Data DragNDrop Component
+ */
 export default class DndData extends React.Component {
   render() {
     return (

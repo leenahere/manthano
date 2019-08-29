@@ -22,6 +22,9 @@ const DataList = styled.div`
   min-height: 100px;
 `;
 
+/**
+ * Column Component for the Data DragNDrop Component
+ */
 export default class Column extends React.Component {
   render() {
     return (

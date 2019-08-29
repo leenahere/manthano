@@ -9,6 +9,11 @@ const Container = styled.div`
   display: flex;
 `;
 
+/**
+ * Data DragNDrop component used for altering data for model and for plotting data.
+ * Three Columns to drag around columns of dataset to add them as features or labels.
+ * Followed this tutorial: https://blog.bitsrc.io/implement-better-drag-and-drop-in-your-react-app-beafc4451599
+ */ 
 class DataDragNDrop extends Component {
   state = {
     features: [],
@@ -34,6 +39,7 @@ class DataDragNDrop extends Component {
     columnsort: ['column-1', 'column-2', 'column-3']
   };
 
+  // Transforms list of dataset columns into the right format for the columns dataId state
   arrayForDataId(list) {
     const arr = [];
     for (var item in list) {
