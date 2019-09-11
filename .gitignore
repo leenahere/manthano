@@ -130,3 +130,4 @@ chrome-user-data
 
 # Project Specific Stuff
 /backend/plots
+/backend/pickled_models
