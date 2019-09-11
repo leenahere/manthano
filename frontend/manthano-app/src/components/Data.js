@@ -17,7 +17,9 @@ class Data extends Component {
     plotid: "",
     showPlot: false,
     exampleCSVList: [],
-    robotCSVList: ['Connect to robot to display data'],
+    robotCSVList: this.props.csvList.length == 0 ? ['Connect to robot'] : this.props.csvList,
+    robotCSVContents: this.props.csvContents,
+    robotCSVDelimiters: this.props.delimiters,
     connection: this.props.connection,
     delimiter: "",
     dndList: {},
@@ -28,14 +30,12 @@ class Data extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.connection != nextProps.connection) {
       if (nextProps.connection == 3) {
-        axios.get('http://'  + window.location.hostname + ':80/api/robotdata/list/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw)
-        .then(res => this.setState({
-            robotCSVList: res.data,
+        this.setState({
+            robotCSVList: nextProps.csvList,
+            robotCSVContents: nextProps.csvContents,
+            robotCSVDelimiters: nextProps.delimiters,
             connection: nextProps.connection
-          }))
-        .catch(error => {
-          console.log(error);
-        });
+          });
       } else {
         this.setState({
           robotCSVList: ['Connect to robot to display data'],
@@ -118,36 +118,34 @@ class Data extends Component {
     this.setState({
         selectedData: e.currentTarget.id,
     });
-    axios.all([
-      axios.get('http://'  + window.location.hostname + ':80/api/robotdata/file/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.currentTarget.id),
-      axios.get('http://'  + window.location.hostname + ':80/api/robotdata/delimiter/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.currentTarget.id)
-    ])
-    .then(axios.spread((resCSV, resDel) => {
-      const i =  resCSV.data.split("\n")[0];
-      const j = i.split(resDel.data);
-      const l = [];
-      for (var item in j) {
-        const id = "data-" + item;
-        l.push(
-          {id: "data-" + item, name: j[item]}
-        );
-      }
-      const dict = {};
-      for (var item in l) {
-        const d = "data-" + item;
-        dict[d] = l[item];
-      }
-      this.setState({
-        loadedCSV: resCSV.data,
-        delimiter: resDel.data,
-        loadedCSVArray: convertCSVToArray(resCSV.data, {type: 'array', separator: resDel.data,}),
-        dndList: dict,
-      });
-      this.getHeatmap(resCSV.data, resDel.data, this.props.session);
-      }))
-    .catch(error => {
-      console.log(error);
+    console.log(this.state.robotCSVList.indexOf(e.currentTarget.id));
+    let contentIndex = this.state.robotCSVList.indexOf(e.currentTarget.id);
+    let resCSV = this.state.robotCSVContents[contentIndex];
+    console.log(resCSV)
+    let resDel = this.state.robotCSVDelimiters[contentIndex];
+    console.log(resDel)
+    const i =  resCSV.split("\n")[0];
+    const j = i.split(resDel);
+    const l = [];
+    for (var item in j) {
+      const id = "data-" + item;
+      l.push(
+        { id: "data-" + item, name: j[item] }
+      );
+    }
+    const dict = {};
+    for (var item in l) {
+      const d = "data-" + item;
+      dict[d] = l[item];
+    }
+
+    this.setState({
+      loadedCSV: resCSV,
+      delimiter: resDel,
+      loadedCSVArray: convertCSVToArray(resCSV, { type: 'array', separator: resDel, }),
+      dndList: dict,
     });
+    this.getHeatmap(resCSV, resDel, this.props.session);
   }
 
   handOver = () => {
@@ -164,8 +162,10 @@ class Data extends Component {
               </tr>);
     });
 
+    console.log(this.state);
     const robotData = this.state.robotCSVList;
     let robotDataList = robotData.map((obj, id) => {
+      console.log(obj)
       return (<tr id={obj} onClick={this.handleClickRobot} style={{cursor: 'pointer'}}>
                 <th>{obj}</th>
               </tr>);
@@ -263,7 +263,7 @@ class Data extends Component {
              </Tab>
              <Tab eventKey="enhance" title="Preprocessing">
                 <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
-                 <DataSettings forceUpdate={this.handOver} dataList={allData} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw}/>
+                 <DataSettings forceUpdate={this.handOver} dataList={allData} session={this.props.session} csvList={this.props.csvList} csvContents={this.props.csvContents} delimiters={this.props.delimiters}/>
                 </div>
              </Tab>
            </Tabs>
@@ -277,9 +277,9 @@ class Data extends Component {
 Data.propTypes = {
   forceUpdate: PropTypes.func.isRequired,
   session: PropTypes.string.isRequired,
-  ip: PropTypes.string.isRequired,
-  user: PropTypes.string.isRequired,
-  pw: PropTypes.string.isRequired,
+  csvList: PropTypes.array.isRequired,
+  csvContents: PropTypes.array.isRequired,
+  delimiters: PropTypes.array.isRequired,
   connection: PropTypes.string.isRequired
 }
 

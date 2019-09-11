@@ -48,6 +48,7 @@ class Workspace extends Component {
 
   render() {
     // Returns the Blockly Workspace and ModelResult component, in the second Tab it returns the Data Analysis Component
+    console.log(this.props)
     return (
       <div>
         <Tabs
@@ -66,7 +67,7 @@ class Workspace extends Component {
            </div>
          </Tab>
          <Tab eventKey="data" title="Data">
-           <Data forceUpdate={this.updateForceUpdate} session={this.props.session} ip={this.props.ip} user={this.props.user} pw={this.props.pw} connection={this.props.connection}/>
+           <Data forceUpdate={this.updateForceUpdate} session={this.props.session} csvList={this.props.csvList} csvContents={this.props.csvContents} delimiters={this.props.delimiters} connection={this.props.connection}/>
          </Tab>
        </Tabs>
       </div>
@@ -77,9 +78,9 @@ class Workspace extends Component {
 
 Workspace.propTypes = {
   session: PropTypes.string.isRequired,
-  ip: PropTypes.string.isRequired,
-  user: PropTypes.string.isRequired,
-  pw: PropTypes.string.isRequired,
+  csvList: PropTypes.array.isRequired,
+  csvContents: PropTypes.array.isRequired,
+  delimiters: PropTypes.array.isRequired,
   connection: PropTypes.string.isRequired
 }
 

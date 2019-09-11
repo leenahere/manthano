@@ -115,36 +115,29 @@ class DataSettings extends Component {
         console.log(error);
       });
     } else {
-      axios.all([
-        axios.get('http://'  + window.location.hostname + ':80/api/robotdata/file/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.value),
-        axios.get('http://'  + window.location.hostname + ':80/api/robotdata/delimiter/' + this.props.ip + '/' + this.props.user + '/' + this.props.pw + '/' + e.value)
-      ])
-      .then(axios.spread((resCSV, resDel) => {
-        this.setState({
-          selectedCSV: resCSV.data,
-          selectedDel: resDel.data
-        })
-        const i =  resCSV.data.split("\n")[0];
-        const j = i.split(resDel.data);
-        const l = [];
-        for (var item in j) {
-          const id = "data-" + item;
-          l.push(
-            {id: "data-" + item, name: j[item]}
-          );
-        }
-        const dict = {};
-        for (var item in l) {
-          const d = "data-" + item;
-          dict[d] = l[item];
-        }
-        this.setState({
-          selectedData: e.value,
-          dndList: dict
-        });
-      }))
-      .catch(error => {
-        console.log(error);
+      let contentIndex = this.props.csvList.indexOf(e.value)
+      console.log(contentIndex)
+      let resCSV = this.props.csvContents[contentIndex];
+      console.log(resCSV)
+      let resDel = this.props.delimiters[contentIndex];
+      console.log(resDel)
+      const i =  resCSV.split("\n")[0];
+      const j = i.split(resDel);
+      const l = [];
+      for (var item in j) {
+        const id = "data-" + item;
+        l.push(
+          { id: "data-" + item, name: j[item] }
+        );
+      }
+      const dict = {};
+      for (var item in l) {
+        const d = "data-" + item;
+        dict[d] = l[item];
+      }
+      this.setState({
+        selectedData: e.value,
+        dndList: dict
       });
     }
     this.setState({
@@ -161,7 +154,6 @@ class DataSettings extends Component {
 
   render() {
     console.log(this.state);
-    //console.log(this.state.checkboxChecked);
     const options = ['None', 'Standard', 'MinMax', 'Normalization'];
     const defaultOption = this.state.scaler;
     let dataOptions = [];
@@ -217,12 +209,12 @@ class DataSettings extends Component {
 }
 
 DataSettings.propTypes = {
-  ip: PropTypes.string.isRequired,
-  user: PropTypes.string.isRequired,
-  pw: PropTypes.string.isRequired,
   forceUpdate: PropTypes.func.isRequired,
   session: PropTypes.string.isRequired,
   dataList: PropTypes.array.isRequired,
+  csvList: PropTypes.array.isRequired,
+  csvContents: PropTypes.array.isRequired,
+  delimiters: PropTypes.array.isRequired,
 }
 
 export default DataSettings

@@ -69,7 +69,6 @@ def import_dataset(data):
     print("Split worked")
 
 
-
 def execute_classification_code(code):
     global df, model, problem_class
     code_str = urllib.parse.unquote(code)

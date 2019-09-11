@@ -26,12 +26,16 @@ class App extends Component {
   state = {
     sessionId: "",
     isLoaded: false,
+    connectionLoading: false,
     ip: "",
     user: "",
     pw: "",
     connected: connection.UNKNOWN,
     showPopup: false,
     correctFormat: false,
+    robotCSVList: [],
+    robotCSVContent: [],
+    CSVDelimiterList: [],
   }
 
   // Handles the IP address input field. Checks if IP has valid pattern
@@ -66,12 +70,24 @@ class App extends Component {
   handleSubmit = () => {
     // Backend checks if it can create a SFTP connection to robot
     // TODO What happends if connection is lost in between? User won't have any feedback about lost connection. Could reconnect to robot every minute or so?
-    axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw)
-    .then(res => this.setState({
-      connected: (res.data ? connection.SUCCESSFUL : connection.UNUSCCESSFUL)
-    }))
-    .catch(error => {
-      console.log(error);
+    this.setState({ connectionLoading: true, error: ""}, () => {
+      axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw)
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          robotCSVList: res.data[1],
+          robotCSVContent: res.data[2],
+          CSVDelimiterList: res.data[3],
+          connected: (res.data[0] ? connection.SUCCESSFUL : connection.UNUSCCESSFUL),
+          connectionLoading: false,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({
+          connectionLoading: false,
+        });
+      });
     });
   }
 
@@ -95,6 +111,7 @@ class App extends Component {
 
   render() {
     // ev3Connect gives user feedback if the Connection to the robot was successfull
+    console.log(this.state)
     let ev3Connect;
     switch(this.state.connected) {
       case connection.UNKNOWN:
@@ -156,10 +173,10 @@ class App extends Component {
               </div>
             )}
           </Popup>
-          { ev3Connect }
+          { this.state.connectionLoading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : ev3Connect}
         </div>
         <div>
-          <Workspace session={this.state.sessionId} ip={this.state.ip} user={this.state.user} pw={this.state.pw} connection={this.state.connected}/>
+          <Workspace session={this.state.sessionId} connection={this.state.connected} csvList={this.state.robotCSVList} csvContents={this.state.robotCSVContent} delimiters={this.state.CSVDelimiterList}/>
         </div>
       </div>
     );
