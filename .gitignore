@@ -127,3 +127,6 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+
+# Project Specific Stuff
+/backend/plots
