@@ -39,6 +39,43 @@ paths:
         200:
           description: Successfully read all entries
 
+  /runscript/{ip}/{user}/{pw}/{script}/{picklepath}:
+    get:
+      operationId: connect_robot.run_script
+      tags:
+        - connect
+      summary: Check if IP address is accessible
+      description: Check if IP address
+      parameters:
+        - name: ip
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: user
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: pw
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: script
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+        - name: picklepath
+          in: path
+          description: IP address given by user
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully read all entries
+
   /robotdata/list/{ip}/{user}/{pw}:
     get:
       operationId: robot_data.read_all
@@ -331,7 +368,7 @@ paths:
         201:
           description: Successfully created robot in list
 
-  /runcode/classification/{code}:
+  /runcode/classification/{code}/{session}:
     get:
       operationId: train_code.execute_classification_code
       tags:
@@ -344,11 +381,15 @@ paths:
           description: Code that should be executed
           type: string
           required: True
+        - name: session
+          in: path
+          type: string
+          required: True
       responses:
         200:
           description: Successfully executed code
 
-  /runcode/regression/{code}:
+  /runcode/regression/{code}/{session}:
     get:
       operationId: train_code.execute_regression_code
       tags:
@@ -359,6 +400,10 @@ paths:
         - name: code
           in: path
           description: Code that should be executed
+          type: string
+          required: True
+        - name: session
+          in: path
           type: string
           required: True
       responses:

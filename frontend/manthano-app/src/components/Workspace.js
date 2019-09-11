@@ -62,7 +62,7 @@ class Workspace extends Component {
                <BlocklyWorkspace updateCode={ this.updateCode } pythonCode={ this.state.pythonCode } forceUpdate= { this.state.forceBlocklyUpdate } session={this.props.session}/>
              </div>
              <div style={{ display: 'flex', flexDirection: 'column', width: '45%' }}>
-               <ModelResults forceUpdate={ this.state.forceBlocklyUpdate } code={ this.state.pythonCode } />
+               <ModelResults trainedModel={this.props.trainedModel} forceUpdate={ this.state.forceBlocklyUpdate } code={ this.state.pythonCode } session={this.props.session} />
              </div>
            </div>
          </Tab>
@@ -81,7 +81,8 @@ Workspace.propTypes = {
   csvList: PropTypes.array.isRequired,
   csvContents: PropTypes.array.isRequired,
   delimiters: PropTypes.array.isRequired,
-  connection: PropTypes.string.isRequired
+  connection: PropTypes.string.isRequired,
+  trainedModel: PropTypes.func.isRequired,
 }
 
 export default Workspace;

@@ -5,6 +5,7 @@ import Workspace from './components/Workspace';
 import Loader from 'react-loader-spinner';
 import Popup from 'reactjs-popup';
 import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-dropdown';
 
 // connection "enum" for connecting to a robot
 const connection = {
@@ -36,6 +37,18 @@ class App extends Component {
     robotCSVList: [],
     robotCSVContent: [],
     CSVDelimiterList: [],
+    successfulModelRun: false,
+    pathToPickledModel: "",
+    scriptList: [],
+    selectedScript: "",
+    runSuccess: false,
+  }
+
+  trainedModelAvailable = (path) => {
+    this.setState({
+      successfulModelRun: true,
+      pathToPickledModel: path
+    })
   }
 
   // Handles the IP address input field. Checks if IP has valid pattern
@@ -68,7 +81,7 @@ class App extends Component {
 
   // Handles Submission of connection form.
   handleSubmit = () => {
-    // Backend checks if it can create a SFTP connection to robot
+    // Backend checks if it can create a SFTP connection to robot and gets all necessary data from robot directories
     // TODO What happends if connection is lost in between? User won't have any feedback about lost connection. Could reconnect to robot every minute or so?
     this.setState({ connectionLoading: true, error: ""}, () => {
       axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw)
@@ -78,6 +91,7 @@ class App extends Component {
           robotCSVList: res.data[1],
           robotCSVContent: res.data[2],
           CSVDelimiterList: res.data[3],
+          scriptList: res.data[4],
           connected: (res.data[0] ? connection.SUCCESSFUL : connection.UNUSCCESSFUL),
           connectionLoading: false,
         });
@@ -89,6 +103,31 @@ class App extends Component {
         });
       });
     });
+  }
+
+  _onSelectData = (e) => {
+    console.log(e.value);
+    this.setState({
+      selectedScript: e.value,
+    });
+  }
+
+  handleRunScript = () => {
+    console.log(this.state.sessionId)
+    console.log(this.state.pathToPickledModel.concat(this.state.sessionId))
+    axios.get('http://'  + window.location.hostname + ':80/api/runscript/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw + '/' + this.state.selectedScript + '/' + this.state.pathToPickledModel.concat(this.state.sessionId))
+      .then(res => {
+        console.log(res)
+        this.setState({
+          runSuccess: true
+        })
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({
+          runSuccess: false
+        })
+      });
   }
 
   componentDidMount() {
@@ -126,6 +165,14 @@ class App extends Component {
       default:
       ev3Connect = <span>Something's wrong</span>
       break;
+    }
+
+    let runModel;
+    if(this.state.connected == 3) {
+     runModel =  <div>
+       <Dropdown options={this.state.scriptList} onChange={this._onSelectData} value={this.state.selectedScript} placeholder="Select a script" />
+       <Button onClick={this.handleRunScript} disabled={!(this.state.successfulModelRun && (this.state.connected == 3))} variant="light">Run on Robot</Button>
+     </div>
     }
 
     // isLoaded is false if session ID hasn't been generated yet. Returns loading spinner if false
@@ -174,9 +221,12 @@ class App extends Component {
             )}
           </Popup>
           { this.state.connectionLoading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : ev3Connect}
+          <div>
+            { runModel }
+          </div>
         </div>
         <div>
-          <Workspace session={this.state.sessionId} connection={this.state.connected} csvList={this.state.robotCSVList} csvContents={this.state.robotCSVContent} delimiters={this.state.CSVDelimiterList}/>
+          <Workspace trainedModel={this.trainedModelAvailable} session={this.state.sessionId} connection={this.state.connected} csvList={this.state.robotCSVList} csvContents={this.state.robotCSVContent} delimiters={this.state.CSVDelimiterList}/>
         </div>
       </div>
     );

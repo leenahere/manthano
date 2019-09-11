@@ -29,13 +29,14 @@ class ModelResults extends Component {
     var problemClass = code.split("\n")[0];
     console.log(problemClass);
     if (problemClass == 'classification') {
-      var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/classification/'+ encodeURIComponent(code);
+      var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/classification/'+ encodeURIComponent(code) + '/' + this.props.session;
       this.setState({ loading: true, problem: "classification"}, () => {
         axios.get(locationUrl)
         .then(res => {
+          this.props.trainedModel(res.data[2]);
           console.log(res.data);
           console.log(Date.now());
-          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[0] + '/' + Date.now(), { responseType: 'arraybuffer' })
+          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[0] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
           .then(res => {
             console.log(res);
             const base64Class = btoa(
@@ -56,7 +57,7 @@ class ModelResults extends Component {
             console.log(error);
           });
 
-          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[1] + '/' + Date.now(), { responseType: 'arraybuffer' })
+          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[1] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
           .then(res => {
             console.log(res);
             const base64Dec = btoa(
@@ -139,8 +140,10 @@ class ModelResults extends Component {
 }
 
 ModelResults.propTypes = {
+  session: PropTypes.string.isRequired,
   code: PropTypes.string.isRequired,
   forceUpdate: PropTypes.bool.isRequired,
+  trainedModel: PropTypes.func.isRequired,
 }
 
 export default ModelResults;

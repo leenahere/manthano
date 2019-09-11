@@ -13,6 +13,7 @@ from yellowbrick.contrib.classifier import DecisionViz
 from yellowbrick.regressor import ResidualsPlot, PredictionError
 import matplotlib
 matplotlib.use("Agg")
+import pickle
 
 import sklearn as skl
 import sklearn.model_selection
@@ -69,7 +70,7 @@ def import_dataset(data):
     print("Split worked")
 
 
-def execute_classification_code(code):
+def execute_classification_code(code, session):
     global df, model, problem_class
     code_str = urllib.parse.unquote(code)
     code_arr = code_str.split("\n")
@@ -83,7 +84,7 @@ def execute_classification_code(code):
     viz = ClassificationReport(model, cmap='PiYG')
     viz.fit(X_train, y_train)
     viz.score(X_test, y_test)
-    viz.poof(outpath="./plots/classificationmatrix.png")
+    viz.poof(outpath="./plots/classificationmatrix" + session + ".png")
     image_path_class = "classificationmatrix"
 
     plt.clf()
@@ -94,14 +95,20 @@ def execute_classification_code(code):
     dec_viz = DecisionViz(model, title="Decision Boundaries", features=np.where(cols == True)[0].tolist(), classes=list(map(str, y.iloc[:, 0].unique())))
     dec_viz.fit(X_train.to_numpy(), le.fit_transform(y_train))
     dec_viz.draw(X_test.to_numpy(), le.fit_transform(y_test))
-    dec_viz.poof(outpath="./plots/decviz.png")
+    dec_viz.poof(outpath="./plots/decviz" + session + ".png")
     image_path_dec = "decviz"
 
     plt.clf()
     plt.cla()
     plt.close()
 
-    return jsonify(image_path_class, image_path_dec)
+    model.fit(X_train, y_train)
+
+    file = 'pickled_models/trained_model' + session + '.sav'
+    pickle_path = 'trained_model'
+    pickle.dump(model, open(file, 'wb'))
+
+    return jsonify(image_path_class, image_path_dec, pickle_path)
 
 
 def send_image(imagepath, timestamp):
@@ -112,7 +119,7 @@ def send_image(imagepath, timestamp):
         abort(400)
 
 
-def execute_regression_code(code):
+def execute_regression_code(code, session):
     try:
         global df, model, problem_class
         code_str = urllib.parse.unquote(code)
