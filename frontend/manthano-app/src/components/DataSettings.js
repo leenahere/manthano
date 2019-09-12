@@ -121,6 +121,10 @@ class DataSettings extends Component {
       console.log(resCSV)
       let resDel = this.props.delimiters[contentIndex];
       console.log(resDel)
+      this.setState({
+        selectedCSV: resCSV,
+        selectedDel: resDel
+      })
       const i =  resCSV.split("\n")[0];
       const j = i.split(resDel);
       const l = [];
