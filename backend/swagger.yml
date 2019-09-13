@@ -457,3 +457,24 @@ paths:
       responses:
         200:
           description: Successfully executed code
+
+  /predict/{Xnew}/{session_id}:
+    get:
+      operationId: predict_results.predicition_for_robot
+      tags:
+        - prediction_for_robot
+      description: endpoint for robot to outsource model predition to backend
+      parameters:
+        - name: Xnew
+          in: path
+          description: input data
+          type: string
+          required: True
+        - name: session_id
+          in: path
+          description: session id of frontend user to identify correct pickled model
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully predicted result
