@@ -8,7 +8,7 @@ import seaborn as sns
 import urllib
 import numpy as np
 from io import StringIO
-from yellowbrick.classifier import ClassificationReport
+from yellowbrick.classifier import ClassificationReport, ConfusionMatrix
 from yellowbrick.contrib.classifier import DecisionViz
 from yellowbrick.regressor import ResidualsPlot, PredictionError
 import matplotlib
@@ -102,13 +102,24 @@ def execute_classification_code(code, session):
     plt.cla()
     plt.close()
 
+    cm = ConfusionMatrix(model, classes=list(map(str, y.iloc[:, 0].unique())))
+    cm.fit(X_train, y_train)
+    cm.score(X_test, y_test)
+    plt.tight_layout()
+    cm.poof(outpath="./plots/cm" + session + ".png")
+    image_path_cm = "cm"
+
+    plt.clf()
+    plt.cla()
+    plt.close()
+
     model.fit(X_train, y_train)
 
     file = 'pickled_models/trained_model' + session + '.sav'
     pickle_path = 'trained_model'
     pickle.dump(model, open(file, 'wb'))
 
-    return jsonify(image_path_class, image_path_dec, pickle_path)
+    return jsonify(image_path_class, image_path_dec, pickle_path, image_path_cm)
 
 
 def send_image(imagepath, timestamp):

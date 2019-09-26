@@ -12,6 +12,7 @@ class ModelResults extends Component {
     loading: false,
     resultData: "",
     resultDecBoundary: "",
+    resultConfMatrix: "",
     problem: "",
   }
 
@@ -54,6 +55,27 @@ class ModelResults extends Component {
               loading: false,
             })
             alert("Couldn't plot classification matrix");
+            console.log(error);
+          });
+
+          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[3] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
+          .then(res => {
+            console.log(res);
+            const base64Class = btoa(
+              new Uint8Array(res.data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                '',
+              ),
+            );
+            this.setState({
+              resultConfMatrix: "data:;base64," + base64Class,
+            });
+          })
+          .catch(error => {
+            this.setState({
+              loading: false,
+            })
+            alert("Couldn't plot confusion matrix");
             console.log(error);
           });
 
@@ -118,6 +140,7 @@ class ModelResults extends Component {
       if (this.state.problem == "classification") {
         result = <AliceCarousel mouseDragEnabled buttonsDisabled={true}>
                     <img onDragStart={handleOnDragStart} src={this.state.resultData}/>
+                    <img onDragStart={handleOnDragStart} src={this.state.resultConfMatrix}/>
                     <img onDragStart={handleOnDragStart} src={this.state.resultDecBoundary}/>
                   </AliceCarousel>
       } else if (this.state.problem == "regression") {

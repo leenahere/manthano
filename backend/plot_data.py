@@ -52,7 +52,7 @@ def heatmap(csv, delimiter, session):
         figure_size = 5
     plt.figure(figsize=(figure_size,figure_size))
     sns.heatmap(data.corr(), annot=True, cmap='PiYG', fmt='.1f', square=True)
-    #plt.tight_layout()
+    plt.tight_layout()
     plt.savefig('./plots/heatmap' + session + '.png')
     plt.clf()
     plt.cla()
