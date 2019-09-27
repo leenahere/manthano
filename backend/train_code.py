@@ -24,7 +24,7 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB, ComplementNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler, Normalizer, MinMaxScaler
 from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2, f_regression
@@ -45,6 +45,10 @@ order = 0
 def import_dataset(data):
     global df, X_train, X_test, y_train, y_test, X, y, features_df_new, cols
     data_entry = Data.query.filter(Data.data_name == data).first()
+    data_scale = data_entry.scale
+    print(data_scale)
+    data_shuffle = data_entry.shuffle
+    print(data_shuffle)
     df = pd.read_csv(StringIO(data_entry.csv), delimiter=data_entry.delimiter)
     max = len(df.columns)
     all = sorted(data_entry.features + data_entry.labels)
@@ -56,6 +60,17 @@ def import_dataset(data):
     drop_features_arr = sorted(to_drop + data_entry.labels)
     drop_labels_arr = sorted(to_drop + data_entry.features)
     X = df.drop(df.columns[drop_features_arr], axis=1)
+
+    if data_scale is "MinMax":
+        scaler = MinMaxScaler()
+        scaler.fit_transform(X)
+    elif data_scale is "Normalization":
+        scaler = Normalizer()
+        scaler.fit_transform(X)
+    elif data_scale is "Standard":
+        scaler = StandardScaler()
+        scaler.fit_transform(X)
+
     y = df.drop(df.columns[drop_labels_arr], axis=1)
     drop_more = sorted(to_drop)
     df = df.drop(df.columns[drop_more], axis=1)
@@ -79,7 +94,7 @@ def import_dataset(data):
 
     print("tada")
 
-    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, train_size=train_size)
+    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, train_size=train_size, shuffle=data_shuffle)
     print("Split worked")
 
 

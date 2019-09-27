@@ -18,10 +18,13 @@ def create(data):
     session_id = data.get("session_id", None)
     data_name = data.get("data_name", None)
     csv = data.get("csv", None)
-    split = data.get("split", None)
+    scale = data.get("scale", None)
     shuffle = data.get("shuffle", None)
     test = data.get("test", None)
     train = data.get("train", None)
+    labels = data.get("labels", None)
+    features = data.get("features", None)
+    delimiter = data.get("delimiter", None)
 
     schema = DataSchema()
     new_data = schema.load(data, session=db.session).data
