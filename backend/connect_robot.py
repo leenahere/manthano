@@ -3,8 +3,9 @@ from flask import jsonify
 import re
 import csv
 import paramiko
+import os
 
-DATA_DIRECTORY = 'csv_on_pi'
+DATA_DIRECTORY = 'csv_data'
 SCRIPTS_DIRECTORY = 'ml_scripts'
 
 def check_ip_connection(ip, user, pw):
@@ -39,17 +40,21 @@ def check_ip_connection(ip, user, pw):
         return jsonify(False)
 
 
-def run_script(ip, user, pw, script, picklepath):
+def run_script(ip, user, pw, picklepath, modelname, session):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(ip, username=user, password=pw)
 
     pickled_model = "pickled_models/" + picklepath + ".sav"
+    new_name = modelname + session + ".sav"
+    new_dst = "pickled_models/" + new_name
 
     sftp = client.open_sftp()
-    sftp.put(pickled_model, './ml_scripts/trained_model.sav')
+    sftp.put(pickled_model, "./ml_scripts/models/" + new_name)
     sftp.close()
 
-    client.exec_command('python3 ./ml_scripts/' + script)
-    client.close()
+    os.rename(pickled_model, new_dst)
+
+    #client.exec_command('python3 ./ml_scripts/' + script)
+    #client.close()
     return jsonify(True)

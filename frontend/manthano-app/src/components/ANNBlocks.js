@@ -51,6 +51,7 @@ export const mlp = {
     },
   },
   generator: (block) => {
+    var order = 1;
     var problemValue = block.getFieldValue('problem');
     console.log(problemValue);
     var layerList = Blockly.Python.valueToCode(block, 'layers', Blockly.Python.ORDER_ATOMIC);
@@ -64,9 +65,9 @@ export const mlp = {
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
     if (problemValue == "classification") {
-      return 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
+      return 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPClassifier(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
     } else {
-      return 'regression\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPRegressor(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
+      return 'regression\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = MLPRegressor(hidden_layer_sizes=' + layerList + ',max_iter=' + maxIterValue + ', solver=\''+solverValue+'\', activation=\''+ activationValue + '\')';
     }
   },
 };

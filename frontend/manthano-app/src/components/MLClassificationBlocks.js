@@ -35,6 +35,7 @@ export const logRegression = {
     },
   },
   generator: (block) => {
+    var order = 1;
     var problemValue = block.getFieldValue('problem');
     var solverValue = block.getFieldValue('solver');
     var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
@@ -43,7 +44,7 @@ export const logRegression = {
     var labelsSplit = labelsValue.split("\n");
     var problemString = 'multi_class=\'' + problemValue + '\', ';
     var solverString = 'solver=\'' + solverValue + '\', ';
-    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = LogisticRegression(' + problemString + solverString + ')';
+    var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = LogisticRegression(' + problemString + solverString + ')';
     return code;
   },
 };
@@ -76,12 +77,13 @@ export const naiveBayes = {
     },
   },
   generator: (block) => {
+    var order = 1;
     var typeValue = block.getFieldValue('type');
     var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
-    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel =' + typeValue;
+    var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel =' + typeValue;
     return code;
   },
 };
@@ -120,6 +122,7 @@ export const svm = {
   generator: (block) => {
     var kernelValue = block.getFieldValue('kernel');
     var degreeValue = Blockly.Python.valueToCode(block, 'degreePoly', Blockly.Python.ORDER_ATOMIC);
+    var order = degreeValue;
     var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
@@ -127,9 +130,9 @@ export const svm = {
     var kernelString = 'kernel=\'' + kernelValue + '\', ';
     var degreeString = 'degree=' + degreeValue;
     if (kernelValue != 'poly') {
-      var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + 'gamma=\'auto\')';
+      var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + 'gamma=\'auto\')';
     } else {
-      var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + degreeString + ', gamma=\'auto\')';
+      var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = SVC(' + kernelString + degreeString + ', gamma=\'auto\')';
     }
 
     return code;
@@ -172,6 +175,7 @@ export const decisionTree = {
     },
   },
   generator: (block) => {
+    var order = 1;
     var criterionValue = block.getFieldValue('criterion');
     var splitterValue = block.getFieldValue('splitter');
     var depthValue = Blockly.Python.valueToCode(block, 'depth', Blockly.Python.ORDER_ATOMIC);
@@ -182,7 +186,7 @@ export const decisionTree = {
     var criterionString = 'criterion=\'' + criterionValue + '\', ';
     var splitterString = 'splitter=\'' + splitterValue + '\', ';
     var depthString = 'max_depth=' + depthValue;
-    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = DecisionTreeClassifier(' + criterionString + splitterString + depthString + ')';
+    var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = DecisionTreeClassifier(' + criterionString + splitterString + depthString + ')';
     return code;
   },
 };
@@ -223,6 +227,7 @@ export const kNearNeigh = {
     },
   },
   generator: (block) => {
+    var order = 1;
     var distanceValue = block.getFieldValue('distance');
     var weightsValue = block.getFieldValue('weights');
     var kValue = Blockly.Python.valueToCode(block, 'k', Blockly.Python.ORDER_ATOMIC);
@@ -233,7 +238,7 @@ export const kNearNeigh = {
     var kString = 'n_neighbors=' + kValue + ', ';
     var distanceString = 'metric=\'' + distanceValue + '\', ';
     var weightsString = 'weights=\'' + weightsValue + '\'';
-    var code = 'classification\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = KNeighborsClassifier(' + kString + distanceString + weightsString + ')';
+    var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = KNeighborsClassifier(' + kString + distanceString + weightsString + ')';
     return code;
   },
 };

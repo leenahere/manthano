@@ -251,7 +251,7 @@ class Data extends Component {
                      {tablecontent}
                  </div>
              </Tab>
-             <Tab eventKey="heatmap" title="Feature Heatmap">
+             <Tab eventKey="heatmap" title="Feature Correlation">
                <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
                    { heatmap }
                </div>

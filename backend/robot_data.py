@@ -5,7 +5,7 @@ import re
 import time
 
 # needs to be changed once running on ev3 (same directory name on every ev3!)
-DATA_DIRECTORY = 'csv_on_pi'
+DATA_DIRECTORY = 'csv_data'
 
 def read_all(ip, user, pw):
     print("read_all")

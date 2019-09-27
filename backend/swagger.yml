@@ -39,7 +39,7 @@ paths:
         200:
           description: Successfully read all entries
 
-  /runscript/{ip}/{user}/{pw}/{script}/{picklepath}:
+  /runscript/{ip}/{user}/{pw}/{picklepath}/{modelname}/{session}:
     get:
       operationId: connect_robot.run_script
       tags:
@@ -54,22 +54,27 @@ paths:
           required: True
         - name: user
           in: path
-          description: IP address given by user
+          description: robot user
           type: string
           required: True
         - name: pw
           in: path
-          description: IP address given by user
-          type: string
-          required: True
-        - name: script
-          in: path
-          description: IP address given by user
+          description: pw given by user
           type: string
           required: True
         - name: picklepath
           in: path
-          description: IP address given by user
+          description: path to model
+          type: string
+          required: True
+        - name: modelname
+          in: path
+          description: model name given by user
+          type: string
+          required: True
+        - name: session
+          in: path
+          description: session id
           type: string
           required: True
       responses:

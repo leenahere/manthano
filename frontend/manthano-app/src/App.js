@@ -40,8 +40,8 @@ class App extends Component {
     successfulModelRun: false,
     pathToPickledModel: "",
     scriptList: [],
-    selectedScript: "",
     runSuccess: false,
+    modelName: "",
   }
 
   trainedModelAvailable = (path) => {
@@ -79,6 +79,12 @@ class App extends Component {
     })
   }
 
+  handleChangeModelName = (event) => {
+    this.setState({
+      modelName: event.target.value
+    })
+  }
+
   // Handles Submission of connection form.
   handleSubmit = () => {
     // Backend checks if it can create a SFTP connection to robot and gets all necessary data from robot directories
@@ -105,17 +111,10 @@ class App extends Component {
     });
   }
 
-  _onSelectData = (e) => {
-    console.log(e.value);
-    this.setState({
-      selectedScript: e.value,
-    });
-  }
-
   handleRunScript = () => {
     console.log(this.state.sessionId)
     console.log(this.state.pathToPickledModel.concat(this.state.sessionId))
-    axios.get('http://'  + window.location.hostname + ':80/api/runscript/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw + '/' + this.state.selectedScript + '/' + this.state.pathToPickledModel.concat(this.state.sessionId))
+    axios.get('http://'  + window.location.hostname + ':80/api/runscript/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw + '/' + this.state.pathToPickledModel.concat(this.state.sessionId) + '/' + this.state.modelName + '/' + this.state.sessionId)
       .then(res => {
         console.log(res)
         this.setState({
@@ -167,11 +166,37 @@ class App extends Component {
       break;
     }
 
+    let sentModel;
+    if(this.state.runSuccess == true) {
+      sentModel = <span style={{color: 'green'}}>Model was successfully sent to robot</span>
+    } else {
+      sentModel = <span></span>
+    }
+
     let runModel;
     if(this.state.connected == 3) {
      runModel =  <div>
-       <Dropdown options={this.state.scriptList} onChange={this._onSelectData} value={this.state.selectedScript} placeholder="Select a script" />
-       <Button onClick={this.handleRunScript} disabled={!(this.state.successfulModelRun && (this.state.connected == 3))} variant="light">Run on Robot</Button>
+       <Popup
+            trigger={<Button disabled={!(this.state.successfulModelRun && (this.state.connected == 3))} variant="light">Send Model to Robot</Button>}
+            modal
+            closeOnDocumentClick
+            >
+            {close => (
+              <div>
+                <form>
+                  <label>
+                    Model Name:
+                    <input type="text" value={this.state.modelName} onChange={this.handleChangeModelName}/>
+                  </label>
+                  <Button onClick={() => {
+                      close();
+                      this.handleRunScript();
+                    }} variant="light">Send</Button>
+                  </form>
+              </div>
+            )}
+          </Popup>
+          { sentModel }
      </div>
     }
 

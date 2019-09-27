@@ -13,6 +13,9 @@ class ModelResults extends Component {
     resultData: "",
     resultDecBoundary: "",
     resultConfMatrix: "",
+    resultRegression: "",
+    mse: 0,
+    r2: 0,
     problem: "",
   }
 
@@ -34,7 +37,7 @@ class ModelResults extends Component {
       this.setState({ loading: true, problem: "classification"}, () => {
         axios.get(locationUrl)
         .then(res => {
-          this.props.trainedModel(res.data[2]);
+          this.props.trainedModel(res.data[3]);
           console.log(res.data);
           console.log(Date.now());
           axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[0] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
@@ -58,7 +61,7 @@ class ModelResults extends Component {
             console.log(error);
           });
 
-          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[3] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
+          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[2] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
           .then(res => {
             console.log(res);
             const base64Class = btoa(
@@ -110,15 +113,37 @@ class ModelResults extends Component {
         });
       });
     } else if (problemClass == 'regression') {
-      var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/regression/'+ encodeURIComponent(code);
+      var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/regression/'+ encodeURIComponent(code) + '/' + this.props.session;
       this.setState({ loading: true, problem: "regression"}, () => {
         axios.get(locationUrl)
         .then(res => {
+          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[0] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
+          .then(res => {
+            console.log(res);
+            const base64Class = btoa(
+              new Uint8Array(res.data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                '',
+              ),
+            );
+            this.setState({
+              resultRegression: "data:;base64," + base64Class,
+            });
+          })
+          .catch(error => {
+            this.setState({
+              loading: false,
+            })
+            alert("Couldn't plot regression plot");
+            console.log(error);
+          });
           console.log(res.data);
           this.setState({
             loading: false,
-            resultData: res.data,
+            mse: res.data[1],
+            r2: res.data[2]
           });
+          this.props.trainedModel(res.data[3]);
         })
         .catch(error => {
           this.setState(({
@@ -144,7 +169,10 @@ class ModelResults extends Component {
                     <img onDragStart={handleOnDragStart} src={this.state.resultDecBoundary}/>
                   </AliceCarousel>
       } else if (this.state.problem == "regression") {
-        result = <div><p>{ this.state.resultData[0] }</p><p>{ this.state.resultData[1] }</p></div>
+        result = <AliceCarousel mouseDragEnabled buttonsDisabled={true}>
+                    <img onDragStart={handleOnDragStart} src={this.state.resultRegression}/>
+                    <div><span>Mean Squared Error:  {this.state.mse} </span><br /><span>R2: {this.state.r2} </span></div>
+                  </AliceCarousel>
       } else {
         result = <span></span>;
       }

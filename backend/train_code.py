@@ -30,6 +30,8 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2, f_regression
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import LabelEncoder
+from sklearn.kernel_ridge import KernelRidge
+from sklearn.linear_model import Lasso, ElasticNet
 
 df = None
 X, y = None, None
@@ -37,6 +39,7 @@ X_train, X_test, y_train, y_test = None, None, None, None
 cols = None
 model = None
 problem_class = None
+order = 0
 
 
 def import_dataset(data):
@@ -57,29 +60,41 @@ def import_dataset(data):
     drop_more = sorted(to_drop)
     df = df.drop(df.columns[drop_more], axis=1)
 
-    if problem_class == 'classification':
-        two_best = SelectKBest(chi2, k=2).fit(X, y)
-        cols = two_best.get_support()
+    print("works")
+    print(X.shape)
+    print(y.shape)
+
+    if X.shape[1] > 2:
+        if problem_class == 'classification':
+            two_best = SelectKBest(chi2, k=2).fit(X, y)
+            cols = two_best.get_support()
+            print(cols)
+        elif problem_class == 'regression':
+            two_best = SelectKBest(f_regression, k=2).fit(X, y)
+            cols = two_best.get_support()
+            print(cols)
+    else:
+        cols = [True for i in range(0, X.shape[1])]
         print(cols)
-    elif problem_class == 'regression':
-        two_best = SelectKBest(f_regression, k=2).fit(X, y)
-        cols = two_best.get_support()
-        print(cols)
+
+    print("tada")
 
     X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, train_size=train_size)
     print("Split worked")
 
 
 def execute_classification_code(code, session):
-    global df, model, problem_class
+    global df, model, problem_class, order
     code_str = urllib.parse.unquote(code)
     code_arr = code_str.split("\n")
     print(code_arr)
     problem_class = code_arr[0]
     print(problem_class)
-    exec(code_arr[1])
+    order = code_arr[1]
+    print(order)
+    exec(code_arr[2])
     print(df)
-    exec(code_arr[2], globals())
+    exec(code_arr[3], globals())
 
     viz = ClassificationReport(model, cmap='PiYG')
     viz.fit(X_train, y_train)
@@ -92,7 +107,7 @@ def execute_classification_code(code, session):
     plt.close()
 
     le = LabelEncoder()
-    dec_viz = DecisionViz(model, title="Decision Boundaries", features=np.where(cols == True)[0].tolist(), classes=list(map(str, y.iloc[:, 0].unique())))
+    dec_viz = DecisionViz(model, title="Decision Boundaries", features=np.where(cols == True)[0].tolist(), classes=list(map(str, y.iloc[:, 0].unique())).sort())
     dec_viz.fit(X_train.to_numpy(), le.fit_transform(y_train))
     dec_viz.draw(X_test.to_numpy(), le.fit_transform(y_test))
     dec_viz.poof(outpath="./plots/decviz" + session + ".png")
@@ -102,7 +117,8 @@ def execute_classification_code(code, session):
     plt.cla()
     plt.close()
 
-    cm = ConfusionMatrix(model, classes=list(map(str, y.iloc[:, 0].unique())))
+    print(list(map(str, y.iloc[:, 0].unique())))
+    cm = ConfusionMatrix(model, classes=list(map(str, y.iloc[:, 0].unique())).sort())
     cm.fit(X_train, y_train)
     cm.score(X_test, y_test)
     plt.tight_layout()
@@ -119,7 +135,7 @@ def execute_classification_code(code, session):
     pickle_path = 'trained_model'
     pickle.dump(model, open(file, 'wb'))
 
-    return jsonify(image_path_class, image_path_dec, pickle_path, image_path_cm)
+    return jsonify(image_path_class, image_path_dec, image_path_cm, pickle_path)
 
 
 def send_image(imagepath, timestamp):
@@ -132,23 +148,50 @@ def send_image(imagepath, timestamp):
 
 def execute_regression_code(code, session):
     try:
-        global df, model, problem_class
+        global df, model, problem_class, order
         code_str = urllib.parse.unquote(code)
         code_arr = code_str.split("\n")
         print(code_arr)
         problem_class = code_arr[0]
         print(problem_class)
-        exec(code_arr[1])
+        order = code_arr[1]
+        print(order)
+        exec(code_arr[2])
         print(df)
-        exec(code_arr[2], globals())
+        exec(code_arr[3], globals())
+
+        feature_vis = X_test[X_test.columns[pd.Series(cols)]]
 
         plt.clf()
+        plt.cla()
+        plt.close()
 
         model.fit(X_train, y_train)
         y_predict = model.predict(X_test)
+
+        print(X_test[feature_vis.columns[0]].shape, y_test.shape)
+        print(y_test.to_numpy().ravel().shape)
+        print(y_predict.ravel().shape)
+        print(X_test[feature_vis.columns[0]].to_numpy(), y_predict)
+
+        sns.regplot(x=X_test[feature_vis.columns[0]], y=y_test.to_numpy().ravel(), color='blue', order=int(order))
+        sns.regplot(x=X_test[feature_vis.columns[0]], y=y_predict.ravel(), color='green', order=int(order))
+        #plt.scatter(X_test[feature_vis.columns[1]].to_numpy(), y_test, s=10)
+        #plt.scatter(X_test[feature_vis.columns[1]].to_numpy(), y_predict, color='r')
+        plt.savefig("./plots/regression" + session + ".png")
+        image_path = "regression"
         r2 = r2_score(y_test, y_predict)
         mse = mean_squared_error(y_test, y_predict)
-        return jsonify(r2, mse)
+
+        plt.clf()
+        plt.cla()
+        plt.close()
+
+        file = 'pickled_models/trained_model' + session + '.sav'
+        pickle_path = 'trained_model'
+        pickle.dump(model, open(file, 'wb'))
+
+        return jsonify(image_path, mse, r2, pickle_path)
     except:
         abort(400)
 

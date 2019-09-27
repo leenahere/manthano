@@ -50,7 +50,7 @@ class BlocklyWorkspace extends Component {
           <BlocklyDrawer
             style={{ height: 'calc(100vh - 210px)'}}
             language={Blockly.Python}
-            tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, annblocks.mlp, helperblocks.dataBlock, helperblocks.list]}
+            tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, annblocks.mlp, helperblocks.dataBlock, helperblocks.list, regblocks.kernelRidgeRegression, regblocks.lassoRegression, regblocks.elasticNetRegression]}
             onChange={this.handleChange}
             appearance={
               {
