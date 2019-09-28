@@ -7,7 +7,7 @@ def read_relevant(session_id):
     data = Data.query.filter(Data.session_id == session_id).all()
     if data is not None:
         data_schema = DataSchema(many=True)
-        return data_schema.dump(data).data
+        return data_schema.dump(data)
     else:
         abort(
             404, "data for {session} not found".format(session_id=session_id)
@@ -27,9 +27,9 @@ def create(data):
     delimiter = data.get("delimiter", None)
 
     schema = DataSchema()
-    new_data = schema.load(data, session=db.session).data
+    new_data = schema.load(data, session=db.session)
 
     db.session.add(new_data)
     db.session.commit()
 
-    return schema.dump(new_data).data
+    return schema.dump(new_data)

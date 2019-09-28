@@ -6,7 +6,7 @@ from models import ExampleData, ExampleDataSchema
 def read_all():
     data = ExampleData.query.with_entities(ExampleData.data_name).all()
     data_schema = ExampleDataSchema(many=True)
-    return data_schema.dump(data).data
+    return data_schema.dump(data)
 
 
 def read_file(filename):
@@ -14,7 +14,7 @@ def read_file(filename):
 
     if data is not None:
         data_schema = ExampleDataSchema()
-        return data_schema.dump(data).data
+        return data_schema.dump(data)
     else:
         abort(
             404, "file {filename} not found".format(filename=filename)
