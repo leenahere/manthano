@@ -4,9 +4,10 @@ import axios from 'axios';
 import { CsvToHtmlTable } from 'react-csv-to-table';
 import DataVisualization from './DataVisualization';
 import {Tab, Tabs, Table} from 'react-bootstrap';
-import DataSettings from './DataSettings';
+import DataPreprocessing from './DataPreprocessing';
 import convertCSVToArray from 'convert-csv-to-array';
 import Loader from 'react-loader-spinner';
+import { withTranslation, Translation  } from 'react-i18next';
 
 class Data extends Component {
   state = {
@@ -17,7 +18,7 @@ class Data extends Component {
     plotid: "",
     showPlot: false,
     exampleCSVList: [],
-    robotCSVList: this.props.csvList.length == 0 ? ['Connect to robot'] : this.props.csvList,
+    robotCSVList: this.props.csvList.length == 0 ? [] : this.props.csvList,
     robotCSVContents: this.props.csvContents,
     robotCSVDelimiters: this.props.delimiters,
     connection: this.props.connection,
@@ -155,6 +156,9 @@ class Data extends Component {
   render() {
     console.log(this.props);
     console.log(this.state.delimiter);
+
+    let { t } = this.props;
+
     const exampleData = this.state.exampleCSVList;
     let exampleDataList = exampleData.map((obj, id) => {
       return (<tr id={obj.data_name} onClick={this.handleClickExample} style={{cursor: 'pointer'}}>
@@ -164,12 +168,18 @@ class Data extends Component {
 
     console.log(this.state);
     const robotData = this.state.robotCSVList;
-    let robotDataList = robotData.map((obj, id) => {
-      console.log(obj)
-      return (<tr id={obj} onClick={this.handleClickRobot} style={{cursor: 'pointer'}}>
-                <th>{obj}</th>
-              </tr>);
-    });
+    let robotDataList;
+    if (robotData.length == 0) {
+      robotDataList = <span>{t("data.table.connect")}</span>;
+    } else {
+      robotDataList = robotData.map((obj, id) => {
+        console.log(obj)
+        return (<tr id={obj} onClick={this.handleClickRobot} style={{cursor: 'pointer'}}>
+                  <th>{obj}</th>
+                </tr>);
+      });
+    }
+    
 
     let tablecontent;
 
@@ -180,7 +190,7 @@ class Data extends Component {
                         tableClassName="table table-striped table-hover"
                       />;
     } else {
-      tablecontent = <h3>Select data to display</h3>;
+      tablecontent = <span>{t("data.selectionprompt")}</span>;
     }
 
     let exampleList = [];
@@ -205,7 +215,7 @@ class Data extends Component {
       heatmap = <Loader type="Oval" color="#a8a8a8" height={80} width={80} />
     } else {
       if (this.state.heatmap == "") {
-        heatmap = <span>Select data to display heatmap. If you've already selected data then the heatmap is not available</span>
+        heatmap = <span>{t("data.selectionpromptheatmap")}</span>
       } else {
         heatmap = <img src={this.state.heatmap} />
       }
@@ -219,7 +229,7 @@ class Data extends Component {
               <thead>
                 <tr>
                   <th>
-                    Example Data
+                    {t("data.table.example")}
                   </th>
                 </tr>
               </thead>
@@ -231,7 +241,7 @@ class Data extends Component {
               <thead>
                 <tr>
                   <th>
-                    Robot Data
+                  {t("data.table.robot")}
                   </th>
                 </tr>
               </thead>
@@ -246,24 +256,24 @@ class Data extends Component {
              activeKey={this.state.key}
              onSelect={key => this.setState({ key })}
            >
-             <Tab eventKey="home" title="Table">
+             <Tab eventKey="home" title={t("data.tabs.data")}>
                  <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
                      {tablecontent}
                  </div>
              </Tab>
-             <Tab eventKey="heatmap" title="Feature Correlation">
+             <Tab eventKey="heatmap" title={t("data.tabs.heatmap")}>
                <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
                    { heatmap }
                </div>
              </Tab>
-             <Tab eventKey="plot" title="Plot">
+             <Tab eventKey="plot" title={t("data.tabs.plot")}>
                  <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
                      <DataVisualization csv={this.state.loadedCSV} list={this.state.dndList} delimiter={this.state.delimiter} session={this.props.session} />
                  </div>
              </Tab>
-             <Tab eventKey="enhance" title="Preprocessing">
+             <Tab eventKey="enhance" title={t("data.tabs.preprocessing")}>
                 <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
-                 <DataSettings forceUpdate={this.handOver} dataList={allData} session={this.props.session} csvList={this.props.csvList} csvContents={this.props.csvContents} delimiters={this.props.delimiters}/>
+                 <DataPreprocessing forceUpdate={this.handOver} dataList={allData} session={this.props.session} csvList={this.props.csvList} csvContents={this.props.csvContents} delimiters={this.props.delimiters}/>
                 </div>
              </Tab>
            </Tabs>
@@ -283,4 +293,4 @@ Data.propTypes = {
   connection: PropTypes.string.isRequired
 }
 
-export default Data;
+export default withTranslation(['translations'])(Data);

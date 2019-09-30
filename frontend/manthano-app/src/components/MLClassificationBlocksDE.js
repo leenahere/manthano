@@ -6,32 +6,30 @@ const classificationColor = 56;
 // Logistic Regression block that converts to sklearn.linear_model.LogisticRegression
 export const logRegression = {
   name: 'logRegression',
-  category: 'Classification',
+  category: 'Klassifikation',
   block: {
     init: function () {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train logistic regression model");
+        .appendField("Trainiere logistische Regression");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("problem")
-        .appendField(new Blockly.FieldDropdown([["multinomial","multinomial"], ["binary", "ovr"]]), "problem");
+        .appendField("Problem")
+        .appendField(new Blockly.FieldDropdown([["multinomial","multinomial"], ["binär", "ovr"]]), "problem");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("learning algorithm")
+        .appendField("Lernalgorithmus")
         .appendField(new Blockly.FieldDropdown([["lbfgs","lbfgs"], ["liblinear", "liblinear"], ["newtoncg", "newton-cg"], ["saga", "saga"]]), "solver");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("features");
+        .appendField("Merkmale");
       this.appendValueInput("labels")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("labels");
+        .appendField("Kategorien");
       this.setInputsInline(false);
       this.setColour(classificationColor);
-      this.setTooltip("");
-      this.setHelpUrl("");
     },
   },
   generator: (block) => {
@@ -52,24 +50,24 @@ export const logRegression = {
 // Naive Bayes block that converts to sklearn.naive_bayes
 export const naiveBayes = {
   name: 'naiveBayes',
-  category: 'Classification',
+  category: 'Klassifikation',
   block: {
     init: function () {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train naive bayes model");
+        .appendField("Trainiere naiven Bayes-Klassifikator");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("type")
-        .appendField(new Blockly.FieldDropdown([["Gaussian","GaussianNB()"], ["Multinomial", "MultinomialNB()"], ["Complement", "ComplementNB()"], ["Bernoulli", "BernoulliNB()"]]), "type");
+        .appendField("Typ")
+        .appendField(new Blockly.FieldDropdown([["Gauß","GaussianNB()"], ["Multinomial", "MultinomialNB()"], ["Komplement", "ComplementNB()"], ["Bernoulli", "BernoulliNB()"]]), "type");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("features");
+        .appendField("Merkmale");
       this.appendValueInput("labels")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("labels");
+        .appendField("Kategorien");
       this.setInputsInline(false);
       this.setColour(classificationColor);
       this.setTooltip("");
@@ -91,28 +89,28 @@ export const naiveBayes = {
 // Support vector machine block that converts to sklearn.svm.SVC
 export const svm = {
   name: 'svm',
-  category: 'Classification',
+  category: 'Klassifikation',
   block: {
     init: function () {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train support vector machine");
+        .appendField("Trainiere Support Vector Maschine");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("kernel")
+        .appendField("Kernel")
         .appendField(new Blockly.FieldDropdown([["linear","linear"], ["poly", "poly"], ["rbf", "rbf"], ["sigmoid", "sigmoid"]]), "kernel");
       this.appendValueInput("degreePoly")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("degree for polynomial kernel");
+        .appendField("Grad für polynomiellen Kernel");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("features");
+        .appendField("Merkmale");
       this.appendValueInput("labels")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("labels");
+        .appendField("Kategorien");
       this.setInputsInline(false);
       this.setColour(classificationColor);
       this.setTooltip("");
@@ -142,32 +140,32 @@ export const svm = {
 // Decision Tree Block that converts to sklearn.tree.DecisionTreeClassifier
 export const decisionTree = {
   name: 'decisionTree',
-  category: 'Classification',
+  category: 'Klassifikation',
   block: {
     init: function () {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train decision tree");
+        .appendField("Trainiere Entscheidungsbaum");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("classification criterion")
-        .appendField(new Blockly.FieldDropdown([["gini","gini"], ["entropy", "entropy"]]), "criterion");
+        .appendField("Klassifikationkriterum")
+        .appendField(new Blockly.FieldDropdown([["Gini","gini"], ["Entropie", "entropy"]]), "criterion");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("splitting strategy")
-        .appendField(new Blockly.FieldDropdown([["best","best"], ["random", "random"]]), "splitter");
+        .appendField("Teilungsstrategie")
+        .appendField(new Blockly.FieldDropdown([["Beste","best"], ["Zufällig", "random"]]), "splitter");
       this.appendValueInput("depth")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("depth");
+        .appendField("Tiefe");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("features");
+        .appendField("Merkmale");
       this.appendValueInput("labels")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("labels");
+        .appendField("Kategorien");
       this.setInputsInline(false);
       this.setColour(classificationColor);
       this.setTooltip("");
@@ -194,32 +192,32 @@ export const decisionTree = {
 // K nearest neighbors block that converts to sklearn.neighbors.KNeighborsClassifier
 export const kNearNeigh = {
   name: 'kNearNeigh',
-  category: 'Classification',
+  category: 'Klassifikation',
   block: {
     init: function () {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train k-nearest neigbors model");
+        .appendField("Trainiere Nächste-Nachbarn-Klassifikator");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("distance metric")
-          .appendField(new Blockly.FieldDropdown([["euclidean","euclidean"], ["manhattan","manhattan"], ["chebyshev","chebyshev"], ["minkowski","minkowski"]]), "distance");
+          .appendField("Abstandsmetrik")
+          .appendField(new Blockly.FieldDropdown([["Euklid","euclidean"], ["Manhattan","manhattan"], ["Chebyshev","chebyshev"], ["Minkowski","minkowski"]]), "distance");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("weights")
-          .appendField(new Blockly.FieldDropdown([["uniform", "uniform"], ["distance", "distance"]]), "weights");
+          .appendField("Gewichtung")
+          .appendField(new Blockly.FieldDropdown([["Uniform", "uniform"], ["Distanz", "distance"]]), "weights");
       this.appendValueInput("k")
           .setCheck("Number")
           .setAlign(Blockly.ALIGN_LEFT)
-          .appendField("number of neighbors to consider");
+          .appendField("Anzahl der berücksichtigten Nachbarn");
       this.appendValueInput("features")
           .setCheck("data")
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("features");
+          .appendField("Merkmale");
       this.appendValueInput("labels")
           .setCheck("data")
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("labels");
+          .appendField("Kategorien");
       this.setInputsInline(false);
       this.setColour(classificationColor);
       this.setTooltip("");

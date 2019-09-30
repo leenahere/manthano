@@ -6,9 +6,10 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import Slider from '@material-ui/core/Slider';
 import DragDrop from './DataDragNDrop';
+import { withTranslation, Translation  } from 'react-i18next';
 
 
-class DataSettings extends Component {
+class DataPreprocessing extends Component {
   state = {
     scaler: "None",
     selectedData: "",
@@ -157,6 +158,7 @@ class DataSettings extends Component {
   }
 
   render() {
+    let { t } = this.props;
     console.log(this.state);
     const options = ['None', 'Standard', 'MinMax', 'Normalization'];
     const defaultOption = this.state.scaler;
@@ -169,40 +171,39 @@ class DataSettings extends Component {
     return(
       <div>
       <div>
-        <label>Data</label>
-        <Dropdown options={dataOptions} onChange={this._onSelectData} value={this.state.selectedData} placeholder="Select a dataset" />
+        <label>{t("preprocessing.datalabel")}</label>
+        <Dropdown options={dataOptions} onChange={this._onSelectData} value={this.state.selectedData} placeholder={t("preprocessing.dropdowndefault")} />
       </div>
-      <b><em>All data that isn't dragged to either the features or labels column will be dropped.</em></b>
+      <b><em>{t("preprocessing.explanationdnd")}</em></b>
       <DragDrop list={this.state.dndList} callbackFromParent={this.myCallback}/>
       <div>
-        <label>Scale Data</label>
-        <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />
+        <label>{t("preprocessing.scalelabel")}</label>
+        <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder={t("preprocessing.scaledropdown")} />
       </div>
       <div>
       </div>
       <div>
-        <label><u>Save Data</u></label>
         <Form onSubmit={this.saveSettings}>
           <Form.Row>
-            <Form.Label>Name for configured data</Form.Label>
+            <Form.Label>{t("preprocessing.name")}</Form.Label>
             <Form.Control
               onChange={this.handleNameChange}
               required
               type="text"
-              placeholder="dataset1"
+              placeholder={t("preprocessing.nameplaceholder")}
             />
           </Form.Row>
           <Form.Row>
-            <Form.Label>Percentage taken as test data</Form.Label>
+            <Form.Label>{t("preprocessing.percentage")}</Form.Label>
               <Form.Label>Training {this.state.trData}</Form.Label>
               <Slider onChange={this.splitChange} defaultValue={70} min={0} max={100} step={10} marks aria-labelledby="discrete-slider" />
               <Form.Label>Test {this.state.testData}</Form.Label>
           </Form.Row>
           <Form.Group id="formGridCheckbox">
-            <Form.Check checked={this.state.checkboxChecked} onChange={this.handleChange} type="checkbox" label="Shuffle data when splitting into training and text set" />
+            <Form.Check checked={this.state.checkboxChecked} onChange={this.handleChange} type="checkbox" label={t("preprocessing.checkbox")} />
           </Form.Group>
           <Button variant="primary" type="submit">
-              Submit
+          {t("preprocessing.submit")}
           </Button>
         </Form>
       </div>
@@ -212,7 +213,7 @@ class DataSettings extends Component {
   }
 }
 
-DataSettings.propTypes = {
+DataPreprocessing.propTypes = {
   forceUpdate: PropTypes.func.isRequired,
   session: PropTypes.string.isRequired,
   dataList: PropTypes.array.isRequired,
@@ -221,4 +222,4 @@ DataSettings.propTypes = {
   delimiters: PropTypes.array.isRequired,
 }
 
-export default DataSettings
+export default withTranslation(['translations'])(DataPreprocessing)

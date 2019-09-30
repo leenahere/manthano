@@ -6,6 +6,10 @@ import * as classblocks from './MLClassificationBlocks';
 import * as helperblocks from './helperBlocks';
 import * as regblocks from './MLRegressionBlocks';
 import * as annblocks from './ANNBlocks';
+import * as classblocksde from './MLClassificationBlocksDE';
+import * as helperblocksde from './helperBlocksDE';
+import * as regblocksde from './MLRegressionBlocksDE';
+import * as annblocksde from './ANNBlocksDE';
 import axios from 'axios';
 
 /**
@@ -19,7 +23,7 @@ class BlocklyWorkspace extends Component {
    * This leads to the foldout menu containing the blocks immediatley closing again which makes the whole workspace unusable.
    */
   shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.forceUpdate === nextProps.forceUpdate) {
+    if (this.props.forceUpdate === nextProps.forceUpdate && this.props.language === nextProps.language) {
       console.log("Blockly Workspace doesnt update");
       return false;
     }
@@ -42,46 +46,84 @@ class BlocklyWorkspace extends Component {
   }
 
   render() {
+    let workspace;
+    // Since react i18n doesn't work with custom blockly blocks, the whole workspace is simply translated and re-rendered when the language is changed
+    if (this.props.language == 'de') {
+      workspace =  <BlocklyDrawer
+                    style={{ height: 'calc(100vh - 210px)'}}
+                    language={Blockly.Python}
+                    tools={[classblocksde.kNearNeigh, classblocksde.logRegression, classblocksde.naiveBayes, classblocksde.svm, regblocksde.linRegression, regblocksde.polyRegression, classblocksde.decisionTree, annblocksde.mlp, helperblocksde.dataBlock, helperblocksde.list, regblocksde.kernelRidgeRegression, regblocksde.lassoRegression, regblocksde.elasticNetRegression]}
+                    onChange={this.handleChange}
+                    appearance={
+                    {
+                      categories: {
+                        Klassifikation: {
+                          colour: '56'
+                        },
+                        Daten: {
+                          colour: '30'
+                        },
+                        NeuronaleNetze: {
+                          colour: '320'
+                        },
+                        Liste: {
+                          colour: '190'
+                        },
+                        Regression: {
+                          colour: '120'
+                        }
+
+                      },
+                    }
+                  }
+                >
+                  <Category name="Wert" colour='%{BKY_MATH_HUE}' >
+                    <Block type="math_number" />
+                  </Category>
+                </BlocklyDrawer>
+    } else {
+      workspace = <BlocklyDrawer
+                  style={{ height: 'calc(100vh - 210px)'}}
+                  language={Blockly.Python}
+                  tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, annblocks.mlp, helperblocks.dataBlock, helperblocks.list, regblocks.kernelRidgeRegression, regblocks.lassoRegression, regblocks.elasticNetRegression]}
+                  onChange={this.handleChange}
+                  appearance={
+                    {
+                      categories: {
+                        Demo: {
+                          colour: '270'
+                        },
+                        Classification: {
+                          colour: '56'
+                        },
+                        Data: {
+                          colour: '30'
+                        },
+                        NeuralNets: {
+                          colour: '320'
+                        },
+                        List: {
+                          colour: '190'
+                        },
+                        Regression: {
+                          colour: '120'
+                        }
+
+                      },
+                    }
+                  }
+                >
+                  <Category name="Value" colour='%{BKY_MATH_HUE}' >
+                    <Block type="math_number" />
+                  </Category>
+                </BlocklyDrawer>
+    }
     // Changes saturation and value of block colors in whole workspace
     Blockly.HSV_SATURATION = 0.9;
     Blockly.HSV_VALUE = 0.9;
     return (
       <div>
-          <BlocklyDrawer
-            style={{ height: 'calc(100vh - 210px)'}}
-            language={Blockly.Python}
-            tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, annblocks.mlp, helperblocks.dataBlock, helperblocks.list, regblocks.kernelRidgeRegression, regblocks.lassoRegression, regblocks.elasticNetRegression]}
-            onChange={this.handleChange}
-            appearance={
-              {
-                categories: {
-                  Demo: {
-                    colour: '270'
-                  },
-                  Classification: {
-                    colour: '56'
-                  },
-                  Data: {
-                    colour: '30'
-                  },
-                  NeuralNets: {
-                    colour: '320'
-                  },
-                  List: {
-                    colour: '190'
-                  },
-                  Regression: {
-                    colour: '120'
-                  }
-
-                },
-              }
-            }
-          >
-            <Category name="Values" colour='%{BKY_MATH_HUE}' >
-              <Block type="math_number" />
-            </Category>
-          </BlocklyDrawer>
+          { workspace }
       </div>
     );
   }
@@ -93,6 +135,7 @@ BlocklyWorkspace.propTypes = {
   pythonCode: PropTypes.string.isRequired,
   forceUpdate: PropTypes.bool.isRequired,
   session: PropTypes.string.isRequired,
+  language: PropTypes.string.isRequired,
 }
 
 export default BlocklyWorkspace;

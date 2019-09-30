@@ -2,6 +2,7 @@ import React from 'react';
 import DndData from '../DndData';
 import styled from 'styled-components';
 import {Droppable} from 'react-beautiful-dnd';
+import { withTranslation, Translation  } from 'react-i18next';
 
 const Container = styled.div`
   margin: 10px;
@@ -25,11 +26,20 @@ const DataList = styled.div`
 /**
  * Column Component for the Data DragNDrop Component
  */
-export default class Column extends React.Component {
+class Column extends React.Component {
   render() {
+    let { t } = this.props;
+    let title;
+    if (this.props.column.title == "Features") {
+      title = <Title>{t("dnd.features")}</Title>;
+    } else if (this.props.column.title == "Labels") {
+      title = <Title>{t("dnd.labels")}</Title>;
+    } else if (this.props.column.title == "Data") {
+      title = <Title>{t("dnd.data")}</Title>;
+    }
     return (
       <Container>
-        <Title>{this.props.column.title}</Title>
+        { title }
           <Droppable droppableId={this.props.column.id}>
             {(provided) => (
               <DataList
@@ -47,3 +57,5 @@ export default class Column extends React.Component {
     );
   }
 }
+
+export default withTranslation(['translations'])(Column);

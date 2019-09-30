@@ -1,0 +1,72 @@
+{
+    "app": {
+        "subtitle": "Learn How Machines Learn",
+        "connect": "Connect to Robot",
+        "sendmodel": "Send Model to Robot",
+        "modelname": "name for model",
+        "sendbutton": "Send",
+        "sendsuccess": "Your model was successfully sent to your robot",
+        "form": {
+            "ip": "IP Address",
+            "user": "User",
+            "password": "Password",
+            "submit": "Connect",
+            "validip": "valid IP address",
+            "invalidip": "invalid IP address"
+        },
+        "connection": {
+            "unsuccessful": "Connection refused. Please re-check your robot's IP and try again.",
+            "successful": "Connection successful. You are connected to the robot.",
+            "default": "Something's wrong"
+        }
+    },
+    "workspace": {
+        "tab1": "Model Development",
+        "tab2": "Data Analysis & Preprocessing"
+    },
+    "modelresults": {
+        "button": "Train Model"
+    },
+    "plot": {
+        "button": "Reset"
+    },
+    "data": {
+        "selectionprompt": "Select data on the left to display them",
+        "selectionpromptheatmap": "Select data on the left to display heatmap. If you've already selected data then the heatmap isn't available for this dataset",
+        "table": {
+            "example": "Sample Data",
+            "robot": "Data from Robot",
+            "connect": "No robot connected"
+        },
+        "tabs": {
+            "data": "Data",
+            "heatmap": "Feature Correlation",
+            "plot": "Plot Data",
+            "preprocessing": "Preprocess Data"
+        }
+    },
+    "dnd": {
+        "data": "Data",
+        "features": "Features",
+        "labels": "Labels"
+    },
+    "datavisualization": {
+        "error": "Your chosen data could not be plotted. Please try to match features and labels again and be sure to select a problem class",
+        "radio1": "Classification",
+        "radio2": "Regression",
+        "button": "Plot",
+        "problemclass": "Select a problem class"
+    },
+    "preprocessing": {
+        "datalabel": "Data",
+        "dropdowndefault": "Select a data set",
+        "explanationdnd": "All data that isn't dragged to either the features or the labels column will be dropped",
+        "scalelabel": "Scale Data",
+        "scaledropdown": "Select a scaler",
+        "name": "Name for the preprocessed data",
+        "nameplaceholder": "data1",
+        "percentage": "Ratio of trainings and test data",
+        "checkbox": "Shuffle data when splitting into training and test set",
+        "submit": "Save Data"
+    }
+}

@@ -5,6 +5,8 @@ import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
+import { withTranslation, Translation  } from 'react-i18next';
+
 
 // updates when state and props change
 class ModelResults extends Component {
@@ -159,7 +161,7 @@ class ModelResults extends Component {
 
   render() {
     const handleOnDragStart = e => e.preventDefault();
-
+    let { t } = this.props;
     let result;
     if (this.state.loading == false) {
       if (this.state.problem == "classification") {
@@ -182,7 +184,7 @@ class ModelResults extends Component {
 
     return (
       <div>
-        <Button variant="light" onClick={this.handleClickRun}>Run Model</Button>
+        <Button variant="light" onClick={this.handleClickRun}>{t("modelresults.button")}</Button>
         { result }
       </div>
     );
@@ -197,4 +199,4 @@ ModelResults.propTypes = {
   trainedModel: PropTypes.func.isRequired,
 }
 
-export default ModelResults;
+export default withTranslation(['translations'])(ModelResults);
