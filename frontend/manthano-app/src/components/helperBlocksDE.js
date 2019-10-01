@@ -171,7 +171,7 @@ export var dataBlock = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
         .appendField("Aus Daten")
-        .appendField(new Blockly.FieldDropdown(getListsForDataBlock([["iris", "iris"]])),'data');
+        .appendField(new Blockly.FieldDropdown(getListsForDataBlock([["irisBeispiel", "irisExample"]])),'data');
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
         .appendField("entnehme")
