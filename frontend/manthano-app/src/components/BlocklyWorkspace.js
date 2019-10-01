@@ -48,7 +48,7 @@ class BlocklyWorkspace extends Component {
   render() {
     let workspace;
     // Since react i18n doesn't work with custom blockly blocks, the whole workspace is simply translated and re-rendered when the language is changed
-    if (this.props.language == 'de') {
+    if (this.props.language == 'de' || this.props.language == 'de-DE') {
       workspace =  <BlocklyDrawer
                     style={{ height: 'calc(100vh - 210px)'}}
                     language={Blockly.Python}
