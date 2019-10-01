@@ -1,0 +1,4 @@
+FROM node
+
+WORKDIR "/home"
+CMD ["yarn", "start"]
