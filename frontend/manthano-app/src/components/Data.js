@@ -29,7 +29,6 @@ class Data extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.connection != nextProps.connection) {
       if (nextProps.connection == 3) {
         this.setState({
             robotCSVList: nextProps.csvList,
@@ -39,11 +38,10 @@ class Data extends Component {
           });
       } else {
         this.setState({
-          robotCSVList: ['Connect to robot to display data'],
+          robotCSVList: [],
           connection: nextProps.connection
         })
       }
-    }
   }
 
   componentDidMount() {

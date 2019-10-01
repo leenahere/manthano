@@ -215,6 +215,13 @@ class App extends Component {
       sentModel = <span></span>
     }
 
+    let reloadRobotConnection;
+    if(this.state.connected == 3) {
+      reloadRobotConnection =<Button style={{margin: '5px 5px 5px 5px'}} variant="light" onClick={this.handleSubmit}><Emoji symbol="🔄"/></Button>
+    } else {
+      reloadRobotConnection = <span></span>
+    }
+
     let runModel;
     if(this.state.connected == 3) {
      runModel =  <div>
@@ -350,7 +357,12 @@ class App extends Component {
           </Popup>
           { this.state.connectionLoading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : ev3Connect}
           <div>
-            { runModel }
+            <div>
+              { reloadRobotConnection }
+            </div>
+            <div>
+              { runModel }
+            </div>
           </div>
         </div>
         <div>
