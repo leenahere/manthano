@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Button} from 'react-bootstrap';
+import { withTranslation, Translation  } from 'react-i18next';
 
 class Plot extends Component {
   onResetClick = () => {
@@ -8,9 +9,10 @@ class Plot extends Component {
   }
 
   render() {
+    let { t } = this.props;
     return (
       <div>
-        <Button variant="light" onClick={this.onResetClick}>Reset</Button>
+        <Button variant="light" onClick={this.onResetClick}>{t("plot.button")}</Button>
         <img src={this.props.plot}/>
       </div>
     );
@@ -22,4 +24,4 @@ Plot.propTypes = {
   showPlot: PropTypes.func.isRequired,
 }
 
-export default Plot;
+export default withTranslation(['translations'])(Plot);

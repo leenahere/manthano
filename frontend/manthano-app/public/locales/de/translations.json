@@ -1,0 +1,73 @@
+{
+    "app": {
+        "subtitle": "Lerne wie Maschinen lernen",
+        "connect": "Mit Roboter verbinden",
+        "sendmodel": "Modell an Roboter senden",
+        "modelname": "Name für Modell",
+        "sendbutton": "Senden",
+        "sendsuccess": "Das Modell wurde erfolgreich auf deinen Roboter übertragen",
+        "form": {
+            "ip": "IP-Adresse",
+            "user": "Benutzername",
+            "password": "Passwort",
+            "submit": "Verbinden",
+            "validip": "zulässige IP-Adresse",
+            "invalidip": "unzulässige IP-Adresse"
+        },
+        "connection": {
+            "unsuccessful": "Verbindung ist fehlgeschlafen. Überprüfe die Verbindungsdaten für deinen Roboter und probiere es erneut.",
+            "successful": "Verbindung war erfolgreich. Du bist jetzt mit dem Roboter verbunden. ",
+            "default": "Es liegt ein Fehler vor."
+        }
+    },
+    "workspace": {
+        "tab1": "Modellentwicklung",
+        "tab2": "Datenanalyse & -vorbereitung"
+    },
+    "modelresults": {
+        "button": "Modell trainieren"
+    },
+    "plot": {
+        "button": "Zurücksetzen"
+    },
+    "data": {
+        "selectionprompt": "Wähle links Daten aus, um sie dir anzuschauen",
+        "selectionpromptheatmap": "Wähle links Daten aus, um dir die Heatmap anzuschauen. Solltest du bereits Daten ausgewählt haben, ist die Heatmap für diese nicht verfügbar",
+        "table": {
+            "example": "Beispieldaten",
+            "robot": "Daten auf dem Roboter",
+            "connect": "Kein Roboter verbunden"
+        } ,
+        "tabs": {
+            "data": "Daten",
+            "heatmap": "Zusammenhang zwischen Merkmalen",
+            "plot": "Datendiagramme",
+            "preprocessing": "Aufbereitung der Daten"
+        }   
+    },
+    "dnd": {
+        "data": "Daten",
+        "features": "Merkmale",
+        "labels": "Kategorien"
+    },
+    "datavisualization": {
+        "error": "Die ausgewählten Daten konnten nicht dargestellt werden. Stelle sicher, dass du Merkmale und Kategorien richtig gesetzt hast und eine Problemklasse ausgewählt hast",
+        "radio1": "Klassifikation",
+        "radio2": "Regression",
+        "button": "Darstellen",
+        "problemclass": "Wähle eine Problemklasse aus"
+    },
+    "preprocessing": {
+        "datalabel": "Daten",
+        "dropdowndefault": "Wähle ein Datenset aus",
+        "explanationdnd": "Alle Daten, die nicht zu Merkmale oder Kategorien verschoben werden, werden gelöscht",
+        "scalelabel": "Daten skalieren",
+        "scaledropdown": "Wähle einen Skalierer aus",
+        "name": "Name für die aufbereiteten Daten",
+        "nameplaceholder": "daten1",
+        "percentage": "Verhältnis von Trainings- und Testdaten",
+        "checkbox": "Daten mischen, wenn sie geteilt werden",
+        "submit": "Daten speichern"
+    }
+
+}

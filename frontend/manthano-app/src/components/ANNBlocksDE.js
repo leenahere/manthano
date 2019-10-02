@@ -1,4 +1,5 @@
 import Blockly from 'node-blockly/browser';
+import { withTranslation, Translation  } from 'react-i18next';
 
 // Hue for neural net blocks
 const neuralNetColor = 320;
@@ -6,44 +7,44 @@ const neuralNetColor = 320;
 // Multi Layer Perceptron block which converts to either sklearn.neural_network.MLPClassifier or sklearn.neural_network.MLPRegressor depending on the problem class given by the user
 export const mlp = {
   name: 'mlp',
-  category: 'NeuralNets',
+  category: 'NeuronaleNetze',
   block: {
     init: function () {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("train multi layer perceptron");
+        .appendField("Trainiere mehrlagiges Perzeptron");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("problem")
-          .appendField(new Blockly.FieldDropdown([["classification","classification"], ["regression","regression"]]), "problem");
+          .appendField("Problem")
+          .appendField(new Blockly.FieldDropdown([["Klassifikation","classification"], ["Regression","regression"]]), "problem");
       this.appendValueInput("layers")
           .setCheck("list")
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("layers");
+          .appendField("Schichten");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("learning algorithm")
+          .appendField("Lernalgorithmus")
           .appendField(new Blockly.FieldDropdown([["lbfgs","lbfgs"], ["adam","adam"], ["sgd","sgd"]]), "solver");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("activation")
+          .appendField("Aktivierungsfunktion")
           .appendField(new Blockly.FieldDropdown([["identity", "identity"], ["logistic", "logistic"], ["tanh", "tanh"], ["relu", "relu"]]), "activation");
       this.appendValueInput("alpha")
           .setCheck("Number")
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("learning rate");
+          .appendField("Lernrate");
       this.appendValueInput("maxIter")
           .setCheck("Number")
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("maximum iterations");
+          .appendField("Maximale Iterationen");
       this.appendValueInput("features")
           .setCheck("data")
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("features");
+          .appendField("Merkmale");
       this.appendValueInput("labels")
           .setCheck("data")
           .setAlign(Blockly.ALIGN_RIGHT)
-          .appendField("labels");
+          .appendField("Kategorien");
       this.setInputsInline(false);
       this.setColour(neuralNetColor);
       this.setTooltip("");

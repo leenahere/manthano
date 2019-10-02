@@ -6,6 +6,9 @@ import Loader from 'react-loader-spinner';
 import Popup from 'reactjs-popup';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-dropdown';
+import { withTranslation, Translation  } from 'react-i18next';
+import Emoji from './components/Emoji';
+import i18n from './i18n';
 
 // connection "enum" for connecting to a robot
 const connection = {
@@ -42,6 +45,7 @@ class App extends Component {
     scriptList: [],
     runSuccess: false,
     modelName: "",
+    language: "",
   }
 
   trainedModelAvailable = (path) => {
@@ -129,6 +133,22 @@ class App extends Component {
       });
   }
 
+  changeToGer = () => {
+    console.log("Deutsch");
+    i18n.changeLanguage('de');
+    this.setState({
+      language: 'de',
+    });
+  }
+
+  changeToEn = () => {
+    console.log("Englisch");
+    i18n.changeLanguage('en');
+    this.setState({
+      language: 'en',
+    });
+  }
+
   componentDidMount() {
     // Generate session ID and store it in local storage if not existent
     if(localStorage.getItem('sessionID') != null) {
@@ -145,39 +165,75 @@ class App extends Component {
         isLoaded: true
       });
     }
+    
+    i18n.changeLanguage(navigator.language);
+    this.setState({
+      language: navigator.language,
+    });
+    console.log(navigator.language);
   }
 
   render() {
-    // ev3Connect gives user feedback if the Connection to the robot was successfull
-    console.log(this.state)
+    console.log(this.state);
+    console.log(i18n.language);
     let ev3Connect;
     switch(this.state.connected) {
       case connection.UNKNOWN:
       ev3Connect = <span></span>
       break;
       case connection.UNUSCCESSFUL:
-      ev3Connect = <span style={{color: 'red'}}>Connection refused. Please re-check your robot's IP and try again.</span>
+      ev3Connect = <Translation ns="translations">
+                      {
+                        (t, { i18n }) => <span style={{color: 'red'}}>{t("app.connection.unsuccessful")}</span>
+                      }
+                    </Translation>
       break;
       case connection.SUCCESSFUL:
-      ev3Connect = <span style={{color: 'green'}}>Connection successful. You are connected to the robot with the IP address {this.state.ip}</span>
+      ev3Connect =<Translation ns="translations">
+                      {
+                        (t, { i18n }) => <span style={{color: 'green'}}>{t("app.connection.successful")}</span>
+                      }
+                  </Translation>
       break;
       default:
-      ev3Connect = <span>Something's wrong</span>
+      ev3Connect = <Translation ns="translations">
+                      {
+                        (t, { i18n }) => <span style={{color: 'red'}}>{t("app.connection.default")}</span>
+                      }
+                   </Translation>
       break;
     }
 
     let sentModel;
     if(this.state.runSuccess == true) {
-      sentModel = <span style={{color: 'green'}}>Model was successfully sent to robot</span>
+      sentModel = <Translation ns="translations">
+                    {
+                       (t, { i18n }) => <span style={{color: 'green'}}>{t("app.sendsuccess")}</span>
+                    }
+                  </Translation>
     } else {
       sentModel = <span></span>
+    }
+
+    let reloadRobotConnection;
+    if(this.state.connected == 3) {
+      reloadRobotConnection =<Button style={{margin: '5px 5px 5px 5px'}} variant="light" onClick={this.handleSubmit}><Emoji symbol="🔄"/></Button>
+    } else {
+      reloadRobotConnection = <span></span>
     }
 
     let runModel;
     if(this.state.connected == 3) {
      runModel =  <div>
        <Popup
-            trigger={<Button disabled={!(this.state.successfulModelRun && (this.state.connected == 3))} variant="light">Send Model to Robot</Button>}
+            trigger={<Button disabled={!(this.state.successfulModelRun && (this.state.connected == 3))} variant="light">
+                      <Translation ns="translations">
+                        {
+                          (t, { i18n }) => <span>{t("app.sendmodel")}</span>
+                         }
+                       </Translation>
+                    </Button>
+                    }
             modal
             closeOnDocumentClick
             >
@@ -185,13 +241,21 @@ class App extends Component {
               <div>
                 <form>
                   <label>
-                    Model Name:
+                    <Translation ns="translations">
+                        {
+                            (t, { i18n }) => <span>{t("app.modelname")}</span>
+                        }
+                    </Translation>
                     <input type="text" value={this.state.modelName} onChange={this.handleChangeModelName}/>
                   </label>
                   <Button onClick={() => {
                       close();
                       this.handleRunScript();
-                    }} variant="light">Send</Button>
+                    }} variant="light"><Translation ns="translations">
+                    {
+                      (t, { i18n }) => <span>{t("app.sendbutton")}</span>
+                     }
+                   </Translation></Button>
                   </form>
               </div>
             )}
@@ -212,9 +276,29 @@ class App extends Component {
       return(
       <div>
         <div>
-          <h1 style={{ fontFamily: 'Liu Jian Mao Cao', fontSize: '80px'}}>&mu;anth&aacute;n&#333;</h1>
+          <div style={{ display: 'flex'}}>
+            <div style={{ display: 'flex', flexDirection: 'column'}}>
+              <h1 style={{ fontFamily: 'Liu Jian Mao Cao', fontSize: '80px'}}>&mu;anth&aacute;n&#333;</h1>
+              <Translation ns="translations">
+                {
+                  (t, { i18n }) => <h2>{t("app.subtitle")}</h2>
+                }
+               </Translation>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', float: 'right'}}>
+              <Button style={{display: 'flex', flexDirection: 'row', margin: '5px 5px 5px 5px'}} variant="light" onClick={this.changeToGer}><Emoji symbol="🇩🇪"/></Button>
+              <Button style={{display: 'flex', flexDirection: 'row', margin: '5px 5px 5px 5px'}} variant="light" onClick={this.changeToEn}><Emoji symbol="🇺🇸"/></Button>
+            </div>
+          </div>
           <Popup
-            trigger={<Button variant="light">Connect to EV3</Button>}
+            trigger={<Button variant="light">
+                      <Translation ns="translations">
+                        {
+                            (t, { i18n }) => <span>{t("app.connect")}</span>
+                        }
+                      </Translation>
+                    </Button>
+                    }
             modal
             closeOnDocumentClick
             >
@@ -222,36 +306,67 @@ class App extends Component {
               <div>
                 <form>
                   <label>
-                    IP address:
+                    <Translation ns="translations">
+                        {
+                            (t, { i18n }) => <span>{t("app.form.ip")}</span>
+                        }
+                    </Translation>
                     <input type="text" value={this.state.ip} onChange={this.handleChangeIp}/>
                   </label>
                   <label>
-                    User:
+                    <Translation ns="translations">
+                        {
+                            (t, { i18n }) => <span>{t("app.form.user")}</span>
+                        }
+                    </Translation>
                     <input type="text" value={this.state.user} onChange={this.handleChangeUser}/>
                   </label>
                   <label>
-                    Password:
+                    <Translation ns="translations">
+                        {
+                            (t, { i18n }) => <span>{t("app.form.password")}</span>
+                        }
+                    </Translation>
                     <input type="text" value={this.state.pw} onChange={this.handleChangePw}/>
                   </label>
                   <Button onClick={() => {
                       close();
                       this.handleSubmit();
-                    }} disabled={!(this.state.correctIpFormat && (this.state.user.length > 0) && (this.state.pw.length > 0))} variant="light">Connect</Button>
+                    }} disabled={!(this.state.correctIpFormat && (this.state.user.length > 0) && (this.state.pw.length > 0))} variant="light">
+                      <Translation ns="translations">
+                        {
+                            (t, { i18n }) => <span>{t("app.form.submit")}</span>
+                        }
+                      </Translation>
+                  </Button>
                   </form>
                   { this.state.correctIpFormat
-                    ? <span style={{color: 'green'}}>Valid IP address</span>
-                    : <span style={{color: 'red'}}>You need to enter a IP address</span>
+                    ? <Translation ns="translations">
+                        {
+                          (t, { i18n }) => <span style={{color: 'green'}}>{t("app.form.validip")}</span>
+                        }
+                       </Translation>
+                    : <Translation ns="translations">
+                        {
+                          (t, { i18n }) => <span style={{color: 'red'}}>{t("app.form.invalidip")}</span>
+                        }
+                       </Translation>
                 }
               </div>
             )}
           </Popup>
           { this.state.connectionLoading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : ev3Connect}
           <div>
-            { runModel }
+            <div>
+              { reloadRobotConnection }
+            </div>
+            <div>
+              { runModel }
+            </div>
           </div>
         </div>
         <div>
-          <Workspace trainedModel={this.trainedModelAvailable} session={this.state.sessionId} connection={this.state.connected} csvList={this.state.robotCSVList} csvContents={this.state.robotCSVContent} delimiters={this.state.CSVDelimiterList}/>
+          <Workspace trainedModel={this.trainedModelAvailable} session={this.state.sessionId} connection={this.state.connected} csvList={this.state.robotCSVList} csvContents={this.state.robotCSVContent} delimiters={this.state.CSVDelimiterList} language={this.state.language}/>
         </div>
       </div>
     );
@@ -259,4 +374,4 @@ class App extends Component {
 }
 }
 
-export default App;
+export default withTranslation()(App);

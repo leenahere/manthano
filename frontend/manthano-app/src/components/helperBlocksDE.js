@@ -2,7 +2,7 @@ import Blockly from 'node-blockly/browser';
 import axios from 'axios';
 
 // Dropdown list for data block. User needs to select if features or labels of data is needed.
-var testTrainDropdownList = [["features", "X"], ["labels", "y"]]
+var testTrainDropdownList = [["Merkmale", "X"], ["Kategorien", "y"]]
 
 // Hue for data block and list block
 const dataColor = 30;
@@ -28,7 +28,7 @@ function getListsForDataBlock(dataDropdownList) {
 // List Block for adding layers to the neural net blocks. Same as predefined Blockly List block with minor modifications like color and title
 export const list = {
   name: 'list',
-  category: 'NeuralNets',
+  category: 'NeuronaleNetze',
   block: {
     /**
     * Block for creating a list with any number of elements of any type.
@@ -139,7 +139,7 @@ export const list = {
         if (!this.getInput('ADD' + i)) {
           var input = this.appendValueInput('ADD' + i);
           if (i == 0) {
-            input.appendField('create layers');
+            input.appendField('Erzeuge Schichten');
           }
         }
       }
@@ -165,21 +165,21 @@ export const list = {
 // Data Block for ml models (features, labels)
 export var dataBlock = {
   name: 'Data',
-  category: 'Data',
+  category: 'Daten',
   block: {
     init: function () {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("from data")
-        .appendField(new Blockly.FieldDropdown(getListsForDataBlock([["irisExample", "irisExample"]])),'data');
+        .appendField("Aus Daten")
+        .appendField(new Blockly.FieldDropdown(getListsForDataBlock([["irisBeispiel", "irisExample"]])),'data');
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_CENTRE)
-        .appendField("get")
+        .appendField("entnehme")
         .appendField(new Blockly.FieldDropdown(testTrainDropdownList), "part");
       this.setOutput(true, "data");
       this.setInputsInline(true);
       this.setColour(dataColor);
-      this.setTooltip("Data for the training the models");
+      this.setTooltip("Daten zum Trainieren der Modelle");
       this.setHelpUrl("");
     },
   },

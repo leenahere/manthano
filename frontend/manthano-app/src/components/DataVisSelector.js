@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Button} from 'react-bootstrap';
 import DataDragNDrop from './DataDragNDrop';
+import { withTranslation, Translation  } from 'react-i18next';
 
 class DataVisSelector extends Component {
   state = {
@@ -30,10 +31,11 @@ class DataVisSelector extends Component {
 }
 
   render() {
+    let { t } = this.props;
     console.log(this.props);
     return (
       <div>
-        <p>Select problem class:</p>
+        <p>{t("datavisualization.problemclass")}</p>
 
         <ul>
           <li>
@@ -44,7 +46,7 @@ class DataVisSelector extends Component {
                 checked={this.state.problem === "classification"}
                 onChange={this.handleChange}
                 />
-              Classification
+              {t("datavisualization.radio1")}
             </label>
           </li>
 
@@ -56,14 +58,14 @@ class DataVisSelector extends Component {
                 checked={this.state.problem === "regression"}
                 onChange={this.handleChange}
                 />
-              Regression
+              {t("datavisualization.radio2")}
             </label>
           </li>
         </ul>
 
         <DataDragNDrop list={this.props.list} callbackFromParent={this.myCallback} />
 
-        <Button variant="light" onClick={this.onPlotClick}>Plot!</Button>
+        <Button variant="light" onClick={this.onPlotClick}>{t("datavisualization.button")}</Button>
 
       </div>
     );
@@ -77,4 +79,4 @@ DataVisSelector.propTypes = {
   sendVisSelectors: PropTypes.func.isRequired,
 }
 
-export default DataVisSelector;
+export default withTranslation(['translations'])(DataVisSelector);

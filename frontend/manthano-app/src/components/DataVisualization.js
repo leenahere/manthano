@@ -4,6 +4,7 @@ import Plot from './Plot.js';
 import DataVisSelector from './DataVisSelector.js';
 import axios from 'axios';
 import Loader from 'react-loader-spinner';
+import { withTranslation, Translation  } from 'react-i18next';
 
 class DataVisualization extends Component {
   state = {
@@ -13,7 +14,7 @@ class DataVisualization extends Component {
     features: [],
     labels: [],
     plot: "",
-    error: "",
+    error: false,
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,7 +51,7 @@ class DataVisualization extends Component {
         })})
       .catch(error => {
         this.setState({
-          error: "Your chosen data could not be plotted. Please try to match features and labels again and be sure to select a problem class.",
+          error: true,
           showPlot: false,
           loading: false,
         })
@@ -61,6 +62,7 @@ class DataVisualization extends Component {
 
   render() {
     console.log(this.props);
+    let { t } = this.props;
     let content;
     if (this.state.showPlot == false) {
       content = <DataVisSelector csv={this.props.csv} list={this.props.list} showPlot={this.plotOrSelector} sendVisSelectors={this.getPlot}/>
@@ -73,7 +75,10 @@ class DataVisualization extends Component {
     }
     return (
       <div>
-        <span style={{color: 'red'}}>{this.state.error}</span>
+        { this.state.error
+            ? <span style={{color: 'red'}}>{t("datavisualization.error")}</span>
+            : <span></span>
+        }
         {content}
       </div>
     );
@@ -87,4 +92,4 @@ DataVisualization.propTypes = {
   session: PropTypes.string.isRequired,
 }
 
-export default DataVisualization;
+export default withTranslation(['translations'])(DataVisualization);
