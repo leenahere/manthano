@@ -465,14 +465,40 @@ paths:
 
   /predict/{Xnew}/{session_id}:
     get:
-      operationId: predict_results.predicition_for_robot
+      operationId: predict_results.digit_prediction_for_robot
       tags:
-        - prediction_for_robot
+        - digit_prediction_for_robot
       description: endpoint for robot to outsource model predition to backend
       parameters:
         - name: Xnew
           in: path
           description: input data
+          type: string
+          required: True
+        - name: session_id
+          in: path
+          description: session id of frontend user to identify correct pickled model
+          type: string
+          required: True
+      responses:
+        200:
+          description: Successfully predicted result
+
+  /predict/ghost/{time}/{mode}/{session_id}:
+    get:
+      operationId: predict_results.ghost_prediction_for_robot
+      tags:
+        - ghost_prediction_for_robot
+      description: endpoint for robot to outsource model predition to backend
+      parameters:
+        - name: time
+          in: path
+          description: input data
+          type: string
+          required: True
+        - name: mode
+          in: path
+          description: one or two models
           type: string
           required: True
         - name: session_id
