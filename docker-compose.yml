@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+
+  ##########################
+  # Setup backend container
+  ##########################
+  server:
+    build: ./backend
+    expose:
+      - 80
+    ports:
+      - 80:80
+    volumes:
+      - ./backend:/server/manthano
+    command: bash -c "/etc/init.d/postgresql restart && python app.py"
+
+  ###########################
+  # Setup frontend container
+  ###########################
+  client:
+    build: ./frontend/manthano-app
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/manthano-app:/manthano/client
+    links:
+      - "server:server"
+    command: yarn start
