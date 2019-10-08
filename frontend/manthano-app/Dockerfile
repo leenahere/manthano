@@ -5,7 +5,7 @@ WORKDIR /manthano/client
 
 COPY . /manthano/client
 
-RUN rm package-lock.json && rm -rf node_modules && rm -rf ~/.node-gyp && rm yarn.lock
+RUN rm -f package-lock.json && rm -rf node_modules && rm -rf ~/.node-gyp && rm -f yarn.lock
 
 RUN npm i -g node-gyp
 
