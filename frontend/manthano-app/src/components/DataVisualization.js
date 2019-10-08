@@ -6,6 +6,8 @@ import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import { withTranslation, Translation  } from 'react-i18next';
 
+const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
+
 class DataVisualization extends Component {
   state = {
     loading: false,
@@ -35,7 +37,7 @@ class DataVisualization extends Component {
   getPlot = (features, labels, problem) => {
     console.log(features, labels, problem);
     this.setState({ loading: true, error: ""}, () => {
-      axios.get('http://'  + window.location.hostname + ':80/api/plot/' + encodeURIComponent(this.props.csv) + '/' + this.props.delimiter + '/' + this.props.session + '/' + features + '/' + labels + '/' + problem, { responseType: 'arraybuffer' })
+      axios.get(apiURL + 'plot/' + encodeURIComponent(this.props.csv) + '/' + this.props.delimiter + '/' + this.props.session + '/' + features + '/' + labels + '/' + problem, { responseType: 'arraybuffer' })
       .then(res => {
         console.log(res.data);
         const base64 = btoa(

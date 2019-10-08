@@ -7,6 +7,7 @@ import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
 import { withTranslation, Translation  } from 'react-i18next';
 
+const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
 
 // updates when state and props change
 class ModelResults extends Component {
@@ -35,14 +36,14 @@ class ModelResults extends Component {
     var problemClass = code.split("\n")[0];
     console.log(problemClass);
     if (problemClass == 'classification') {
-      var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/classification/'+ encodeURIComponent(code) + '/' + this.props.session;
+      var locationUrl = apiURL + 'runcode/classification/'+ encodeURIComponent(code) + '/' + this.props.session;
       this.setState({ loading: true, problem: "classification"}, () => {
         axios.get(locationUrl)
         .then(res => {
           this.props.trainedModel(res.data[3]);
           console.log(res.data);
           console.log(Date.now());
-          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[0] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
+          axios.get(apiURL + 'runcode/image/' + res.data[0] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
           .then(res => {
             console.log(res);
             const base64Class = btoa(
@@ -63,7 +64,7 @@ class ModelResults extends Component {
             console.log(error);
           });
 
-          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[2] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
+          axios.get(apiURL + 'runcode/image/' + res.data[2] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
           .then(res => {
             console.log(res);
             const base64Class = btoa(
@@ -84,7 +85,7 @@ class ModelResults extends Component {
             console.log(error);
           });
 
-          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[1] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
+          axios.get(apiURL + 'runcode/image/' + res.data[1] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
           .then(res => {
             console.log(res);
             const base64Dec = btoa(
@@ -115,11 +116,11 @@ class ModelResults extends Component {
         });
       });
     } else if (problemClass == 'regression') {
-      var locationUrl = 'http://'  + window.location.hostname + ':80/api/runcode/regression/'+ encodeURIComponent(code) + '/' + this.props.session;
+      var locationUrl = apiURL + 'runcode/regression/'+ encodeURIComponent(code) + '/' + this.props.session;
       this.setState({ loading: true, problem: "regression"}, () => {
         axios.get(locationUrl)
         .then(res => {
-          axios.get('http://'  + window.location.hostname + ':80/api/runcode/image/' + res.data[0] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
+          axios.get(apiURL + 'runcode/image/' + res.data[0] + this.props.session + '/' + Date.now(), { responseType: 'arraybuffer' })
           .then(res => {
             console.log(res);
             const base64Class = btoa(

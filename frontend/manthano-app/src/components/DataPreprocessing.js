@@ -8,6 +8,7 @@ import Slider from '@material-ui/core/Slider';
 import DragDrop from './DataDragNDrop';
 import { withTranslation, Translation  } from 'react-i18next';
 
+const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
 
 class DataPreprocessing extends Component {
   state = {
@@ -33,7 +34,7 @@ class DataPreprocessing extends Component {
 
   saveSettings = (e) => {
     e.preventDefault();
-    var locationUrl = 'http://'  + window.location.hostname + ':80/api/data';
+    var locationUrl = apiURL + 'data';
     axios.post(locationUrl, {
       session_id: this.props.session,
       data_name: this.state.dataName,
@@ -87,7 +88,7 @@ class DataPreprocessing extends Component {
     const dropdownList = this.state.dataList;
     const background = dropdownList.find(item => item.data === e.value);
     if (background.from === "example") {
-      axios.get('http://'  + window.location.hostname + ':80/api/exampledata/file/' + e.value)
+      axios.get(apiURL + 'exampledata/file/' + e.value)
       .then(res => {
         this.setState({
           selectedCSV: res.data.csv,

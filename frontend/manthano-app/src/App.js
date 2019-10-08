@@ -10,6 +10,8 @@ import { withTranslation, Translation  } from 'react-i18next';
 import Emoji from './components/Emoji';
 import i18n from './i18n';
 
+const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
+
 // connection "enum" for connecting to a robot
 const connection = {
   UNKNOWN: 1,
@@ -94,7 +96,7 @@ class App extends Component {
     // Backend checks if it can create a SFTP connection to robot and gets all necessary data from robot directories
     // TODO What happends if connection is lost in between? User won't have any feedback about lost connection. Could reconnect to robot every minute or so?
     this.setState({ connectionLoading: true, error: ""}, () => {
-      axios.get('http://'  + window.location.hostname + ':80/api/connect/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw)
+      axios.get(apiURL + 'connect/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw)
       .then(res => {
         console.log(res.data);
         this.setState({
@@ -118,7 +120,7 @@ class App extends Component {
   handleRunScript = () => {
     console.log(this.state.sessionId)
     console.log(this.state.pathToPickledModel.concat(this.state.sessionId))
-    axios.get('http://'  + window.location.hostname + ':80/api/runscript/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw + '/' + this.state.pathToPickledModel.concat(this.state.sessionId) + '/' + this.state.modelName + '/' + this.state.sessionId)
+    axios.get(apiURL + 'runscript/' + this.state.ip + '/' + this.state.user  + '/' + this.state.pw + '/' + this.state.pathToPickledModel.concat(this.state.sessionId) + '/' + this.state.modelName + '/' + this.state.sessionId)
       .then(res => {
         console.log(res)
         this.setState({
@@ -165,7 +167,7 @@ class App extends Component {
         isLoaded: true
       });
     }
-    
+
     i18n.changeLanguage(navigator.language);
     this.setState({
       language: navigator.language,
