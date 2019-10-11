@@ -16,10 +16,6 @@ export const logRegression = {
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("problem")
         .appendField(new Blockly.FieldDropdown([["multinomial","multinomial"], ["binary", "ovr"]]), "problem");
-      this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("learning algorithm")
-        .appendField(new Blockly.FieldDropdown([["lbfgs","lbfgs"], ["liblinear", "liblinear"], ["newtoncg", "newton-cg"], ["saga", "saga"]]), "solver");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -37,13 +33,12 @@ export const logRegression = {
   generator: (block) => {
     var order = 1;
     var problemValue = block.getFieldValue('problem');
-    var solverValue = block.getFieldValue('solver');
     var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
     var problemString = 'multi_class=\'' + problemValue + '\', ';
-    var solverString = 'solver=\'' + solverValue + '\', ';
+    var solverString = 'solver=\'lbfgs\', ';
     var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = LogisticRegression(' + problemString + solverString + ')';
     return code;
   },
@@ -100,7 +95,7 @@ export const svm = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("kernel")
-        .appendField(new Blockly.FieldDropdown([["linear","linear"], ["poly", "poly"], ["rbf", "rbf"], ["sigmoid", "sigmoid"]]), "kernel");
+        .appendField(new Blockly.FieldDropdown([["linear","linear"], ["poly", "poly"], ["rbf", "rbf"]]), "kernel");
       this.appendValueInput("degreePoly")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -150,10 +145,6 @@ export const decisionTree = {
         .appendField("train decision tree");
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("classification criterion")
-        .appendField(new Blockly.FieldDropdown([["gini","gini"], ["entropy", "entropy"]]), "criterion");
-      this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("splitting strategy")
         .appendField(new Blockly.FieldDropdown([["best","best"], ["random", "random"]]), "splitter");
       this.appendValueInput("depth")
@@ -176,14 +167,13 @@ export const decisionTree = {
   },
   generator: (block) => {
     var order = 1;
-    var criterionValue = block.getFieldValue('criterion');
     var splitterValue = block.getFieldValue('splitter');
     var depthValue = Blockly.Python.valueToCode(block, 'depth', Blockly.Python.ORDER_ATOMIC);
     var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
-    var criterionString = 'criterion=\'' + criterionValue + '\', ';
+    var criterionString = 'criterion=\'gini\', ';
     var splitterString = 'splitter=\'' + splitterValue + '\', ';
     var depthString = 'max_depth=' + depthValue;
     var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = DecisionTreeClassifier(' + criterionString + splitterString + depthString + ')';
@@ -203,7 +193,7 @@ export const kNearNeigh = {
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("distance metric")
-          .appendField(new Blockly.FieldDropdown([["euclidean","euclidean"], ["manhattan","manhattan"], ["chebyshev","chebyshev"], ["minkowski","minkowski"]]), "distance");
+          .appendField(new Blockly.FieldDropdown([["euclidean","euclidean"], ["manhattan","manhattan"], ["chebyshev","chebyshev"]]), "distance");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("weights")
