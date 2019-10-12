@@ -10,7 +10,9 @@ SCRIPTS_DIRECTORY = 'ml_scripts'
 
 def check_ip_connection(ip, user, pw):
     try:
-        sftp = pysftp.Connection(ip, username=user, password=pw)
+        cnopts = pysftp.CnOpts()
+        cnopts.hostkeys = None
+        sftp = pysftp.Connection(ip, username=user, password=pw, cnopts=cnopts)
         print(sftp.listdir())
         all_csv_names = []
         csv_list = []

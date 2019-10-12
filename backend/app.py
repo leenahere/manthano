@@ -1,4 +1,3 @@
-#!flask/bin/python
 from flask import Flask
 import connexion
 

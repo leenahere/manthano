@@ -1,4 +1,3 @@
-#!flask/bin/python
 import os
 import connexion
 from flask_cors import CORS
