@@ -50,7 +50,7 @@ class BlocklyWorkspace extends Component {
     // Since react i18n doesn't work with custom blockly blocks, the whole workspace is simply translated and re-rendered when the language is changed
     if (this.props.language == 'de' || this.props.language == 'de-DE') {
       workspace =  <BlocklyDrawer
-                    style={{ height: 'calc(100vh - 210px)'}}
+                    style={{ height: '100%'}}
                     language={Blockly.Python}
                     tools={[classblocksde.kNearNeigh, classblocksde.logRegression, classblocksde.naiveBayes, classblocksde.svm, regblocksde.linRegression, regblocksde.polyRegression, classblocksde.decisionTree, annblocksde.mlp, helperblocksde.dataBlock, helperblocksde.list, regblocksde.kernelRidgeRegression, regblocksde.lassoRegression, regblocksde.elasticNetRegression]}
                     onChange={this.handleChange}
@@ -83,7 +83,7 @@ class BlocklyWorkspace extends Component {
                 </BlocklyDrawer>
     } else {
       workspace = <BlocklyDrawer
-                  style={{ height: 'calc(100vh - 210px)'}}
+                  style={{ height: '100%'}}
                   language={Blockly.Python}
                   tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, annblocks.mlp, helperblocks.dataBlock, helperblocks.list, regblocks.kernelRidgeRegression, regblocks.lassoRegression, regblocks.elasticNetRegression]}
                   onChange={this.handleChange}

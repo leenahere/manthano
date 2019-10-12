@@ -31,3 +31,161 @@
     transform: rotate(360deg);
   }
 }
+
+
+li {
+    list-style: none;
+}
+
+
+
+
+.headerOfAppL {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+}
+
+.headerInnerOfAppL {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+.headerOfAppL .leftL, .headerOfAppL .rightL {
+    display: inline-block;
+}
+
+.headerOfAppL .rightL {
+    float: right;
+}
+
+.headerOfAppL .rightL Button {
+    float: right;
+    margin-left: 10px;
+}
+
+
+.headerOfAppL h1 {
+    font-family:  'Liu Jian Mao Cao';
+    font-size: 80px;
+}
+
+.headerOfAppL .rightL .popup-content {
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.headerOfAppL .rightL .popup-content {
+    padding: 10px!important;
+    border-radius: 4px;
+}
+
+.headerOfAppL .rightL label {
+    margin-bottom: 15px;
+}
+
+.headerOfAppL .rightL label input {
+    margin: 0 20px 0 5px;
+    border-radius: 4px;
+    border: solid 1px rgb(238, 238, 238);
+    line-height: 34px;
+}
+
+.headerOfAppL .noteL {
+    line-height: 34px;
+}
+
+.popup-content .ipAddressL {
+    display: inline-block;
+    width: 100%;
+}
+
+.mainAppL {
+    position: absolute;
+    overflow: hidden;
+    top: 175px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.mainAppL nav {
+    padding-left: 5px;
+}
+
+.mainAppL > div > .tab-content, #controlled-tab-example-tabpane-blockly, .modelContainerL {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.mainAppL > div > .tab-content {
+    top: 45px;
+}
+
+.modelContainerL {
+    display: flex;
+    padding: 10px;
+}
+
+.modelContainerL .leftL, .modelContainerL .rightL {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    height: 100%;
+}
+
+.modelContainerL .leftL {
+    margin-right: 10px;
+    flex: auto
+}
+
+.modelContainerL .leftL > div {
+    height: 100%;
+}
+
+.modelContainerL .leftL .blocklyMainBackground {
+    stroke-width: 0;
+}
+
+.modelContainerL .rightL {
+    padding: 10px;
+    width: 45%;
+}
+
+
+#controlled-tab-example-tabpane-data {
+    margin-top: 10px;
+}
+
+#controlled-tab-example-tabpane-data .col-2 {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    height: 100%;
+}
+
+#controlled-tab-example-tabpane-data .col-10 .tab-content {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    max-height: 100%;
+    padding: 10px;
+}
+
+
+
+#controlled-tab-example-tabpane-data .col-10 .tab-content .form-row {
+    margin: 0;
+}
+
+#controlled-tab-example-tabpane-data .col-10 .tab-content .form-check-input {
+    margin-left: -17px;
+}
