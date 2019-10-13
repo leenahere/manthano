@@ -14,6 +14,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
+COLORS = ["#e6bc17", "#e67017", "#17e670", "#e6177e", "#1739e6", "#17b2e6"]
 
 def plot(csv, delimiter, session, features, labels, problem):
     replaced = urllib.parse.unquote(csv)
@@ -26,12 +27,12 @@ def plot(csv, delimiter, session, features, labels, problem):
     if problem == 'classification':
         colors = list(data.columns.values[labels])[0]
         print(colors)
-        pairplot = sns.pairplot(data, vars=data[data.columns[features]], hue=colors)
+        pairplot = sns.pairplot(data, vars=data[data.columns[features]], hue=colors, palette=sns.color_palette(COLORS))
     else:
         combined = features + labels
         combined.sort()
         print(combined)
-        pairplot = sns.pairplot(data[data.columns[combined]])
+        pairplot = sns.pairplot(data[data.columns[combined]], palette=sns.color_palette(COLORS))
 
     plt.savefig('./plots/plot'+ session + '.png')
 
@@ -51,7 +52,8 @@ def heatmap(csv, delimiter, session):
     if figure_size < 5:
         figure_size = 5
     plt.figure(figsize=(figure_size,figure_size))
-    sns.heatmap(data.corr(), annot=True, cmap='PiYG', fmt='.1f', square=True)
+    cmap = sns.diverging_palette(352, 136, s=96, l=51, n=7)
+    sns.heatmap(data.corr(), annot=True, cmap=cmap, fmt='.1f', square=True)
     plt.tight_layout()
     plt.savefig('./plots/heatmap' + session + '.png')
     plt.clf()

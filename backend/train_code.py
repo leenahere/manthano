@@ -290,7 +290,8 @@ def execute_classification_code(code, session):
     print(df)
     exec(code_arr[3], globals())
 
-    viz = ClassificationReport(model, cmap='PiYG')
+    cmap_pink_green = sns.diverging_palette(352, 136, s=96, l=51, n=7)
+    viz = ClassificationReport(model, cmap=cmap_pink_green)
     viz.fit(X_train, y_train)
     viz.score(X_test, y_test)
     viz.poof(outpath="./plots/classificationmatrix" + session + ".png")
@@ -312,7 +313,8 @@ def execute_classification_code(code, session):
     plt.close()
 
     print(list(map(str, y.iloc[:, 0].unique())))
-    cm = ConfusionMatrix(model, classes=list(map(str, y.iloc[:, 0].unique())).sort())
+    cmap_salmon_dijon = sns.diverging_palette(28, 65, s=98, l=78, n=7)
+    cm = ConfusionMatrix(model, classes=list(map(str, y.iloc[:, 0].unique())).sort(), cmap=cmap_salmon_dijon)
     cm.fit(X_train, y_train)
     cm.score(X_test, y_test)
     plt.tight_layout()
@@ -368,8 +370,8 @@ def execute_regression_code(code, session):
         print(y_predict.ravel().shape)
         print(X_test[feature_vis.columns[0]].to_numpy(), y_predict)
 
-        sns.regplot(x=X_test[feature_vis.columns[0]], y=y_test.to_numpy().ravel(), color='blue', order=int(order))
-        sns.regplot(x=X_test[feature_vis.columns[0]], y=y_predict.ravel(), color='green', order=int(order))
+        sns.regplot(x=X_test[feature_vis.columns[0]], y=y_test.to_numpy().ravel(), color='#17b2e6', order=int(order))
+        sns.regplot(x=X_test[feature_vis.columns[0]], y=y_predict.ravel(), color='#e67017', order=int(order))
         #plt.scatter(X_test[feature_vis.columns[1]].to_numpy(), y_test, s=10)
         #plt.scatter(X_test[feature_vis.columns[1]].to_numpy(), y_predict, color='r')
         plt.savefig("./plots/regression" + session + ".png")
