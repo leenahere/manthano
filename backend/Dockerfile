@@ -19,6 +19,4 @@ RUN /etc/init.d/postgresql start && \
 
 RUN pip install -r requirements.txt
 
-RUN chmod +x app.py
-
 CMD ["python", "app.py"]

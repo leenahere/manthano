@@ -9,6 +9,8 @@ import convertCSVToArray from 'convert-csv-to-array';
 import Loader from 'react-loader-spinner';
 import { withTranslation, Translation  } from 'react-i18next';
 
+const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
+
 class Data extends Component {
   state = {
     loadedCSV: "",
@@ -45,7 +47,7 @@ class Data extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://'  + window.location.hostname + ':80/api/exampledata/list')
+    axios.get(apiURL + 'exampledata/list')
     .then(res => this.setState({
         exampleCSVList: res.data
       }))
@@ -57,7 +59,7 @@ class Data extends Component {
 
   getHeatmap = (csv, delimiter, session) => {
     this.setState({ loadingHeatmap: true, error: ""}, () => {
-      axios.get('http://'  + window.location.hostname + ':80/api/heatmap/' + encodeURIComponent(csv) + '/' + delimiter + '/' + session, { responseType: 'arraybuffer' })
+      axios.get(apiURL + 'heatmap/' + encodeURIComponent(csv) + '/' + delimiter + '/' + session, { responseType: 'arraybuffer' })
       .then(res => {
         console.log(res.data);
         const base64 = btoa(
@@ -84,7 +86,7 @@ class Data extends Component {
     this.setState({
         selectedData: e.currentTarget.id,
     });
-    axios.get('http://'  + window.location.hostname + ':80/api/exampledata/file/' + e.currentTarget.id)
+    axios.get(apiURL + 'exampledata/file/' + e.currentTarget.id)
     .then(res => {
       const i =  res.data.csv.split("\n")[0];
       const j = i.split(res.data.delimiter);
@@ -177,7 +179,7 @@ class Data extends Component {
                 </tr>);
       });
     }
-    
+
 
     let tablecontent;
 

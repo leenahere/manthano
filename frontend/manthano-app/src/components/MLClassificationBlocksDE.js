@@ -16,10 +16,6 @@ export const logRegression = {
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Problem")
         .appendField(new Blockly.FieldDropdown([["multinomial","multinomial"], ["binär", "ovr"]]), "problem");
-      this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("Lernalgorithmus")
-        .appendField(new Blockly.FieldDropdown([["lbfgs","lbfgs"], ["liblinear", "liblinear"], ["newtoncg", "newton-cg"], ["saga", "saga"]]), "solver");
       this.appendValueInput("features")
         .setCheck("data")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -35,13 +31,12 @@ export const logRegression = {
   generator: (block) => {
     var order = 1;
     var problemValue = block.getFieldValue('problem');
-    var solverValue = block.getFieldValue('solver');
     var featuresValue = Blockly.Python.valueToCode(block, 'features', Blockly.Python.ORDER_ATOMIC);
     var labelsValue = Blockly.Python.valueToCode(block, 'labels', Blockly.Python.ORDER_ATOMIC);
     var featuresSplit = featuresValue.split("\n");
     var labelsSplit = labelsValue.split("\n");
     var problemString = 'multi_class=\'' + problemValue + '\', ';
-    var solverString = 'solver=\'' + solverValue + '\', ';
+    var solverString = 'solver=\'lbfgs\', ';
     var code = 'classification\n' + order +'\nimport_dataset(\"'+featuresSplit[0]+'\")\nmodel = LogisticRegression(' + problemString + solverString + ')';
     return code;
   },
@@ -98,7 +93,7 @@ export const svm = {
       this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Kernel")
-        .appendField(new Blockly.FieldDropdown([["linear","linear"], ["poly", "poly"], ["rbf", "rbf"], ["sigmoid", "sigmoid"]]), "kernel");
+        .appendField(new Blockly.FieldDropdown([["linear","linear"], ["poly", "poly"], ["rbf", "rbf"]]), "kernel");
       this.appendValueInput("degreePoly")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
@@ -201,7 +196,7 @@ export const kNearNeigh = {
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("Abstandsmetrik")
-          .appendField(new Blockly.FieldDropdown([["Euklid","euclidean"], ["Manhattan","manhattan"], ["Chebyshev","chebyshev"], ["Minkowski","minkowski"]]), "distance");
+          .appendField(new Blockly.FieldDropdown([["Euklid","euclidean"], ["Manhattan","manhattan"], ["Chebyshev","chebyshev"]]), "distance");
       this.appendDummyInput()
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField("Gewichtung")

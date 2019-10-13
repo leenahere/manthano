@@ -8,9 +8,9 @@ services:
   server:
     build: ./backend
     expose:
-      - 80
+      - 8080
     ports:
-      - 80:80
+      - 8080:8080
     volumes:
       - ./backend:/server/manthano
     command: bash -c "/etc/init.d/postgresql restart && python app.py"
@@ -21,9 +21,9 @@ services:
   client:
     build: ./frontend/manthano-app
     expose:
-      - 3000
+      - 80
     ports:
-      - 3000:3000
+      - 80:80
     volumes:
       - ./frontend/manthano-app:/manthano/client
     links:
