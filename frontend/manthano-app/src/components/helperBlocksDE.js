@@ -6,7 +6,7 @@ var testTrainDropdownList = [["Merkmale", "X"], ["Kategorien", "y"]]
 
 // Hue for data block and list block
 const dataColor = 30;
-const listColor = 190;
+const listColor = 195;
 
 const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
 

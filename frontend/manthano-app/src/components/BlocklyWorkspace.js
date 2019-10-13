@@ -58,19 +58,16 @@ class BlocklyWorkspace extends Component {
                     {
                       categories: {
                         Klassifikation: {
-                          colour: '56'
+                          colour: '48'
                         },
                         Daten: {
-                          colour: '30'
+                          colour: '26'
                         },
                         NeuronaleNetze: {
-                          colour: '320'
-                        },
-                        Liste: {
-                          colour: '190'
+                          colour: '330'
                         },
                         Regression: {
-                          colour: '120'
+                          colour: '146'
                         }
 
                       },
@@ -90,23 +87,17 @@ class BlocklyWorkspace extends Component {
                   appearance={
                     {
                       categories: {
-                        Demo: {
-                          colour: '270'
-                        },
                         Classification: {
-                          colour: '56'
+                          colour: '48'
                         },
                         Data: {
-                          colour: '30'
+                          colour: '26'
                         },
                         NeuralNets: {
-                          colour: '320'
-                        },
-                        List: {
-                          colour: '190'
+                          colour: '330'
                         },
                         Regression: {
-                          colour: '120'
+                          colour: '146'
                         }
 
                       },
@@ -114,7 +105,7 @@ class BlocklyWorkspace extends Component {
                   }
                 >
                   <Category name="Value" colour='%{BKY_MATH_HUE}' >
-                    <Block type="math_number" />
+                    <Block type="math_number"/>
                   </Category>
                 </BlocklyDrawer>
     }

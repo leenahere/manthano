@@ -1,7 +1,7 @@
 import Blockly from 'node-blockly/browser';
 
 // Hue for classification blocks
-const classificationColor = 56;
+const classificationColor = 48;
 
 // Logistic Regression block that converts to sklearn.linear_model.LogisticRegression
 export const logRegression = {

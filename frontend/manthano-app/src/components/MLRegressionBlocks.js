@@ -1,8 +1,7 @@
 import Blockly from 'node-blockly/browser';
 
 // Hue for regression blocks
-const regressionColor = 120;
-const reinforcementColor = 140;
+const regressionColor = 146;
 
 // Linear Regression block that converts to sklearn.linear_model.LinearRegression
 export const linRegression = {

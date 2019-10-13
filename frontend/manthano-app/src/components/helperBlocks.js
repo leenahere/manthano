@@ -5,8 +5,8 @@ import axios from 'axios';
 var testTrainDropdownList = [["features", "X"], ["labels", "y"]]
 
 // Hue for data block and list block
-const dataColor = 30;
-const listColor = 190;
+const dataColor = 26;
+const listColor = 205;
 
 const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
 
