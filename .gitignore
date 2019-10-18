@@ -129,5 +129,5 @@ chrome-user-data
 *.swo
 
 # Project Specific Stuff
-/backend/plots
-/backend/pickled_models
+/backend/plots/*
+/backend/pickled_models/*
