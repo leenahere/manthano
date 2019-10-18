@@ -14,7 +14,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
-COLORS = ["#e6bc17", "#e67017", "#17e670", "#e6177e", "#1739e6", "#17b2e6"]
+COLORS = ["#e6bc17", "#e67017", "#17e670", "#e6177e", "#1739e6", "#17b2e6", "#dd1a21", "#de8b5f", "#cce197", "#901F76"]
 
 def plot(csv, delimiter, session, features, labels, problem):
     replaced = urllib.parse.unquote(csv)
