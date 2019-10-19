@@ -187,4 +187,3 @@ CREATE INDEX ix_data_data_name ON public.data USING btree (data_name);
 --
 -- PostgreSQL database dump complete
 --
-

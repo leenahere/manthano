@@ -1,7 +1,7 @@
 import Blockly from 'node-blockly/browser';
 
 // Hue for neural net blocks
-const neuralNetColor = 320;
+const neuralNetColor = 330;
 
 // Multi Layer Perceptron block which converts to either sklearn.neural_network.MLPClassifier or sklearn.neural_network.MLPRegressor depending on the problem class given by the user
 export const mlp = {

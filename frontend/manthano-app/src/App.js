@@ -9,6 +9,7 @@ import Dropdown from 'react-dropdown';
 import { withTranslation, Translation  } from 'react-i18next';
 import Emoji from './components/Emoji';
 import i18n from './i18n';
+import './App.css';
 
 const apiURL = 'http://'  + window.location.hostname + ':8080/api/';
 
@@ -186,14 +187,14 @@ class App extends Component {
       case connection.UNUSCCESSFUL:
       ev3Connect = <Translation ns="translations">
                       {
-                        (t, { i18n }) => <span style={{color: 'red'}}>{t("app.connection.unsuccessful")}</span>
+                        (t, { i18n }) => <span class="alertL" style={{color: 'red'}}>{t("app.connection.unsuccessful")}</span>
                       }
                     </Translation>
       break;
       case connection.SUCCESSFUL:
       ev3Connect =<Translation ns="translations">
                       {
-                        (t, { i18n }) => <span style={{color: 'green'}}>{t("app.connection.successful")}</span>
+                        (t, { i18n }) => <span class="alertL" style={{color: 'green'}}>{t("app.connection.successful")}</span>
                       }
                   </Translation>
       break;
@@ -219,7 +220,7 @@ class App extends Component {
 
     let reloadRobotConnection;
     if(this.state.connected == 3) {
-      reloadRobotConnection =<Button style={{margin: '5px 5px 5px 5px'}} variant="light" onClick={this.handleSubmit}><Emoji symbol="🔄"/></Button>
+      reloadRobotConnection =<Button variant="light" onClick={this.handleSubmit}><Emoji symbol="🔄"/></Button>
     } else {
       reloadRobotConnection = <span></span>
     }
@@ -277,99 +278,106 @@ class App extends Component {
       // Returns app heading, the connection button which opens a popup form and the workspace component
       return(
       <div>
-        <div>
-          <div style={{ display: 'flex'}}>
-            <div style={{ display: 'flex', flexDirection: 'column'}}>
-              <h1 style={{ fontFamily: 'Liu Jian Mao Cao', fontSize: '80px'}}>&mu;anth&aacute;n&#333;</h1>
+        <div class="headerOfAppL">
+          <div class="headerInnerOfAppL">
+            <div class="leftL">
+              <h1>&mu;anth&aacute;n&#333;</h1>
               <Translation ns="translations">
                 {
                   (t, { i18n }) => <h2>{t("app.subtitle")}</h2>
                 }
                </Translation>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', float: 'right'}}>
-              <Button style={{display: 'flex', flexDirection: 'row', margin: '5px 5px 5px 5px'}} variant="light" onClick={this.changeToGer}><Emoji symbol="🇩🇪"/></Button>
-              <Button style={{display: 'flex', flexDirection: 'row', margin: '5px 5px 5px 5px'}} variant="light" onClick={this.changeToEn}><Emoji symbol="🇺🇸"/></Button>
-            </div>
-          </div>
-          <Popup
-            trigger={<Button variant="light">
-                      <Translation ns="translations">
-                        {
-                            (t, { i18n }) => <span>{t("app.connect")}</span>
+            <div class="rightL">
+
+              <Button variant="light" onClick={this.changeToGer}><Emoji symbol="🇩🇪"/></Button>
+              <Button variant="light" onClick={this.changeToEn}><Emoji symbol="🇺🇸"/></Button>
+
+              <Popup
+                trigger={<Button variant="light">
+                          <Translation ns="translations">
+                            {
+                                (t, { i18n }) => <span>{t("app.connect")}</span>
+                            }
+                          </Translation>
+                        </Button>
                         }
-                      </Translation>
-                    </Button>
+                modal
+                closeOnDocumentClick
+                >
+                {close => (
+                  <div>
+                    <form>
+                      <label class="ipAddressL">
+                        <Translation ns="translations">
+                            {
+                                (t, { i18n }) => <span>{t("app.form.ip")}:</span>
+                            }
+                        </Translation>
+                        <input type="text" value={this.state.ip} onChange={this.handleChangeIp}/>
+                      </label>
+                      <label>
+                        <Translation ns="translations">
+                            {
+                                (t, { i18n }) => <span>{t("app.form.user")}:</span>
+                            }
+                        </Translation>
+                        <input type="text" value={this.state.user} onChange={this.handleChangeUser}/>
+                      </label>
+                      <label>
+                        <Translation ns="translations">
+                            {
+                                (t, { i18n }) => <span>{t("app.form.password")}:</span>
+                            }
+                        </Translation>
+                        <input type="password" value={this.state.pw} onChange={this.handleChangePw}/>
+                      </label>
+                      <Button onClick={() => {
+                          close();
+                          this.handleSubmit();
+                        }} disabled={!(this.state.correctIpFormat && (this.state.user.length > 0) && (this.state.pw.length > 0))} variant="light">
+                          <Translation ns="translations">
+                            {
+                                (t, { i18n }) => <span>{t("app.form.submit")}</span>
+                            }
+                          </Translation>
+                      </Button>
+                      </form>
+                      { this.state.correctIpFormat
+                        ? <Translation ns="translations">
+                            {
+                              (t, { i18n }) => <span class="noteL" style={{color: 'green'}}>{t("app.form.validip")}</span>
+                            }
+                           </Translation>
+                        : <Translation ns="translations">
+                            {
+                              (t, { i18n }) => <span class="noteL" style={{color: 'red'}}>{t("app.form.invalidip")}</span>
+                            }
+                           </Translation>
                     }
-            modal
-            closeOnDocumentClick
-            >
-            {close => (
-              <div>
-                <form>
-                  <label>
-                    <Translation ns="translations">
-                        {
-                            (t, { i18n }) => <span>{t("app.form.ip")}</span>
-                        }
-                    </Translation>
-                    <input type="text" value={this.state.ip} onChange={this.handleChangeIp}/>
-                  </label>
-                  <label>
-                    <Translation ns="translations">
-                        {
-                            (t, { i18n }) => <span>{t("app.form.user")}</span>
-                        }
-                    </Translation>
-                    <input type="text" value={this.state.user} onChange={this.handleChangeUser}/>
-                  </label>
-                  <label>
-                    <Translation ns="translations">
-                        {
-                            (t, { i18n }) => <span>{t("app.form.password")}</span>
-                        }
-                    </Translation>
-                    <input type="text" value={this.state.pw} onChange={this.handleChangePw}/>
-                  </label>
-                  <Button onClick={() => {
-                      close();
-                      this.handleSubmit();
-                    }} disabled={!(this.state.correctIpFormat && (this.state.user.length > 0) && (this.state.pw.length > 0))} variant="light">
-                      <Translation ns="translations">
-                        {
-                            (t, { i18n }) => <span>{t("app.form.submit")}</span>
-                        }
-                      </Translation>
-                  </Button>
-                  </form>
-                  { this.state.correctIpFormat
-                    ? <Translation ns="translations">
-                        {
-                          (t, { i18n }) => <span style={{color: 'green'}}>{t("app.form.validip")}</span>
-                        }
-                       </Translation>
-                    : <Translation ns="translations">
-                        {
-                          (t, { i18n }) => <span style={{color: 'red'}}>{t("app.form.invalidip")}</span>
-                        }
-                       </Translation>
-                }
+                  </div>
+                )}
+              </Popup>
+
+              { this.state.connectionLoading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : ev3Connect}
+
+              <div class="roboConnectetL">
+                <div>
+                  { reloadRobotConnection }
+                </div>
+                <div>
+                  { runModel }
+                </div>
               </div>
-            )}
-          </Popup>
-          { this.state.connectionLoading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : ev3Connect}
-          <div>
-            <div>
-              { reloadRobotConnection }
-            </div>
-            <div>
-              { runModel }
+
             </div>
           </div>
         </div>
-        <div>
+
+        <div class="mainAppL">
           <Workspace trainedModel={this.trainedModelAvailable} session={this.state.sessionId} connection={this.state.connected} csvList={this.state.robotCSVList} csvContents={this.state.robotCSVContent} delimiters={this.state.CSVDelimiterList} language={this.state.language}/>
         </div>
+        
       </div>
     );
   }

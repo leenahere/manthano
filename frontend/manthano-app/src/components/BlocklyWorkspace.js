@@ -50,7 +50,7 @@ class BlocklyWorkspace extends Component {
     // Since react i18n doesn't work with custom blockly blocks, the whole workspace is simply translated and re-rendered when the language is changed
     if (this.props.language == 'de' || this.props.language == 'de-DE') {
       workspace =  <BlocklyDrawer
-                    style={{ height: 'calc(100vh - 210px)'}}
+                    style={{ height: '100%'}}
                     language={Blockly.Python}
                     tools={[classblocksde.kNearNeigh, classblocksde.logRegression, classblocksde.naiveBayes, classblocksde.svm, regblocksde.linRegression, regblocksde.polyRegression, classblocksde.decisionTree, annblocksde.mlp, helperblocksde.dataBlock, helperblocksde.list, regblocksde.kernelRidgeRegression, regblocksde.lassoRegression, regblocksde.elasticNetRegression]}
                     onChange={this.handleChange}
@@ -58,19 +58,16 @@ class BlocklyWorkspace extends Component {
                     {
                       categories: {
                         Klassifikation: {
-                          colour: '56'
+                          colour: '48'
                         },
                         Daten: {
-                          colour: '30'
+                          colour: '26'
                         },
                         NeuronaleNetze: {
-                          colour: '320'
-                        },
-                        Liste: {
-                          colour: '190'
+                          colour: '330'
                         },
                         Regression: {
-                          colour: '120'
+                          colour: '146'
                         }
 
                       },
@@ -83,30 +80,24 @@ class BlocklyWorkspace extends Component {
                 </BlocklyDrawer>
     } else {
       workspace = <BlocklyDrawer
-                  style={{ height: 'calc(100vh - 210px)'}}
+                  style={{ height: '100%'}}
                   language={Blockly.Python}
                   tools={[classblocks.kNearNeigh, classblocks.logRegression, classblocks.naiveBayes, classblocks.svm, regblocks.linRegression, regblocks.polyRegression, classblocks.decisionTree, annblocks.mlp, helperblocks.dataBlock, helperblocks.list, regblocks.kernelRidgeRegression, regblocks.lassoRegression, regblocks.elasticNetRegression]}
                   onChange={this.handleChange}
                   appearance={
                     {
                       categories: {
-                        Demo: {
-                          colour: '270'
-                        },
                         Classification: {
-                          colour: '56'
+                          colour: '48'
                         },
                         Data: {
-                          colour: '30'
+                          colour: '26'
                         },
                         NeuralNets: {
-                          colour: '320'
-                        },
-                        List: {
-                          colour: '190'
+                          colour: '330'
                         },
                         Regression: {
-                          colour: '120'
+                          colour: '146'
                         }
 
                       },
@@ -114,7 +105,7 @@ class BlocklyWorkspace extends Component {
                   }
                 >
                   <Category name="Value" colour='%{BKY_MATH_HUE}' >
-                    <Block type="math_number" />
+                    <Block type="math_number"/>
                   </Category>
                 </BlocklyDrawer>
     }

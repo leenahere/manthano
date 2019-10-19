@@ -161,22 +161,18 @@ class Data extends Component {
 
     const exampleData = this.state.exampleCSVList;
     let exampleDataList = exampleData.map((obj, id) => {
-      return (<tr id={obj.data_name} onClick={this.handleClickExample} style={{cursor: 'pointer'}}>
-                <th>{obj.data_name}</th>
-              </tr>);
+      return (<li id={obj.data_name} onClick={this.handleClickExample}>{obj.data_name}</li>);
     });
 
     console.log(this.state);
     const robotData = this.state.robotCSVList;
     let robotDataList;
     if (robotData.length == 0) {
-      robotDataList = <span>{t("data.table.connect")}</span>;
+      robotDataList = <li class="noRobotL">🚫🤖 {t("data.table.connect")}</li>;
     } else {
       robotDataList = robotData.map((obj, id) => {
         console.log(obj)
-        return (<tr id={obj} onClick={this.handleClickRobot} style={{cursor: 'pointer'}}>
-                  <th>{obj}</th>
-                </tr>);
+        return (<li id={obj} onClick={this.handleClickRobot} >{obj}</li>);
       });
     }
 
@@ -222,33 +218,17 @@ class Data extends Component {
     }
 
     return (
-      <div className="container" style={{ marginLeft: 1, marginRight: 1 }}>
-        <div className="row" style={{ width: '100vw'}}>
+      <div className="container holderAllDataL">
+        <div className="row">
           <div className="col-2">
-            <Table hover>
-              <thead>
-                <tr>
-                  <th>
-                    {t("data.table.example")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                { exampleDataList }
-              </tbody>
-            </Table>
-            <Table hover>
-              <thead>
-                <tr>
-                  <th>
-                  {t("data.table.robot")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                { robotDataList }
-              </tbody>
-            </Table>
+            <ul>
+              <li class="head">{t("data.table.example")}</li>
+              { exampleDataList }
+            </ul>
+            <ul>
+              <li class="head">{t("data.table.robot")}</li>
+              { robotDataList }
+            </ul>
           </div>
           <div className="col-10">
             <Tabs
@@ -257,22 +237,22 @@ class Data extends Component {
              onSelect={key => this.setState({ key })}
            >
              <Tab eventKey="home" title={t("data.tabs.data")}>
-                 <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+                 <div style={{overflowY: 'scroll', overflowX: 'scroll'}}>
                      {tablecontent}
                  </div>
              </Tab>
              <Tab eventKey="heatmap" title={t("data.tabs.heatmap")}>
-               <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+               <div style={{overflowY: 'scroll', overflowX: 'scroll'}}>
                    { heatmap }
                </div>
              </Tab>
              <Tab eventKey="plot" title={t("data.tabs.plot")}>
-                 <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+                 <div style={{overflowY: 'scroll', overflowX: 'scroll'}}>
                      <DataVisualization csv={this.state.loadedCSV} list={this.state.dndList} delimiter={this.state.delimiter} session={this.props.session} />
                  </div>
              </Tab>
              <Tab eventKey="enhance" title={t("data.tabs.preprocessing")}>
-                <div style={{height: 'calc(100vh - 210px)', overflowY: 'scroll', overflowX: 'scroll'}}>
+                <div style={{ overflowY: 'scroll', overflowX: 'scroll'}}>
                  <DataPreprocessing forceUpdate={this.handOver} dataList={allData} session={this.props.session} csvList={this.props.csvList} csvContents={this.props.csvContents} delimiters={this.props.delimiters}/>
                 </div>
              </Tab>
