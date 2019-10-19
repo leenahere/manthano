@@ -187,14 +187,14 @@ class App extends Component {
       case connection.UNUSCCESSFUL:
       ev3Connect = <Translation ns="translations">
                       {
-                        (t, { i18n }) => <span style={{color: 'red'}}>{t("app.connection.unsuccessful")}</span>
+                        (t, { i18n }) => <span class="alertL" style={{color: 'red'}}>{t("app.connection.unsuccessful")}</span>
                       }
                     </Translation>
       break;
       case connection.SUCCESSFUL:
       ev3Connect =<Translation ns="translations">
                       {
-                        (t, { i18n }) => <span style={{color: 'green'}}>{t("app.connection.successful")}</span>
+                        (t, { i18n }) => <span class="alertL" style={{color: 'green'}}>{t("app.connection.successful")}</span>
                       }
                   </Translation>
       break;
@@ -220,7 +220,7 @@ class App extends Component {
 
     let reloadRobotConnection;
     if(this.state.connected == 3) {
-      reloadRobotConnection =<Button style={{margin: '5px 5px 5px 5px'}} variant="light" onClick={this.handleSubmit}><Emoji symbol="🔄"/></Button>
+      reloadRobotConnection =<Button variant="light" onClick={this.handleSubmit}><Emoji symbol="🔄"/></Button>
     } else {
       reloadRobotConnection = <span></span>
     }
@@ -358,20 +358,20 @@ class App extends Component {
                   </div>
                 )}
               </Popup>
+
               { this.state.connectionLoading ? <Loader type="Oval" color="#a8a8a8" height={80} width={80} /> : ev3Connect}
 
+              <div class="roboConnectetL">
+                <div>
+                  { reloadRobotConnection }
+                </div>
+                <div>
+                  { runModel }
+                </div>
+              </div>
+
             </div>
           </div>
-
-          <div>
-            <div>
-              { reloadRobotConnection }
-            </div>
-            <div>
-              { runModel }
-            </div>
-          </div>
-
         </div>
 
         <div class="mainAppL">

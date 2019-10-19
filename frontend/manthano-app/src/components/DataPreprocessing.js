@@ -196,9 +196,11 @@ class DataPreprocessing extends Component {
           </Form.Row>
           <Form.Row>
             <Form.Label>{t("preprocessing.percentage")}</Form.Label>
+              <div class="sliderL">
               <Form.Label>Training {this.state.trData}</Form.Label>
               <Slider onChange={this.splitChange} defaultValue={70} min={0} max={100} step={10} marks aria-labelledby="discrete-slider" />
               <Form.Label>Test {this.state.testData}</Form.Label>
+              </div>
           </Form.Row>
           <Form.Group id="formGridCheckbox">
             <Form.Check checked={this.state.checkboxChecked} onChange={this.handleChange} type="checkbox" label={t("preprocessing.checkbox")} />

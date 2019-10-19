@@ -11,8 +11,9 @@ class Plot extends Component {
   render() {
     let { t } = this.props;
     return (
-      <div>
-        <Button variant="light" onClick={this.onResetClick}>{t("plot.button")}</Button>
+      <div class="plotResL">
+        <Button variant="light" onClick={this.onResetClick}>🔄 {t("plot.button")}</Button>
+        <br />
         <img src={this.props.plot}/>
       </div>
     );

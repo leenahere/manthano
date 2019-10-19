@@ -166,16 +166,19 @@ class ModelResults extends Component {
     let result;
     if (this.state.loading == false) {
       if (this.state.problem == "classification") {
-        result = <AliceCarousel mouseDragEnabled buttonsDisabled={true}>
+        result = <div class="showImgL">
                     <img onDragStart={handleOnDragStart} src={this.state.resultData}/>
                     <img onDragStart={handleOnDragStart} src={this.state.resultConfMatrix}/>
                     <img onDragStart={handleOnDragStart} src={this.state.resultDecBoundary}/>
-                  </AliceCarousel>
+                  </div>
       } else if (this.state.problem == "regression") {
-        result = <AliceCarousel mouseDragEnabled buttonsDisabled={true}>
+        result = <div class="showImgL">
                     <img onDragStart={handleOnDragStart} src={this.state.resultRegression}/>
-                    <div><span>Mean Squared Error:  {this.state.mse} </span><br /><span>R2: {this.state.r2} </span></div>
-                  </AliceCarousel>
+                    <div class="textL" >
+                      <span><b>Mean Squared Error:</b>  {this.state.mse} </span><br />
+                      <span><b>R2:</b> {this.state.r2} </span>
+                    </div>
+                  </div>
       } else {
         result = <span></span>;
       }
@@ -185,7 +188,7 @@ class ModelResults extends Component {
 
     return (
       <div>
-        <Button variant="light" onClick={this.handleClickRun}>{t("modelresults.button")}</Button>
+        <Button variant="light" onClick={this.handleClickRun}>▶️ {t("modelresults.button")}</Button>
         { result }
       </div>
     );
