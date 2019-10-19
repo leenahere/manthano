@@ -28,4 +28,4 @@ services:
       - ./frontend/manthano-app:/manthano/client
     links:
       - "server:server"
-    command: yarn start
+    command: bash -c "npm install && yarn start"
