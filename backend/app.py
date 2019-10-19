@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, redirect
 import connexion
 
 import config
@@ -9,9 +9,9 @@ connex_app = config.connex_app
 # Read the swagger.yml file to configure the endpoints
 connex_app.add_api("swagger.yml")
 
-@connex_app.route('/')
+@connex_app.route('/pdf')
 def index():
-    return "Hello, World!"
+    return redirect('/static/maschinelles_lernen.pdf')
 
 
 if __name__ == '__main__':
