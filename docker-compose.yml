@@ -26,6 +26,7 @@ services:
       - 80:80
     volumes:
       - ./frontend/manthano-app:/manthano/client
+      - /manthano/client/node_modules
     links:
       - "server:server"
-    command: bash -c "npm install && yarn start"
+    command: yarn start
