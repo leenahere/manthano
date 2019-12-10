@@ -2,6 +2,8 @@
 
 **µanthánō** is a prototypic visual programming environment that I built as part of my master's thesis ([Full text](https://www.researchgate.net/publication/337868874_An_Educational_Programming_Environment_for_Teaching_the_Principles_of_Machine_Learning_using_LEGO_MINDSTORMS)).
 
+![](/manthano.gif)
+
 The client is built with React. The server is built with Python Flask.
 
 This repository includes a docker compose file which allows you to try the web application.

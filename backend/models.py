@@ -8,7 +8,6 @@ DIRNAME = os.path.dirname(__file__)
 class Data(db.Model):
     __tablename__ = 'data'
     data_id = db.Column(db.Integer, primary_key=True)
-    #  I need something to connect data objects to robot/session. This is just a temporary solution
     session_id = db.Column(db.String)
     data_name = db.Column(db.String(32), index=True)
     csv = db.Column(db.String)
