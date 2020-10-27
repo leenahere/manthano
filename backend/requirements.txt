@@ -7,7 +7,7 @@ chardet==3.0.4
 Click==7.0
 clickclick==1.2.2
 connexion==2.3.0
-cryptography==2.7
+cryptography==3.2
 cycler==0.10.0
 Flask==1.1.1
 Flask-Cors==3.0.8
