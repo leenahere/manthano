@@ -47,6 +47,6 @@ sklearn==0.0
 smmap2==2.0.5
 SQLAlchemy==1.3.8
 swagger-ui-bundle==0.0.5
-urllib3==1.25.3
+urllib3==1.26.5
 Werkzeug==0.16.0
 yellowbrick==0.9.1
